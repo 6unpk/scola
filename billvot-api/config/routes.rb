@@ -8,12 +8,36 @@ Rails.application.routes.draw do
     end
   end
   
-  resources :votes
-  get "votes/index"
-  get "votes/show"
-  get "votes/create"
-  get "votes/update"
-  get "votes/destroy"
+  resources :votes do
+    collection do
+      get :search
+    end
+    resources :bill_votes, only: [:create] do
+      collection do
+        get :status
+      end
+    end
+    resources :comments, only: [:index, :create, :update, :destroy] do
+      member do
+        post :like
+      end
+    end
+  end
+
+  resources :news, only: [:index, :create] do
+    collection do
+      delete :clear
+    end
+  end
+
+  resources :notifications, only: [:index] do
+    member do
+      post :mark_read
+    end
+    collection do
+      post :mark_all_read
+    end
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
