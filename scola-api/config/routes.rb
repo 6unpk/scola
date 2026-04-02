@@ -1,12 +1,10 @@
 Rails.application.routes.draw do
-  namespace :api do
-    namespace :v1 do
-      devise_for :users, controllers: {
-        sessions: 'api/v1/sessions',
-        registrations: 'api/v1/registrations'
-      }
-    end
-  end
+  devise_for :users,
+    path: 'api/v1/users',
+    controllers: {
+      sessions: 'api/v1/sessions',
+      registrations: 'api/v1/registrations'
+    }
 
   resources :students
 
@@ -14,6 +12,7 @@ Rails.application.routes.draw do
     member do
       post :enroll
       delete :unenroll
+      get :students
     end
     resources :attendances, only: [:index] do
       collection do

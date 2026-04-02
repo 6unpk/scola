@@ -1,6 +1,6 @@
 class LessonsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_lesson, only: [:show, :update, :destroy, :enroll, :unenroll]
+  before_action :set_lesson, only: [:show, :update, :destroy, :enroll, :unenroll, :students]
 
   def index
     @lessons = current_user.lessons.includes(:students).order(created_at: :desc)
@@ -34,6 +34,13 @@ class LessonsController < ApplicationController
   def destroy
     @lesson.destroy
     render json: { status: { code: 200, message: '수업이 삭제되었습니다.' } }
+  end
+
+  def students
+    render json: {
+      status: { code: 200 },
+      data: @lesson.students.map { |s| s.as_json(only: [:id, :name, :phone, :grade, :school, :status]) }
+    }
   end
 
   def enroll
