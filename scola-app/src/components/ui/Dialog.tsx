@@ -18,7 +18,7 @@ const Overlay = styled.div`
 const Panel = styled.div<{ $maxWidth?: string }>`
   background: ${({ theme }) => theme.colors.white};
   border-radius: ${({ theme }) => theme.radius.lg};
-  box-shadow: ${({ theme }) => theme.shadow.lg};
+  border: 2px solid ${({ theme }) => theme.colors.dark};
   width: 100%;
   max-width: ${({ $maxWidth }) => $maxWidth || '500px'};
   max-height: 90vh;

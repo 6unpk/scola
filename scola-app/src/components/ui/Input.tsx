@@ -19,7 +19,7 @@ const StyledInput = styled.input`
 
   &:focus {
     border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 3px ${({ theme }) => theme.colors.primaryLight};
+    border-width: 2px;
   }
 
   &:disabled {
@@ -47,7 +47,7 @@ const StyledTextarea = styled.textarea`
 
   &:focus {
     border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 3px ${({ theme }) => theme.colors.primaryLight};
+    border-width: 2px;
   }
 `;
 

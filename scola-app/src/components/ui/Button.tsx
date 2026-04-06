@@ -22,9 +22,10 @@ const variantStyles = {
   outline: css`
     background: ${({ theme }) => theme.colors.white};
     color: ${({ theme }) => theme.colors.gray700};
-    border: 1px solid ${({ theme }) => theme.colors.gray200};
+    border: 2px solid ${({ theme }) => theme.colors.gray300};
     &:hover:not(:disabled) {
-      background: ${({ theme }) => theme.colors.gray50};
+      border-color: ${({ theme }) => theme.colors.dark};
+      color: ${({ theme }) => theme.colors.dark};
     }
   `,
   ghost: css`

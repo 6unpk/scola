@@ -9,13 +9,18 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
   }
 
-  html, body {
-    height: 100%;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-      'Helvetica Neue', Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    color: ${({ theme }) => theme.colors.gray900};
+  html {
+    overscroll-behavior: none;
     background: ${({ theme }) => theme.colors.gray50};
+  }
+
+  body {
+    height: 100%;
+    font-family: var(--font-ibm-plex-sans-kr), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    color: ${({ theme }) => theme.colors.dark};
+    background: ${({ theme }) => theme.colors.gray50};
+    overscroll-behavior: none;
   }
 
   a {

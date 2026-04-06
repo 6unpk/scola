@@ -46,3 +46,7 @@ gem "devise", "~> 4.9"
 gem "devise-jwt", "~> 0.12"
 gem "pg"
 gem "dotenv-rails", groups: [:development, :test]
+
+gem "activeadmin"
+gem "sassc-rails"
+gem "kaminari"

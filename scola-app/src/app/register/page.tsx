@@ -4,62 +4,41 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import styled from 'styled-components';
-import { BookOpen, Mail, Lock, User, AlertCircle } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import { Input, Label, FieldGroup } from '@/components/ui/Input';
-import { Card, CardContent } from '@/components/ui/Card';
+import { Mail, Lock, User, AlertCircle } from 'lucide-react';
 import { useRegister } from '@/hooks/api/useAuth';
+import Navbar from '@/components/layout/Navbar';
 
-const PageWrapper = styled.div`
+const Page = styled.div`
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #1D4ED8 0%, #3B82F6 50%, #60A5FA 100%);
-  padding: 16px;
-`;
-
-const RegisterCard = styled(Card)`
-  width: 100%;
-  max-width: 420px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-`;
-
-const LogoArea = styled.div`
+  background: white;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 32px 24px 24px;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
 `;
 
-const LogoIcon = styled.div`
-  width: 52px;
-  height: 52px;
-  background: ${({ theme }) => theme.colors.primary};
-  border-radius: ${({ theme }) => theme.radius.lg};
+const Body = styled.div`
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 12px;
-  color: ${({ theme }) => theme.colors.white};
+  padding: 48px 20px;
 `;
 
-const AppName = styled.h1`
-  font-size: 22px;
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors.gray900};
-  letter-spacing: -0.3px;
+const FormWrap = styled.div`
+  width: 100%;
+  max-width: 400px;
 `;
 
-const AppSubtitle = styled.p`
-  font-size: 13px;
+const FormTitle = styled.h1`
+  font-size: 26px;
+  font-weight: 800;
+  color: ${({ theme }) => theme.colors.dark};
+  margin-bottom: 6px;
+`;
+
+const FormSub = styled.p`
+  font-size: 14px;
   color: ${({ theme }) => theme.colors.gray500};
-  margin-top: 4px;
-`;
-
-const FormArea = styled(CardContent)`
-  padding-top: 24px !important;
+  margin-bottom: 32px;
 `;
 
 const Form = styled.form`
@@ -68,40 +47,79 @@ const Form = styled.form`
   gap: 16px;
 `;
 
-const InputWrapper = styled.div`
+const FieldGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+`;
+
+const Label = styled.label`
+  font-size: 13px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.dark};
+`;
+
+const InputWrap = styled.div`
   position: relative;
 `;
 
-const InputIconLeft = styled.div`
+const InputIcon = styled.div`
   position: absolute;
-  left: 10px;
+  left: 12px;
   top: 50%;
   transform: translateY(-50%);
   color: ${({ theme }) => theme.colors.gray400};
   pointer-events: none;
   display: flex;
-  align-items: center;
 `;
 
-const PaddedInput = styled(Input)`
-  padding-left: 34px;
+const StyledInput = styled.input`
+  width: 100%;
+  padding: 11px 12px 11px 38px;
+  border: 2px solid ${({ theme }) => theme.colors.dark};
+  border-radius: ${({ theme }) => theme.radius.md};
+  font-size: 14px;
+  background: white;
+  outline: none;
+  transition: border-color 0.15s;
+
+  &::placeholder { color: ${({ theme }) => theme.colors.gray400}; }
+  &:focus { border-color: ${({ theme }) => theme.colors.primary}; }
 `;
 
 const ErrorBox = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 12px;
+  padding: 10px 14px;
   background: ${({ theme }) => theme.colors.dangerLight};
-  border: 1px solid #FECACA;
+  border: 2px solid ${({ theme }) => theme.colors.danger};
   border-radius: ${({ theme }) => theme.radius.md};
-  color: #B91C1C;
+  color: ${({ theme }) => theme.colors.danger};
   font-size: 13px;
+  font-weight: 500;
+`;
+
+const SubmitBtn = styled.button`
+  width: 100%;
+  padding: 13px;
+  background: ${({ theme }) => theme.colors.primary};
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  border: 2px solid ${({ theme }) => theme.colors.dark};
+  border-radius: ${({ theme }) => theme.radius.md};
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-top: 4px;
+
+  &:hover:not(:disabled) { background: ${({ theme }) => theme.colors.primaryHover}; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
 `;
 
 const Divider = styled.div`
   height: 1px;
-  background: ${({ theme }) => theme.colors.gray100};
+  background: ${({ theme }) => theme.colors.gray200};
   margin: 4px 0;
 `;
 
@@ -109,16 +127,49 @@ const FooterText = styled.p`
   text-align: center;
   font-size: 13px;
   color: ${({ theme }) => theme.colors.gray500};
-  padding: 16px 0 8px;
 `;
 
 const StyledLink = styled(Link)`
   color: ${({ theme }) => theme.colors.primary};
-  font-weight: 500;
-  text-decoration: none;
-  &:hover {
-    text-decoration: underline;
-  }
+  font-weight: 700;
+  &:hover { text-decoration: underline; }
+`;
+
+const AgreementBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const AgreementRow = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  color: ${({ theme }) => theme.colors.gray700};
+`;
+
+const AgreementCheck = styled.span<{ $checked: boolean }>`
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+  border-radius: 4px;
+  border: 2px solid ${({ $checked, theme }) => $checked ? theme.colors.dark : theme.colors.gray300};
+  background: ${({ $checked, theme }) => $checked ? theme.colors.dark : 'white'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 11px;
+  transition: all 0.1s;
+`;
+
+const AgreementLink = styled(Link)`
+  color: ${({ theme }) => theme.colors.primary};
+  text-decoration: underline;
+  font-weight: 600;
+  margin-left: 2px;
 `;
 
 export default function RegisterPage() {
@@ -129,126 +180,91 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [validationError, setValidationError] = useState('');
+  const [agreePrivacy, setAgreePrivacy] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setValidationError('');
 
-    if (password !== passwordConfirm) {
-      setValidationError('비밀번호가 일치하지 않습니다.');
-      return;
-    }
+    if (password !== passwordConfirm) { setValidationError('비밀번호가 일치하지 않습니다.'); return; }
+    if (password.length < 6)          { setValidationError('비밀번호는 6자 이상이어야 합니다.'); return; }
+    if (!agreePrivacy || !agreeTerms) { setValidationError('약관에 동의해주세요.'); return; }
 
-    if (password.length < 6) {
-      setValidationError('비밀번호는 6자 이상이어야 합니다.');
-      return;
-    }
-
-    register(
-      { name, email, password },
-      { onSuccess: () => router.replace('/attendance') }
-    );
+    register({ name, email, password, password_confirmation: passwordConfirm }, { onSuccess: () => router.replace('/') });
   };
 
-  const errorMessage =
-    validationError ||
-    (error instanceof Error ? error.message : error ? '회원가입에 실패했습니다. 다시 시도해주세요.' : null);
+  const errorMessage = validationError || (error instanceof Error ? error.message : null);
 
   return (
-    <PageWrapper>
-      <RegisterCard>
-        <LogoArea>
-          <LogoIcon>
-            <BookOpen size={26} />
-          </LogoIcon>
-          <AppName>Scola</AppName>
-          <AppSubtitle>계정을 만들고 시작하세요</AppSubtitle>
-        </LogoArea>
+    <Page>
+      <Navbar />
+      <Body>
+      <FormWrap>
+          <FormTitle>회원가입</FormTitle>
+          <FormSub>계정을 만들고 시작하세요.</FormSub>
 
-        <FormArea>
           <Form onSubmit={handleSubmit}>
             {errorMessage && (
-              <ErrorBox>
-                <AlertCircle size={15} />
-                {errorMessage}
-              </ErrorBox>
+              <ErrorBox><AlertCircle size={15} />{errorMessage}</ErrorBox>
             )}
 
             <FieldGroup>
-              <Label htmlFor="name">이름</Label>
-              <InputWrapper>
-                <InputIconLeft>
-                  <User size={15} />
-                </InputIconLeft>
-                <PaddedInput
-                  id="name"
-                  type="text"
-                  placeholder="강사 이름"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  autoComplete="name"
-                />
-              </InputWrapper>
+              <Label htmlFor="name">닉네임</Label>
+              <InputWrap>
+                <InputIcon><User size={15} /></InputIcon>
+                <StyledInput id="name" type="text" placeholder="닉네임을 입력하세요" value={name} onChange={(e) => setName(e.target.value)} required autoComplete="name" />
+              </InputWrap>
             </FieldGroup>
 
             <FieldGroup>
               <Label htmlFor="email">이메일</Label>
-              <InputWrapper>
-                <InputIconLeft>
-                  <Mail size={15} />
-                </InputIconLeft>
-                <PaddedInput
-                  id="email"
-                  type="email"
-                  placeholder="teacher@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  autoComplete="email"
-                />
-              </InputWrapper>
+              <InputWrap>
+                <InputIcon><Mail size={15} /></InputIcon>
+                <StyledInput id="email" type="email" placeholder="example@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
+              </InputWrap>
             </FieldGroup>
 
             <FieldGroup>
               <Label htmlFor="password">비밀번호</Label>
-              <InputWrapper>
-                <InputIconLeft>
-                  <Lock size={15} />
-                </InputIconLeft>
-                <PaddedInput
-                  id="password"
-                  type="password"
-                  placeholder="6자 이상"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  autoComplete="new-password"
-                />
-              </InputWrapper>
+              <InputWrap>
+                <InputIcon><Lock size={15} /></InputIcon>
+                <StyledInput id="password" type="password" placeholder="6자 이상" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="new-password" />
+              </InputWrap>
             </FieldGroup>
 
             <FieldGroup>
               <Label htmlFor="passwordConfirm">비밀번호 확인</Label>
-              <InputWrapper>
-                <InputIconLeft>
-                  <Lock size={15} />
-                </InputIconLeft>
-                <PaddedInput
-                  id="passwordConfirm"
-                  type="password"
-                  placeholder="비밀번호를 다시 입력하세요"
-                  value={passwordConfirm}
-                  onChange={(e) => setPasswordConfirm(e.target.value)}
-                  required
-                  autoComplete="new-password"
-                />
-              </InputWrapper>
+              <InputWrap>
+                <InputIcon><Lock size={15} /></InputIcon>
+                <StyledInput id="passwordConfirm" type="password" placeholder="비밀번호를 다시 입력하세요" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} required autoComplete="new-password" />
+              </InputWrap>
             </FieldGroup>
 
-            <Button type="submit" fullWidth disabled={isPending} size="lg">
+            <AgreementBox>
+              <AgreementRow>
+                <input type="checkbox" style={{ display: 'none' }} checked={agreePrivacy} onChange={(e) => setAgreePrivacy(e.target.checked)} />
+                <AgreementCheck $checked={agreePrivacy} onClick={() => setAgreePrivacy((v) => !v)}>
+                  {agreePrivacy && '✓'}
+                </AgreementCheck>
+                <span>
+                  <AgreementLink href="/privacy" target="_blank">개인정보처리방침</AgreementLink>에 동의합니다 <span style={{ color: '#A62121', fontWeight: 700 }}>(필수)</span>
+                </span>
+              </AgreementRow>
+              <AgreementRow>
+                <input type="checkbox" style={{ display: 'none' }} checked={agreeTerms} onChange={(e) => setAgreeTerms(e.target.checked)} />
+                <AgreementCheck $checked={agreeTerms} onClick={() => setAgreeTerms((v) => !v)}>
+                  {agreeTerms && '✓'}
+                </AgreementCheck>
+                <span>
+                  <AgreementLink href="/terms" target="_blank">이용약관</AgreementLink>에 동의합니다 <span style={{ color: '#A62121', fontWeight: 700 }}>(필수)</span>
+                </span>
+              </AgreementRow>
+            </AgreementBox>
+
+            <SubmitBtn type="submit" disabled={isPending || !agreePrivacy || !agreeTerms}>
               {isPending ? '가입 중...' : '회원가입'}
-            </Button>
+            </SubmitBtn>
 
             <Divider />
 
@@ -257,8 +273,8 @@ export default function RegisterPage() {
               <StyledLink href="/login">로그인</StyledLink>
             </FooterText>
           </Form>
-        </FormArea>
-      </RegisterCard>
-    </PageWrapper>
+      </FormWrap>
+      </Body>
+    </Page>
   );
 }

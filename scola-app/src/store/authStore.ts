@@ -10,6 +10,7 @@ interface User {
 interface AuthState {
   user: User | null;
   token: string | null;
+  _hasHydrated: boolean;
   setAuth: (user: User, token: string) => void;
   logout: () => void;
   isAuthenticated: () => boolean;
@@ -20,10 +21,16 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       user: null,
       token: null,
+      _hasHydrated: false,
       setAuth: (user, token) => set({ user, token }),
       logout: () => set({ user: null, token: null }),
       isAuthenticated: () => !!get().token,
     }),
-    { name: 'scola-auth' }
+    {
+      name: 'scola-auth',
+      onRehydrateStorage: () => (state) => {
+        if (state) state._hasHydrated = true;
+      },
+    }
   )
 );

@@ -15,7 +15,7 @@ const StyledSelect = styled.select`
 
   &:focus {
     border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 3px ${({ theme }) => theme.colors.primaryLight};
+    border-width: 2px;
   }
 `;
 
