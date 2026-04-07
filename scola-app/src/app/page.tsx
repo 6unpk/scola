@@ -3,10 +3,10 @@ import HomePage from './home-content';
 import JsonLd from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
-  title: 'Scola — 사우나 & 찜질방 탐색',
+  title: '스콜라 - 사우나 찜질방 정보 후기',
   description: '전국 사우나, 찜질방, 스파를 한 곳에서 찾아보세요. 위치, 시설 정보, 이용 후기까지.',
   openGraph: {
-    title: 'Scola — 사우나 & 찜질방 탐색',
+    title: '스콜라 - 사우나 찜질방 정보 후기',
     description: '전국 사우나, 찜질방, 스파를 한 곳에서 찾아보세요.',
     url: 'https://scola.kr',
     type: 'website',
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 const websiteJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  name: 'Scola',
+  name: '스콜라',
   url: 'https://scola.kr',
   description: '전국 사우나, 찜질방, 스파 정보 플랫폼',
   inLanguage: 'ko',

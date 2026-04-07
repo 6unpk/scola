@@ -9,10 +9,10 @@ export const RECENT_REVIEWS: Review[] = [
 ];
 
 export const HERO_BANNERS = [
-  { id: 1, tag: '이번 주 추천', title: '용산 불한증막\n최고의 힐링 코스', sub: '서울 용산구', bg: 'linear-gradient(135deg, #7A1818 0%, #A62121 100%)', href: '/place/1' },
-  { id: 2, tag: '신규 오픈', title: '부산 해운대\n루프탑 스파', sub: '부산 해운대구', bg: 'linear-gradient(135deg, #1a3a5c 0%, #2d6a9f 100%)', href: '/place/5' },
-  { id: 3, tag: '가이드', title: '사우나\n제대로 즐기는 법', sub: '입문자 필독 가이드', bg: 'linear-gradient(135deg, #3d2b00 0%, #8a6200 100%)', href: '/guide' },
-  { id: 4, tag: '인기 급상승', title: '수원 왕갈비\n찜질방', sub: '경기 수원시', bg: 'linear-gradient(135deg, #1a4a1a 0%, #2d8a2d 100%)', href: '/place/4' },
+  // { id: 1, tag: '이번 주 추천', title: '용산 불한증막\n최고의 힐링 코스', sub: '서울 용산구', bg: 'linear-gradient(135deg, #7A1818 0%, #A62121 100%)', href: '/place/1' },
+  // { id: 2, tag: '신규 오픈', title: '부산 해운대\n루프탑 스파', sub: '부산 해운대구', bg: 'linear-gradient(135deg, #1a3a5c 0%, #2d6a9f 100%)', href: '/place/5' },
+  // { id: 3, tag: '가이드', title: '사우나\n제대로 즐기는 법', sub: '입문자 필독 가이드', bg: 'linear-gradient(135deg, #3d2b00 0%, #8a6200 100%)', href: '/guide' },
+  // { id: 4, tag: '인기 급상승', title: '수원 왕갈비\n찜질방', sub: '경기 수원시', bg: 'linear-gradient(135deg, #1a4a1a 0%, #2d8a2d 100%)', href: '/place/4' },
 ];
 
 export const CATEGORY_OPTIONS = [
