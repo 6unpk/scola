@@ -489,7 +489,7 @@ export default function HeroSection() {
         </motion.div>
 
         <HeroBannerRow>
-          {HERO_BANNERS.map((banner) => (
+          {/* {HERO_BANNERS.map((banner) => (
             <HeroBannerCard key={banner.id} $bg={banner.bg} onClick={() => router.push(banner.href)}>
               <HeroBannerOverlay>
                 <HeroBannerTag>{banner.tag}</HeroBannerTag>
@@ -499,7 +499,7 @@ export default function HeroSection() {
                 </div>
               </HeroBannerOverlay>
             </HeroBannerCard>
-          ))}
+          ))} */}
         </HeroBannerRow>
       </HeroInner>
     </Hero>
