@@ -1,12 +1,18 @@
 ActiveAdmin.register Place do
-  permit_params :gender_type, :sauna_type,
+  permit_params :naver_place_id,
+                :name, :road_address, :naver_category,
+                :address, :phone, :homepage, :business_hours, :description,
+                :visitor_review_count, :blog_review_count,
+                :thumbnail,
+                :gender_type, :sauna_type,
                 :open_hours, :admission_fee, :rating, :review_count,
                 :room_count, :sauna_temp, :hot_bath_temp, :cold_bath_temp,
                 :pool_info, :age_restriction,
                 :is_24hours, :membership_available, :has_restaurant,
                 :has_sleep_room, :has_massage, :has_gym, :kids_facility,
                 :parking_count,
-                app_category: [], tags: [], bath_types: [], special_rooms: [], amenities: []
+                :bath_types, :special_rooms, :amenities, :tags,
+                app_category: []
 
   # ── 목록 ─────────────────────────────────────────────��────────────────────
   index do
@@ -84,11 +90,20 @@ ActiveAdmin.register Place do
 
   # ── 편집 폼 ─────────────────────────────────────────────────────────��─────
   form do |f|
-    f.inputs '네이버 기본 정보 (읽기 전용)' do
-      f.input :name, input_html: { disabled: true }
-      f.input :road_address, input_html: { disabled: true }
-      f.input :naver_category, input_html: { disabled: true }
-      f.input :admission_fee, input_html: { disabled: true }
+    f.inputs '네이버 기본 정보' do
+      f.input :naver_place_id, hint: '유니크 값이라 중복이면 저장이 실패해요.'
+      f.input :name
+      f.input :road_address
+      f.input :address
+      f.input :phone
+      f.input :homepage
+      f.input :naver_category
+      f.input :business_hours
+      f.input :description, as: :text
+      f.input :visitor_review_count
+      f.input :blog_review_count
+      f.input :admission_fee
+      f.input :thumbnail, hint: '이미지 URL(대표 썸네일)'
     end
 
     f.inputs '앱 분류' do
@@ -162,4 +177,5 @@ ActiveAdmin.register Place do
       end
     end
   end
+
 end

@@ -1,0 +1,10 @@
+<%# Devise shared links override for admin/browser sessions %>
+
+<%# 로그인 링크 (이미 로그인 화면이면 숨김) %>
+<% if controller_name != 'sessions' %>
+  <%= link_to t('devise.sessions.new.sign_in'), new_session_path(resource_name) %><br />
+<% end %>
+
+<%# admin_auth scope에서는 passwords/registrations 라우트 모두 스킵했으므로
+    비밀번호 찾기/회원가입 링크를 전부 노출하지 않는다. %>
+
