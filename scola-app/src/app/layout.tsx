@@ -18,8 +18,34 @@ const ibmPlexSansKR = IBM_Plex_Sans_KR({
 });
 
 export const metadata: Metadata = {
-  title: 'Scola - 사우나 & 찜질방 탐색',
-  description: '내 주변 사우나와 찜질방을 쉽게 찾아보세요',
+  title: {
+    default: 'Scola — 사우나 & 찜질방 탐색',
+    template: '%s | Scola',
+  },
+  description: '전국 사우나, 찜질방, 스파를 한 곳에서 찾아보세요. 위치, 시설 정보, 이용 후기까지.',
+  keywords: ['사우나', '찜질방', '스파', '황토방', '불한증막', '사우나 추천', '찜질방 추천', '사우나 찾기'],
+  authors: [{ name: '아온미디어', url: 'https://scola.kr' }],
+  metadataBase: new URL('https://scola.kr'),
+  openGraph: {
+    type: 'website',
+    locale: 'ko_KR',
+    url: 'https://scola.kr',
+    siteName: 'Scola',
+    title: 'Scola — 사우나 & 찜질방 탐색',
+    description: '전국 사우나, 찜질방, 스파를 한 곳에서 찾아보세요.',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Scola' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Scola — 사우나 & 찜질방 탐색',
+    description: '전국 사우나, 찜질방, 스파를 한 곳에서 찾아보세요.',
+    images: ['/og-image.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large' },
+  },
 };
 
 export default function RootLayout({

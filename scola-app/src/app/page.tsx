@@ -1,31 +1,38 @@
-'use client';
+import type { Metadata } from 'next';
+import HomePage from './home-content';
+import JsonLd from '@/components/seo/JsonLd';
 
-import styled from 'styled-components';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import HeroSection from '@/components/home/HeroSection';
-import CuratedPlacesSection from '@/components/home/CuratedPlacesSection';
-import PromoBannerSection from '@/components/home/PromoBannerSection';
-import GuideBannerSection from '@/components/home/GuideBannerSection';
-import ReviewsSection from '@/components/home/ReviewsSection';
+export const metadata: Metadata = {
+  title: 'Scola — 사우나 & 찜질방 탐색',
+  description: '전국 사우나, 찜질방, 스파를 한 곳에서 찾아보세요. 위치, 시설 정보, 이용 후기까지.',
+  openGraph: {
+    title: 'Scola — 사우나 & 찜질방 탐색',
+    description: '전국 사우나, 찜질방, 스파를 한 곳에서 찾아보세요.',
+    url: 'https://scola.kr',
+    type: 'website',
+  },
+};
 
-const Page = styled.div`
-  min-height: 100vh;
-  background: ${({ theme }) => theme.colors.gray50};
-  display: flex;
-  flex-direction: column;
-`;
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Scola',
+  url: 'https://scola.kr',
+  description: '전국 사우나, 찜질방, 스파 정보 플랫폼',
+  inLanguage: 'ko',
+  publisher: { '@type': 'Organization', name: '아온미디어', url: 'https://scola.kr' },
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: { '@type': 'EntryPoint', urlTemplate: 'https://scola.kr/search?q={search_term_string}' },
+    'query-input': 'required name=search_term_string',
+  },
+};
 
-export default function HomePage() {
+export default function Page() {
   return (
-    <Page>
-      <Navbar />
-      <HeroSection />
-      <CuratedPlacesSection />
-      <PromoBannerSection />
-      <GuideBannerSection />
-      <ReviewsSection />
-      <Footer />
-    </Page>
+    <>
+      <JsonLd data={websiteJsonLd} />
+      <HomePage />
+    </>
   );
 }

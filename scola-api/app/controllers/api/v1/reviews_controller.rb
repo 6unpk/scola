@@ -1,7 +1,7 @@
 module Api
   module V1
     class ReviewsController < BaseController
-      before_action :authenticate_user!, only: [:create, :destroy]
+      before_action :authenticate_user!, only: [:create, :destroy, :mine]
 
       # GET /reviews  (전체 후기)
       def all
@@ -9,6 +9,16 @@ module Api
         reviews = Review.includes(:user, :place)
                         .order(order)
                         .page(params[:page]).per(params[:per] || 12)
+        render json: {
+          data: reviews.map { |r| serialize(r, with_place: true) },
+          meta: { total: reviews.total_count, total_pages: reviews.total_pages, page: reviews.current_page }
+        }
+      end
+
+      # GET /api/v1/me/reviews
+      def mine
+        reviews = current_user.reviews.includes(:place).order(created_at: :desc)
+                              .page(params[:page]).per(params[:per] || 12)
         render json: {
           data: reviews.map { |r| serialize(r, with_place: true) },
           meta: { total: reviews.total_count, total_pages: reviews.total_pages, page: reviews.current_page }
@@ -58,7 +68,7 @@ module Api
           rating: r.rating,
           visited_at: r.visited_at,
           created_at: r.created_at,
-          user: { id: r.user.id, nickname: r.user.nickname }
+          user: { id: r.user.id, nickname: r.user.name }
         }
         if with_place
           data[:place] = {

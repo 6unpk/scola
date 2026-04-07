@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
-import LoginPage from './content';
+import MyPage from './content';
 
 export const metadata: Metadata = {
-  title: '로그인',
+  title: '마이페이지',
   robots: { index: false, follow: false },
 };
 
 export default function Page() {
-  return <LoginPage />;
+  return <MyPage />;
 }

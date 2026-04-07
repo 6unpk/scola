@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     }
 
   get 'reviews', to: 'api/v1/reviews#all'
+  get 'api/v1/me/reviews', to: 'api/v1/reviews#mine'
 
   resources :places, only: [:index, :show, :update] do
     resources :reviews, only: [:index, :create, :destroy], module: 'api/v1'

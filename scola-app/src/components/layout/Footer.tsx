@@ -167,7 +167,7 @@ export default function Footer() {
           <span><strong>상호명</strong> 아온미디어</span>
           <span><strong>대표자</strong> 박준우</span>
           <span><strong>사업자등록번호</strong> 855-12-02-532</span>
-          <span><strong>통신판매업신고번호</strong> 제0000-서울-00000호</span>
+          <span><strong>통신판매업신고번호</strong> 제2025-고양덕양구-0737호</span>
         </BusinessRow>
         <BusinessRow>
           <span><strong>주소</strong> 경기도 고양시 덕양구 향동로 218, 1125호</span>

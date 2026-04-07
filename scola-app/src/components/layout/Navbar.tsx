@@ -6,13 +6,14 @@ import logoSrc from '@/assets/logo.png';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
+import { motion, AnimatePresence } from 'motion/react';
 import { Search, User, LogOut, TrendingUp } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
+import { SUGGESTION_POOL } from '@/data/home';
 
-const POPULAR_SEARCHES = [
-  '용산 불한증막', '부산 해운대', '사우나', '찜질방', '스파', '황토방',
-  '불한증막', '냉탕', '수영장', '24시간', '서울', '경기',
-];
+function sampleRandom<T>(arr: T[], n: number): T[] {
+  return [...arr].sort(() => Math.random() - 0.5).slice(0, n);
+}
 
 const NAV_ITEMS = [
   {
@@ -29,6 +30,7 @@ const NAV_ITEMS = [
     label: '사우나 즐기는 법',
     href: '/guide',
     children: [
+      { label: '사우나 즐기기', href: '/guide', desc: '색다른 사우나 철학' },
       { label: '핀란드식 사우나 즐기기', href: '/guide/finland', desc: '뢸뤼·비흐타·아반토의 세계' },
       { label: '일본식 사우나 즐기기', href: '/guide/japan', desc: '토토노우·사우너·사메시 문화' },
     ],
@@ -74,16 +76,16 @@ const NavSearchWrap = styled.div`
 const SearchForm = styled.form`
   display: flex;
   align-items: center;
-  background: rgba(255,255,255,0.1);
-  border: 1.5px solid rgba(255,255,255,0.2);
-  border-radius: ${({ theme }) => theme.radius.lg};
-  overflow: hidden;
+  background: rgba(255,255,255,0.07);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  border-radius: ${({ theme }) => theme.radius.full};
   transition: border-color 0.15s, background 0.15s;
   width: 100%;
+  padding-right: 4px;
 
   &:focus-within {
-    background: rgba(255,255,255,0.15);
-    border-color: ${({ theme }) => theme.colors.primary};
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.4);
   }
 `;
 
@@ -132,7 +134,7 @@ const NavSuggestionItem = styled.button`
 
 const SearchInput = styled.input`
   flex: 1;
-  padding: 8px 14px;
+  padding: 8px 12px 8px 16px;
   background: transparent;
   border: none;
   outline: none;
@@ -141,16 +143,19 @@ const SearchInput = styled.input`
   min-width: 0;
 
   &::placeholder {
-    color: rgba(255,255,255,0.45);
+    color: rgba(255,255,255,0.35);
   }
 `;
 
 const SearchBtn = styled.button`
-  padding: 8px 14px;
-  background: ${({ theme }) => theme.colors.primary};
-  color: white;
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: ${({ theme }) => theme.radius.full};
+  background: ${({ theme }) => theme.colors.primary};
+  color: white;
   border: none;
   cursor: pointer;
   flex-shrink: 0;
@@ -300,11 +305,12 @@ export default function Navbar() {
   const { user, token, logout } = useAuthStore();
   const [query, setQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [popularSample] = useState(() => sampleRandom(SUGGESTION_POOL, 6));
   const navSearchRef = useRef<HTMLDivElement>(null);
 
   const suggestions = query.trim()
-    ? POPULAR_SEARCHES.filter((s) => s.toLowerCase().includes(query.trim().toLowerCase())).slice(0, 6)
-    : POPULAR_SEARCHES.slice(0, 6);
+    ? SUGGESTION_POOL.filter((s) => s.toLowerCase().includes(query.trim().toLowerCase())).slice(0, 6)
+    : popularSample;
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -348,28 +354,45 @@ export default function Navbar() {
             </SearchBtn>
           </SearchForm>
 
-          {showSuggestions && (
-            <NavSuggestionsBox>
-              <NavSuggestionsHeader>
-                {query.trim() ? '추천 검색어' : '인기 검색어'}
-              </NavSuggestionsHeader>
-              {suggestions.map((s) => (
-                <NavSuggestionItem key={s} type="button" onClick={() => handleSelectSuggestion(s)}>
-                  {query.trim()
-                    ? <Search size={13} style={{ color: '#9E9E9E', flexShrink: 0 }} />
-                    : <TrendingUp size={13} style={{ color: '#A62121', flexShrink: 0 }} />
-                  }
-                  <span>{s}</span>
-                </NavSuggestionItem>
-              ))}
-            </NavSuggestionsBox>
-          )}
+          <AnimatePresence>
+            {showSuggestions && (
+              <motion.div
+                initial={{ opacity: 0, y: -8, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -6, scale: 0.97 }}
+                transition={{ duration: 0.18, ease: 'easeOut' }}
+                style={{ position: 'absolute', width: '100%', zIndex: 300, top: 'calc(100% + 8px)' }}
+              >
+                <NavSuggestionsBox style={{ position: 'static' }}>
+                  <NavSuggestionsHeader>
+                    {query.trim() ? '추천 검색어' : '인기 검색어'}
+                  </NavSuggestionsHeader>
+                  {suggestions.map((s, i) => (
+                    <motion.div
+                      key={s}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.13, delay: i * 0.03, ease: 'easeOut' }}
+                    >
+                      <NavSuggestionItem type="button" onClick={() => handleSelectSuggestion(s)}>
+                        {query.trim()
+                          ? <Search size={13} style={{ color: '#9E9E9E', flexShrink: 0 }} />
+                          : <TrendingUp size={13} style={{ color: '#A62121', flexShrink: 0 }} />
+                        }
+                        <span>{s}</span>
+                      </NavSuggestionItem>
+                    </motion.div>
+                  ))}
+                </NavSuggestionsBox>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </NavSearchWrap>
 
         <NavRight>
           {token ? (
             <>
-              <NavBtn style={{ color: 'rgba(255,255,255,0.6)', fontSize: 13 }}>
+              <NavBtn style={{ color: 'rgba(255,255,255,0.6)', fontSize: 13 }} onClick={() => router.push('/mypage')}>
                 <User size={14} />
                 {user?.nickname ?? user?.email}
               </NavBtn>
@@ -380,7 +403,7 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <NavBtn onClick={() => router.push('/login')}>로그인</NavBtn>
+              <NavBtn onClick={() => router.push(`/login?redirect=${encodeURIComponent(pathname)}`)}>로그인</NavBtn>
               <NavBtnPrimary onClick={() => router.push('/register')}>회원가입</NavBtnPrimary>
             </>
           )}
