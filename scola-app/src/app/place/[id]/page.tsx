@@ -3,7 +3,7 @@ import PlaceDetailClient from './PlaceDetailClient';
 import JsonLd from '@/components/seo/JsonLd';
 import type { Place } from '@/types/place';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.scola.kr';
 
 async function fetchPlace(id: string): Promise<Place | null> {
   try {
@@ -25,7 +25,7 @@ export async function generateMetadata(
   const place = await fetchPlace(id);
 
   if (!place) {
-    return { title: '장소를 찾을 수 없습니다 | Scola' };
+    return { title: '장소를 찾을 수 없습니다' };
   }
 
   const addr = place.road_address ?? place.address ?? '';
@@ -41,9 +41,10 @@ export async function generateMetadata(
   const images = place.thumbnail ? [{ url: place.thumbnail, width: 1200, height: 630, alt: place.name }] : [];
 
   return {
-    title: `${place.name} | Scola`,
+    title: place.name,
     description,
     openGraph: {
+      siteName: '스콜라',
       title: place.name,
       description,
       url: `https://scola.kr/place/${id}`,

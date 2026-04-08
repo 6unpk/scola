@@ -7,12 +7,17 @@ export const metadata: Metadata = {
   description: '사우나 올바르게 즐기는 방법. 사우나→냉탕→외기욕 루틴, 핀란드식 vs 일본식 차이, 사우나 에티켓까지 한눈에 알아보세요.',
   keywords: ['사우나 즐기는 법', '사우나 루틴', '사우나 에티켓', '냉탕 효능', '외기욕', '사우나 입문'],
   openGraph: {
+    siteName: '스콜라',
     title: '사우나 즐기는 법 — 완벽 가이드',
     description: '사우나 올바르게 즐기는 방법과 루틴을 알아보세요.',
     url: 'https://scola.kr/guide',
     type: 'article',
   },
-  twitter: { card: 'summary_large_image' },
+  twitter: {
+    card: 'summary_large_image',
+    title: '사우나 즐기는 법 — 완벽 가이드',
+    description: '사우나 올바르게 즐기는 방법과 루틴을 알아보세요.',
+  },
 };
 
 const articleJsonLd = {
@@ -21,7 +26,7 @@ const articleJsonLd = {
   headline: '사우나 즐기는 법 — 완벽 가이드',
   description: '사우나 올바르게 즐기는 방법과 루틴',
   author: { '@type': 'Organization', name: '아온미디어', url: 'https://scola.kr' },
-  publisher: { '@type': 'Organization', name: 'Scola', url: 'https://scola.kr' },
+  publisher: { '@type': 'Organization', name: '스콜라', url: 'https://scola.kr' },
   url: 'https://scola.kr/guide',
   inLanguage: 'ko',
 };

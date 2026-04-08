@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 const BASE = 'https://scola.kr';
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.scola.kr';
 
 async function fetchAllPlaceIds(): Promise<number[]> {
   try {
