@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Bagel_Fat_One, IBM_Plex_Sans_KR } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
 import StyledRegistry from '@/lib/StyledRegistry';
 import QueryProvider from '@/lib/QueryProvider';
 
@@ -60,6 +61,7 @@ export default function RootLayout({
         <StyledRegistry>
           <QueryProvider>{children}</QueryProvider>
         </StyledRegistry>
+        <Analytics />
       </body>
     </html>
   );
