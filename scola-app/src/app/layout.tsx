@@ -11,11 +11,13 @@ const bagelFatOne = Bagel_Fat_One({
   display: 'swap',
 });
 
+// 실제 사용 웨이트만: 300·500 제거, 한국어는 시스템폰트 폴백 사용
 const ibmPlexSansKR = IBM_Plex_Sans_KR({
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['400', '600', '700'],
   subsets: ['latin'],
   variable: '--font-ibm-plex-sans-kr',
-  display: 'swap',
+  display: 'optional', // swap→optional: 로드 안되면 시스템폰트 유지(CLS 방지)
+  preload: false,       // body 폰트는 비critical — 비동기 로드
 });
 
 export const metadata: Metadata = {
