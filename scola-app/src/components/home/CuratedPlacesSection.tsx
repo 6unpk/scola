@@ -13,6 +13,7 @@ import type { Place, PlacesResponse } from '@/types/place';
 
 const PlaceCard = styled.div`
   flex: 0 0 260px;
+  min-width: 0;
   background: ${({ theme }) => theme.colors.white};
   border: 2px solid ${({ theme }) => theme.colors.dark};
   border-radius: ${({ theme }) => theme.radius.lg};
@@ -45,6 +46,13 @@ const PlaceAddr = styled.p`
   align-items: center;
   gap: 3px;
   margin-bottom: 10px;
+  overflow: hidden;
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 `;
 
 const PlaceTags = styled.div`
@@ -145,54 +153,57 @@ export default function CuratedPlacesSection() {
             전체보기 <ChevronRight size={15} />
           </SectionMore>
         </SectionHeader>
-        <AutoCarousel secPerItem={4}>
-          {loading
-            ? Array.from({ length: 6 }).map((_, i) => (
-                <SkeletonCard key={i}>
-                  <SkeletonThumb />
-                  <SkeletonBody>
-                    <SkeletonLine $w="70%" />
-                    <SkeletonLine $w="50%" />
-                    <SkeletonLine $w="90%" />
-                  </SkeletonBody>
-                </SkeletonCard>
-              ))
-            : places.map((place) => (
-                <PlaceCard key={place.id} onClick={() => router.push(`/place/${place.id}`)}>
-                  <PlaceThumbnail>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={place.thumbnail ?? `https://picsum.photos/seed/${place.naver_place_id}/400/200`}
-                      alt={place.name}
-                      onError={(e) => { (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${place.naver_place_id}/400/200`; }}
-                    />
-                  </PlaceThumbnail>
-                  <PlaceBody>
-                    <PlaceName>{place.name}</PlaceName>
-                    <PlaceAddr><MapPin size={11} />{displayAddr(place)}</PlaceAddr>
-                    <PlaceTags>
-                      {displayTags(place).slice(0, 3).map((tag) => (
-                        <PlaceTag key={tag}>{tag}</PlaceTag>
-                      ))}
-                    </PlaceTags>
-                    <PlaceMeta>
-                      <PlaceRating>
-                        <Star size={13} fill="#EAB308" color="#EAB308" />
-                        <span style={{ fontWeight: 400, color: '#9E9E9E', fontSize: 12 }}>
-                          리뷰 {(place.visitor_review_count ?? 0).toLocaleString()}개
-                        </span>
-                      </PlaceRating>
-                    </PlaceMeta>
-                    {(place.open_hours ?? place.business_hours) && (
-                      <PlaceHours>
-                        <Clock size={11} />{place.open_hours ?? place.business_hours}
-                      </PlaceHours>
-                    )}
-                  </PlaceBody>
-                </PlaceCard>
-              ))
-          }
-        </AutoCarousel>
+        {loading ? (
+          <AutoCarousel secPerItem={4}>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <SkeletonCard key={i}>
+                <SkeletonThumb />
+                <SkeletonBody>
+                  <SkeletonLine $w="70%" />
+                  <SkeletonLine $w="50%" />
+                  <SkeletonLine $w="90%" />
+                </SkeletonBody>
+              </SkeletonCard>
+            ))}
+          </AutoCarousel>
+        ) : places.length === 0 ? null : (
+          <AutoCarousel secPerItem={4}>
+            {places.map((place) => (
+              <PlaceCard key={place.id} onClick={() => router.push(`/place/${place.id}`)}>
+                <PlaceThumbnail>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={place.thumbnail ?? `https://picsum.photos/seed/${place.naver_place_id}/400/200`}
+                    alt={place.name}
+                    onError={(e) => { (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${place.naver_place_id}/400/200`; }}
+                  />
+                </PlaceThumbnail>
+                <PlaceBody>
+                  <PlaceName>{place.name}</PlaceName>
+                  <PlaceAddr><MapPin size={11} /><span>{displayAddr(place)}</span></PlaceAddr>
+                  <PlaceTags>
+                    {displayTags(place).slice(0, 3).map((tag) => (
+                      <PlaceTag key={tag}>{tag}</PlaceTag>
+                    ))}
+                  </PlaceTags>
+                  <PlaceMeta>
+                    <PlaceRating>
+                      <Star size={13} fill="#EAB308" color="#EAB308" />
+                      <span style={{ fontWeight: 400, color: '#9E9E9E', fontSize: 12 }}>
+                        리뷰 {(place.visitor_review_count ?? 0).toLocaleString()}개
+                      </span>
+                    </PlaceRating>
+                  </PlaceMeta>
+                  {(place.open_hours ?? place.business_hours) && (
+                    <PlaceHours>
+                      <Clock size={11} />{place.open_hours ?? place.business_hours}
+                    </PlaceHours>
+                  )}
+                </PlaceBody>
+              </PlaceCard>
+            ))}
+          </AutoCarousel>
+        )}
       </SectionInner>
     </Section>
   );

@@ -11,6 +11,7 @@ const scroll = keyframes`
 const Track = styled.div<{ $duration: number; $paused: boolean }>`
   display: flex;
   width: max-content;
+  will-change: transform;
   animation: ${scroll} ${({ $duration }) => $duration}s linear infinite;
   ${({ $paused }) => $paused && css`animation-play-state: paused;`}
 `;
@@ -18,6 +19,9 @@ const Track = styled.div<{ $duration: number; $paused: boolean }>`
 const Viewport = styled.div`
   overflow: hidden;
   width: 100%;
+  /* iOS Safari에서 overflow:hidden + animation 클리핑 보장 */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
   cursor: grab;
 
   &:active {
