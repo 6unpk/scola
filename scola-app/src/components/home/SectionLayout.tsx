@@ -4,13 +4,14 @@ import styled from 'styled-components';
 
 export const Section = styled.section`
   padding: 48px 0;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 `;
 
 export const SectionInner = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
-  overflow: hidden;
 `;
 
 export const SectionHeader = styled.div`
