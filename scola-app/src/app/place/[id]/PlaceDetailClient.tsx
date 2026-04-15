@@ -11,6 +11,7 @@ import {
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ReviewsSection from '@/components/place/ReviewsSection';
+import NearbyPlacesSection from '@/components/place/NearbyPlacesSection';
 import type { Place } from '@/types/place';
 
 const BATH_COLORS: Record<string, string> = {
@@ -259,6 +260,7 @@ export default function PlaceDetailClient({ place }: Props) {
           )}
         </Sidebar>
       </Content>
+      <NearbyPlacesSection currentPlaceId={place.id} address={place.road_address ?? place.address} />
       <Footer />
     </PageWrap>
   );

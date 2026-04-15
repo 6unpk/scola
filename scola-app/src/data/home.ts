@@ -20,6 +20,9 @@ export const CATEGORY_OPTIONS = [
   { value: 'sauna', label: '사우나' },
   { value: 'jjimjilbang', label: '찜질방' },
   { value: 'spa', label: '스파' },
+  { value: 'seshin', label: '세신샵' },
+  { value: 'hotel', label: '호텔' },
+  { value: 'waterpark', label: '워터파크' },
 ];
 
 export const SUGGESTION_POOL = [

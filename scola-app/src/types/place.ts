@@ -40,7 +40,7 @@ export interface Place {
   has_gym: boolean | null;
   kids_facility: boolean | null;
   // 앱 전용 필드 (수동 입력)
-  app_category: ('sauna' | 'jjimjilbang' | 'spa')[];
+  app_category: ('sauna' | 'jjimjilbang' | 'spa' | 'seshin' | 'hotel' | 'waterpark')[];
   rating: number | null;
   review_count: number | null;
   tags: string[];

@@ -108,7 +108,7 @@ ActiveAdmin.register Place do
 
     f.inputs '앱 분류' do
       f.input :app_category, as: :check_boxes,
-              collection: [['사우나', 'sauna'], ['찜질방', 'jjimjilbang'], ['스파', 'spa']],
+              collection: [['사우나', 'sauna'], ['찜질방', 'jjimjilbang'], ['스파', 'spa'], ['세신샵', 'seshin'], ['호텔', 'hotel'], ['워터파크', 'waterpark']],
               label: '카테고리 (복수 선택 가능)'
       f.input :gender_type, as: :select,
               collection: ['남성전용', '여성전용', '남녀공용'],

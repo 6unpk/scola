@@ -22,7 +22,10 @@ import {
   Pagination, PageBtn,
 } from './styles';
 
-const REGIONS = ['서울', '경기', '부산', '인천', '대구', '광주', '대전', '울산'];
+const REGIONS = [
+  '서울', '부산', '인천', '대구', '광주', '대전', '울산', '세종',
+  '경기', '강원', '충북', '충남', '전북', '전남', '경북', '경남', '제주',
+];
 
 // ─── FilterSection ────────────────────────────────────────────────────────────
 
@@ -68,7 +71,7 @@ function SearchContent() {
       const params: Record<string, string> = { page: String(page), per: '9', sort };
       if (query)         params.q               = query;
       if (category)      params.category        = category;
-      if (region)        params.q               = (params.q ? params.q + ' ' : '') + region;
+      if (region)        params.region          = region;
       if (is24hours)     params.is_24hours      = 'true';
       if (hasRestaurant) params.has_restaurant  = 'true';
       if (hasSleepRoom)  params.has_sleep_room  = 'true';
@@ -150,6 +153,9 @@ function SearchContent() {
               { value: 'sauna', label: '사우나' },
               { value: 'jjimjilbang', label: '찜질방' },
               { value: 'spa', label: '스파' },
+              { value: 'seshin', label: '세신샵' },
+              { value: 'hotel', label: '호텔' },
+              { value: 'waterpark', label: '워터파크' },
             ].map((opt) => (
               <Radio key={opt.value} name="category" value={opt.value} checked={category === opt.value} onChange={setCategory} label={opt.label} />
             ))}

@@ -2,6 +2,26 @@ class PlacesController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :set_place, only: [:show, :update]
 
+  REGION_PREFIXES = {
+    '서울' => '서울특별시',
+    '부산' => '부산광역시',
+    '인천' => '인천광역시',
+    '대구' => '대구광역시',
+    '광주' => '광주광역시',
+    '대전' => '대전광역시',
+    '울산' => '울산광역시',
+    '세종' => '세종특별자치시',
+    '경기' => '경기도',
+    '강원' => '강원특별자치도',
+    '충북' => '충청북도',
+    '충남' => '충청남도',
+    '전북' => '전북특별자치도',
+    '전남' => '전라남도',
+    '경북' => '경상북도',
+    '경남' => '경상남도',
+    '제주' => '제주특별자치도',
+  }.freeze
+
   # GET /places
   # 쿼리: q, category, gender_type, is_24hours, has_restaurant, has_sleep_room,
   #        has_massage, has_gym, kids_facility, sort, page, per
@@ -16,6 +36,15 @@ class PlacesController < ApplicationController
 
     # 카테고리 필터 (배열 컬럼 — ANY 사용)
     scope = scope.where("? = ANY(app_category)", params[:category]) if params[:category].present?
+
+    # 지역 필터 — 행정구역명 전체로 매핑 후 주소 앞부분 매칭
+    if params[:region].present?
+      prefix = REGION_PREFIXES[params[:region]] || params[:region]
+      scope = scope.where(
+        "road_address ILIKE ? OR (road_address IS NULL AND address ILIKE ?)",
+        "#{prefix}%", "#{prefix}%"
+      )
+    end
 
     # 불리언 필터
     %w[is_24hours has_restaurant has_sleep_room has_massage has_gym kids_facility membership_available].each do |flag|
@@ -70,7 +99,8 @@ class PlacesController < ApplicationController
 
   def place_params
     params.require(:place).permit(
-      :app_category, :rating, :review_count, :price_range, :open_hours,
+      :rating, :review_count, :price_range, :open_hours,
+      app_category: [],
       :gender_type, :sauna_type, :room_count,
       :sauna_temp, :hot_bath_temp, :cold_bath_temp,
       :pool_info, :age_restriction, :admission_fee,
