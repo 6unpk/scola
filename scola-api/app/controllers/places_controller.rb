@@ -100,14 +100,13 @@ class PlacesController < ApplicationController
   def place_params
     params.require(:place).permit(
       :rating, :review_count, :price_range, :open_hours,
-      app_category: [],
       :gender_type, :sauna_type, :room_count,
       :sauna_temp, :hot_bath_temp, :cold_bath_temp,
       :pool_info, :age_restriction, :admission_fee,
       :is_24hours, :membership_available, :has_restaurant,
       :has_sleep_room, :has_massage, :has_gym, :kids_facility,
       :parking_count,
-      bath_types: [], special_rooms: [], amenities: [], tags: [],
+      app_category: [], bath_types: [], special_rooms: [], amenities: [], tags: [],
       price_tiers: {}
     )
   end
