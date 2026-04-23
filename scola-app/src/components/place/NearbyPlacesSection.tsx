@@ -30,7 +30,7 @@ function extractRegion(address: string | null): string {
 
 function regionLabel(short: string): string {
   const full = ADDRESS_TO_REGION.find(([, s]) => s === short)?.[0] ?? short;
-  return full.replace(/특별시|광역시|특별자치시|특별자치도|도$/, '');
+  return full.replace(/특별시$|광역시$|특별자치시$|특별자치도$/, '');
 }
 
 // ─── Styled ───────────────────────────────────────────────────────────────────

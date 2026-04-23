@@ -67,6 +67,33 @@ const NaverBtn = styled.a`display:inline-flex;align-items:center;gap:5px;padding
 const SkeletonHero = styled.div`width:100%;height:340px;background:${({theme})=>theme.colors.gray200};`;
 const SkeletonBlock = styled.div<{$h?:string;$w?:string}>`height:${({$h})=>$h??'16px'};width:${({$w})=>$w??'100%'};border-radius:6px;background:${({theme})=>theme.colors.gray100};`;
 
+// ─── 장소 특징 ────────────────────────────────────────────────────────────────
+const SignatureText = styled.p`font-size:15px;font-weight:700;color:${({theme})=>theme.colors.dark};font-style:italic;line-height:1.6;padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid ${({theme})=>theme.colors.gray100};`;
+const HighlightList = styled.ul`display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none;`;
+const HighlightItem = styled.li`display:flex;align-items:flex-start;gap:10px;font-size:14px;color:${({theme})=>theme.colors.gray700};line-height:1.55;&::before{content:'';display:block;width:3px;height:14px;background:${({theme})=>theme.colors.primary};border-radius:2px;flex-shrink:0;margin-top:3px;}`;
+const TagRow = styled.div`display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;`;
+const Tag = styled.span`padding:4px 10px;font-size:12px;font-weight:700;border:1.5px solid ${({theme})=>theme.colors.dark};border-radius:${({theme})=>theme.radius.full};color:${({theme})=>theme.colors.dark};`;
+const ProfileMeta = styled.div`display:flex;flex-direction:column;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid ${({theme})=>theme.colors.gray100};`;
+const ProfileMetaRow = styled.div`display:flex;gap:10px;font-size:13px;line-height:1.55;`;
+const ProfileMetaLabel = styled.span`font-weight:800;color:${({theme})=>theme.colors.gray500};white-space:nowrap;min-width:44px;`;
+const ProfileMetaValue = styled.span`color:${({theme})=>theme.colors.gray700};`;
+const CautionValue = styled(ProfileMetaValue)`color:${({theme})=>theme.colors.danger};`;
+
+// ─── 리뷰 요약 ────────────────────────────────────────────────────────────────
+const OverallText = styled.p`font-size:14px;line-height:1.75;color:${({theme})=>theme.colors.gray700};margin-bottom:16px;`;
+const ProConGrid = styled.div`display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;@media(max-width:480px){grid-template-columns:1fr;}`;
+const ProConBlock = styled.div<{$type:'pro'|'con'}>``;
+const ProConLabel = styled.p<{$type:'pro'|'con'}>`font-size:11px;font-weight:800;letter-spacing:0.6px;text-transform:uppercase;color:${({$type,theme})=>$type==='pro'?theme.colors.success:theme.colors.gray400};margin-bottom:8px;`;
+const ProConList = styled.ul`margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;`;
+const ProConItem = styled.li<{$type:'pro'|'con'}>`font-size:13px;color:${({theme})=>theme.colors.gray700};line-height:1.5;padding-left:12px;position:relative;&::before{content:'';position:absolute;left:0;top:7px;width:5px;height:5px;border-radius:50%;background:${({$type,theme})=>$type==='pro'?theme.colors.success:theme.colors.gray300};}`;
+const KeywordRow = styled.div`display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px;`;
+const Keyword = styled.span`padding:3px 9px;font-size:12px;font-weight:600;background:${({theme})=>theme.colors.gray50};border:1px solid ${({theme})=>theme.colors.gray200};border-radius:${({theme})=>theme.radius.full};color:${({theme})=>theme.colors.gray600};`;
+const SentimentBar = styled.div`display:flex;height:5px;border-radius:3px;overflow:hidden;margin-bottom:6px;`;
+const SentimentSeg = styled.div<{$color:string;$pct:number}>`background:${({$color})=>$color};flex:${({$pct})=>$pct};`;
+const SentimentLabels = styled.div`display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:${({theme})=>theme.colors.gray400};margin-bottom:16px;`;
+const QuoteList = styled.div`display:flex;flex-direction:column;gap:10px;`;
+const Quote = styled.blockquote`margin:0;padding:10px 14px;border-left:3px solid ${({theme})=>theme.colors.primary};background:${({theme})=>theme.colors.gray50};font-size:13px;color:${({theme})=>theme.colors.gray600};line-height:1.65;font-style:italic;border-radius:0 ${({theme})=>theme.radius.sm} ${({theme})=>theme.radius.sm} 0;`;
+
 type AmenityDef = { label: string; key: keyof Place | null };
 const AMENITY_DEFS: AmenityDef[] = [
   { label: '24시간', key: 'is_24hours' }, { label: '식당/매점', key: 'has_restaurant' },
@@ -107,6 +134,11 @@ export default function PlaceDetailClient({ place }: Props) {
   const hasPriceTiers = place.price_tiers && Object.keys(place.price_tiers).length > 0;
   const hasSaunaSpec = place.sauna_type || place.sauna_temp || place.hot_bath_temp || place.cold_bath_temp || place.room_count;
   const hasFacilityData = AMENITY_DEFS.some((d) => getStatus(place, d) !== 'unknown');
+
+  const profile = place.place_profile;
+  const revSummary = place.review_summary;
+  const hasProfile = profile && ((profile.highlights?.length ?? 0) > 0 || profile.signature || profile.atmosphere);
+  const hasRevSummary = revSummary && (revSummary.overall || (revSummary.pros?.length ?? 0) > 0);
 
   return (
     <PageWrap>
@@ -156,6 +188,51 @@ export default function PlaceDetailClient({ place }: Props) {
               <p style={{ marginTop:18,fontSize:14,lineHeight:1.75,color:'#616161',borderTop:'1px solid #f0f0f0',paddingTop:16 }}>{place.description}</p>
             )}
           </Card>
+
+          {hasProfile && (
+            <Card>
+              <SectionTitle>장소 특징</SectionTitle>
+              {profile!.signature && <SignatureText>"{profile!.signature}"</SignatureText>}
+              {(profile!.highlights?.length ?? 0) > 0 && (
+                <HighlightList>
+                  {profile!.highlights.map((h, i) => <HighlightItem key={i}>{h}</HighlightItem>)}
+                </HighlightList>
+              )}
+              {(profile!.recommended_for?.length ?? 0) > 0 && (
+                <TagRow style={{ marginTop: 14 }}>
+                  {profile!.recommended_for.map((t, i) => <Tag key={i}>{t}</Tag>)}
+                </TagRow>
+              )}
+              {(profile!.atmosphere || profile!.best_time || (profile!.tips?.length ?? 0) > 0 || profile!.caution) && (
+                <ProfileMeta>
+                  {profile!.atmosphere && (
+                    <ProfileMetaRow>
+                      <ProfileMetaLabel>분위기</ProfileMetaLabel>
+                      <ProfileMetaValue>{profile!.atmosphere}</ProfileMetaValue>
+                    </ProfileMetaRow>
+                  )}
+                  {profile!.best_time && (
+                    <ProfileMetaRow>
+                      <ProfileMetaLabel>방문 팁</ProfileMetaLabel>
+                      <ProfileMetaValue>{profile!.best_time}</ProfileMetaValue>
+                    </ProfileMetaRow>
+                  )}
+                  {(profile!.tips?.length ?? 0) > 0 && (
+                    <ProfileMetaRow>
+                      <ProfileMetaLabel>꿀팁</ProfileMetaLabel>
+                      <ProfileMetaValue>{profile!.tips.join(' · ')}</ProfileMetaValue>
+                    </ProfileMetaRow>
+                  )}
+                  {profile!.caution && (
+                    <ProfileMetaRow>
+                      <ProfileMetaLabel>주의</ProfileMetaLabel>
+                      <CautionValue>{profile!.caution}</CautionValue>
+                    </ProfileMetaRow>
+                  )}
+                </ProfileMeta>
+              )}
+            </Card>
+          )}
 
           {hasSaunaSpec && (
             <Card>
@@ -228,6 +305,64 @@ export default function PlaceDetailClient({ place }: Props) {
                   </AmenityRow>
                 ))}
               </AmenityGrid>
+            </Card>
+          )}
+
+          {hasRevSummary && (
+            <Card>
+              <SectionTitle>방문자 리뷰 요약</SectionTitle>
+              {revSummary!.overall && <OverallText>{revSummary!.overall}</OverallText>}
+
+              {((revSummary!.pros?.length ?? 0) > 0 || (revSummary!.cons?.length ?? 0) > 0) && (
+                <ProConGrid>
+                  {(revSummary!.pros?.length ?? 0) > 0 && (
+                    <ProConBlock $type="pro">
+                      <ProConLabel $type="pro">장점</ProConLabel>
+                      <ProConList>
+                        {revSummary!.pros.map((p, i) => <ProConItem key={i} $type="pro">{p}</ProConItem>)}
+                      </ProConList>
+                    </ProConBlock>
+                  )}
+                  {(revSummary!.cons?.length ?? 0) > 0 && (
+                    <ProConBlock $type="con">
+                      <ProConLabel $type="con">아쉬운 점</ProConLabel>
+                      <ProConList>
+                        {revSummary!.cons.map((c, i) => <ProConItem key={i} $type="con">{c}</ProConItem>)}
+                      </ProConList>
+                    </ProConBlock>
+                  )}
+                </ProConGrid>
+              )}
+
+              {(revSummary!.keywords?.length ?? 0) > 0 && (
+                <KeywordRow>
+                  {revSummary!.keywords.map((k, i) => <Keyword key={i}>{k}</Keyword>)}
+                </KeywordRow>
+              )}
+
+              {revSummary!.sentiment_breakdown && (() => {
+                const { positive, neutral, negative } = revSummary!.sentiment_breakdown!;
+                return (
+                  <>
+                    <SentimentBar>
+                      <SentimentSeg $color="#22C55E" $pct={positive} />
+                      <SentimentSeg $color="#D4D4D4" $pct={neutral} />
+                      <SentimentSeg $color="#EF4444" $pct={negative} />
+                    </SentimentBar>
+                    <SentimentLabels>
+                      <span>긍정 {positive}%</span>
+                      <span>중립 {neutral}%</span>
+                      <span>부정 {negative}%</span>
+                    </SentimentLabels>
+                  </>
+                );
+              })()}
+
+              {(revSummary!.representative_reviews?.length ?? 0) > 0 && (
+                <QuoteList>
+                  {revSummary!.representative_reviews.map((q, i) => <Quote key={i}>{q}</Quote>)}
+                </QuoteList>
+              )}
             </Card>
           )}
 

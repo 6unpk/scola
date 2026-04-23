@@ -45,6 +45,27 @@ export interface Place {
   review_count: number | null;
   tags: string[];
   open_hours: string | null;
+  place_profile: {
+    summary: string | null;
+    highlights: string[];
+    atmosphere: string | null;
+    recommended_for: string[];
+    best_time: string | null;
+    tips: string[];
+    caution: string | null;
+    price_value: string | null;
+    cleanliness: string | null;
+    parking: string | null;
+    signature: string | null;
+  } | null;
+  review_summary: {
+    overall: string | null;
+    pros: string[];
+    cons: string[];
+    keywords: string[];
+    sentiment_breakdown: { positive: number; neutral: number; negative: number } | null;
+    representative_reviews: string[];
+  } | null;
   created_at: string;
   updated_at: string;
 }

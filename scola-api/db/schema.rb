@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_05_063125) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_22_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -118,6 +118,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_05_063125) do
     t.string "open_hours"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "place_profile", default: {}
+    t.jsonb "review_summary", default: {}
     t.index ["app_category"], name: "index_places_on_app_category"
     t.index ["latitude", "longitude"], name: "index_places_on_latitude_and_longitude"
     t.index ["naver_place_id"], name: "index_places_on_naver_place_id", unique: true
