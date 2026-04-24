@@ -23,7 +23,7 @@ module Api
         return nil unless header&.start_with?('Bearer ')
 
         token = header.split(' ', 2).last
-        secret = Rails.application.credentials.secret_key_base
+        secret = ENV.fetch('DEVISE_JWT_SECRET_KEY') { Rails.application.credentials.secret_key_base }
 
         begin
           payload, = JWT.decode(token, secret, true, algorithms: ['HS256'])

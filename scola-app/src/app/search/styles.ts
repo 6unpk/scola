@@ -58,6 +58,7 @@ export const Body = styled.div`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     flex-direction: column;
+    align-items: stretch;
   }
 `;
 
@@ -145,7 +146,11 @@ export const FilterGroupBody = styled.div`
 
 // ─── 결과 영역 ────────────────────────────────────────────────────────────────
 
-export const ResultsArea = styled.div`flex: 1; min-width: 0;`;
+export const ResultsArea = styled.div`
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+`;
 
 export const MobileToolbar = styled.div`
   display: none;

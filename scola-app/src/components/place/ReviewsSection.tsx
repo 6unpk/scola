@@ -201,14 +201,40 @@ const ReviewRight = styled.div`display: flex; align-items: center; gap: 10px;`;
 
 const Stars = styled.div`display: flex; gap: 2px;`;
 
-const DeleteBtn = styled.button`
+const ActionBtn = styled.button<{ $danger?: boolean }>`
   background: none;
   border: none;
   cursor: pointer;
   color: ${({ theme }) => theme.colors.gray300};
   padding: 2px;
-  &:hover { color: #EF4444; }
+  &:hover { color: ${({ $danger }) => $danger ? '#EF4444' : '#424242'}; }
 `;
+
+const EditForm = styled.div`
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const EditActions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+`;
+
+const CancelBtn = styled.button`
+  padding: 6px 14px;
+  background: none;
+  border: 1.5px solid ${({ theme }) => theme.colors.gray200};
+  border-radius: ${({ theme }) => theme.radius.md};
+  font-size: 13px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.gray500};
+  cursor: pointer;
+`;
+
+const SaveBtn = styled(SubmitBtn)`padding: 6px 14px;`;
 
 const ReviewBody = styled.p`
   font-size: 14px;
@@ -248,6 +274,13 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
   const [body, setBody] = useState('');
   const [visitedAt, setVisitedAt] = useState('');
 
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editBody, setEditBody] = useState('');
+  const [editRating, setEditRating] = useState(5);
+  const [editVisitedAt, setEditVisitedAt] = useState('');
+  const [editError, setEditError] = useState('');
+  const [editSubmitting, setEditSubmitting] = useState(false);
+
   const fetchReviews = useCallback(async () => {
     try {
       const res = await api.get(`/places/${placeId}/reviews`);
@@ -280,6 +313,36 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
       setError(msgs ? msgs.join(', ') : '오류가 발생했습니다.');
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const startEdit = (r: Review) => {
+    setEditingId(r.id);
+    setEditBody(r.body);
+    setEditRating(r.rating);
+    setEditVisitedAt(r.visited_at ? r.visited_at.slice(0, 10) : '');
+    setEditError('');
+  };
+
+  const cancelEdit = () => { setEditingId(null); setEditError(''); };
+
+  const handleUpdate = async (id: number) => {
+    if (editBody.trim().length < 10) { setEditError('후기는 10자 이상 작성해주세요.'); return; }
+    setEditSubmitting(true);
+    setEditError('');
+    try {
+      const res = await api.patch(
+        `/places/${placeId}/reviews/${id}`,
+        { review: { body: editBody, rating: editRating, visited_at: editVisitedAt || null } },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setReviews((prev) => prev.map((r) => r.id === id ? res.data.data : r));
+      setEditingId(null);
+    } catch (e: any) {
+      const msgs = e.response?.data?.errors;
+      setEditError(msgs ? msgs.join(', ') : '오류가 발생했습니다.');
+    } finally {
+      setEditSubmitting(false);
     }
   };
 
@@ -381,26 +444,70 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
                     </ReviewMeta>
                   </ReviewUser>
                   <ReviewRight>
-                    <Stars>
-                      {[1, 2, 3, 4, 5].map((n) => (
-                        n <= r.rating
-                          ? <RiStarFill key={n} size={14} color="#EAB308" />
-                          : <RiStarLine key={n} size={14} color="#D1D5DB" />
-                      ))}
-                    </Stars>
-                    {user?.id === r.user.id && (
-                      <DeleteBtn onClick={() => handleDelete(r.id)}>
-                        <RiDeleteBinLine size={14} />
-                      </DeleteBtn>
+                    {editingId !== r.id && (
+                      <Stars>
+                        {[1, 2, 3, 4, 5].map((n) => (
+                          n <= r.rating
+                            ? <RiStarFill key={n} size={14} color="#EAB308" />
+                            : <RiStarLine key={n} size={14} color="#D1D5DB" />
+                        ))}
+                      </Stars>
+                    )}
+                    {user?.id === r.user.id && editingId !== r.id && (
+                      <>
+                        <ActionBtn onClick={() => startEdit(r)}><RiPencilLine size={14} /></ActionBtn>
+                        <ActionBtn $danger onClick={() => handleDelete(r.id)}><RiDeleteBinLine size={14} /></ActionBtn>
+                      </>
                     )}
                   </ReviewRight>
                 </ReviewHeader>
-                <ReviewBody>{r.body}</ReviewBody>
-                {r.visited_at && (
-                  <VisitedTag>
-                    <RiCalendarLine size={11} />
-                    {new Date(r.visited_at).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long' })} 방문
-                  </VisitedTag>
+
+                {editingId === r.id ? (
+                  <EditForm>
+                    <StarRow style={{ marginBottom: 0 }}>
+                      {[1, 2, 3, 4, 5].map((n) => (
+                        <StarBtn key={n} $active={n <= editRating} onClick={() => setEditRating(n)}>
+                          <RiStarFill size={20} />
+                        </StarBtn>
+                      ))}
+                    </StarRow>
+                    <VisitedRow>
+                      <RiCalendarLine size={13} />
+                      <span>방문일</span>
+                      <DateInput
+                        type="date"
+                        value={editVisitedAt}
+                        max={new Date().toISOString().split('T')[0]}
+                        onChange={(e) => setEditVisitedAt(e.target.value)}
+                      />
+                    </VisitedRow>
+                    <Textarea
+                      value={editBody}
+                      onChange={(e) => setEditBody(e.target.value)}
+                      maxLength={1000}
+                      style={{ minHeight: 80 }}
+                    />
+                    {editError && <ErrMsg>{editError}</ErrMsg>}
+                    <EditActions>
+                      <CharCount>{editBody.length} / 1000</CharCount>
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        <CancelBtn onClick={cancelEdit}>취소</CancelBtn>
+                        <SaveBtn onClick={() => handleUpdate(r.id)} disabled={editSubmitting || editBody.length < 10}>
+                          {editSubmitting ? '저장 중...' : '저장'}
+                        </SaveBtn>
+                      </div>
+                    </EditActions>
+                  </EditForm>
+                ) : (
+                  <>
+                    <ReviewBody>{r.body}</ReviewBody>
+                    {r.visited_at && (
+                      <VisitedTag>
+                        <RiCalendarLine size={11} />
+                        {new Date(r.visited_at).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long' })} 방문
+                      </VisitedTag>
+                    )}
+                  </>
                 )}
               </ReviewItem>
             ))}

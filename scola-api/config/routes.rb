@@ -22,7 +22,7 @@ Rails.application.routes.draw do
   get 'api/v1/me/reviews', to: 'api/v1/reviews#mine'
 
   resources :places, only: [:index, :show, :update] do
-    resources :reviews, only: [:index, :create, :destroy], module: 'api/v1'
+    resources :reviews, only: [:index, :create, :update, :destroy], module: 'api/v1'
   end
 
   resources :students

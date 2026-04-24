@@ -1,7 +1,7 @@
 module Api
   module V1
     class ReviewsController < BaseController
-      before_action :authenticate_user!, only: [:create, :destroy, :mine]
+      before_action :authenticate_user!, only: [:create, :update, :destroy, :mine]
 
       # GET /reviews  (전체 후기)
       def all
@@ -44,6 +44,18 @@ module Api
         else
           render json: { errors: review.errors.full_messages }, status: :unprocessable_entity
         end
+      end
+
+      # PATCH /places/:place_id/reviews/:id
+      def update
+        review = current_user.reviews.find(params[:id])
+        if review.update(review_params)
+          render json: { data: serialize(review) }
+        else
+          render json: { errors: review.errors.full_messages }, status: :unprocessable_entity
+        end
+      rescue ActiveRecord::RecordNotFound
+        render json: { error: '후기를 찾을 수 없습니다.' }, status: :not_found
       end
 
       # DELETE /places/:place_id/reviews/:id

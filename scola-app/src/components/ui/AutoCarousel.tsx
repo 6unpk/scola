@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 
 const scroll = keyframes`
@@ -44,8 +44,18 @@ interface Props {
 
 export default function AutoCarousel({ children, duration, secPerItem = 4, pauseOnHover = true }: Props) {
   const pausedRef = useRef(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
   const count = Array.isArray(children) ? children.length : 1;
-  const actualDuration = duration ?? count * secPerItem;
+  const baseDuration = duration ?? count * secPerItem;
+  const actualDuration = isMobile ? baseDuration * 2 : baseDuration;
 
   return (
     <Viewport
