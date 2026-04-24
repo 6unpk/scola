@@ -15,12 +15,8 @@ export default function CuratedPlacesSection() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get<PlacesResponse>('/places', { params: { sort: 'review', per: 30 } })
-      .then((res) => {
-        const data = res.data.data;
-        const shuffled = [...data].sort(() => Math.random() - 0.5).slice(0, 12);
-        setPlaces(shuffled);
-      })
+    api.get<PlacesResponse>('/places', { params: { sort: 'daily', per: 12 } })
+      .then((res) => setPlaces(res.data.data))
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);

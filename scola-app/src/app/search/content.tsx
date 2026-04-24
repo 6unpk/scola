@@ -51,7 +51,7 @@ function SearchContent() {
   const [query, setQuery] = useState(searchParams.get('q') ?? '');
   const [category, setCategory] = useState(searchParams.get('category') ?? '');
   const [region, setRegion] = useState('');
-  const [sort, setSort] = useState('review');
+  const [sort, setSort] = useState('popular');
   const [is24hours, setIs24hours] = useState(false);
   const [hasRestaurant, setHasRestaurant] = useState(false);
   const [hasSleepRoom, setHasSleepRoom] = useState(false);
@@ -105,9 +105,9 @@ function SearchContent() {
     .filter(Boolean).length;
 
   const sortOptions = [
-    { value: 'review', label: '리뷰 많은 순' },
-    { value: 'rating', label: '평점 높은 순' },
-    { value: 'name',   label: '이름 순' },
+    { value: 'popular', label: '인기순' },
+    { value: 'rating',  label: '평점 높은 순' },
+    { value: 'recent',  label: '최신순' },
   ];
 
   return (

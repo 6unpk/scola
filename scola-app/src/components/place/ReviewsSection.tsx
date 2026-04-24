@@ -366,7 +366,7 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
       <Card>
         <SectionTitle>
           <RiPencilLine size={14} />
-          이용 후기 {reviews.length > 0 && `(${reviews.length})`}
+          스콜라 이용 후기 {reviews.length > 0 && `(${reviews.length})`}
         </SectionTitle>
 
         {/* 작성 폼 */}

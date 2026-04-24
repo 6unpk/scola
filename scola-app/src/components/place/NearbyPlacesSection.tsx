@@ -87,7 +87,7 @@ export default function NearbyPlacesSection({ currentPlaceId, address }: Props) 
   useEffect(() => {
     if (!region) { setLoading(false); return; }
 
-    api.get<PlacesResponse>('/places', { params: { region, per: '9', sort: 'review' } })
+    api.get<PlacesResponse>('/places', { params: { region, per: '9', sort: 'popular' } })
       .then((res) => {
         setPlaces(res.data.data.filter((p) => p.id !== currentPlaceId).slice(0, 8));
       })

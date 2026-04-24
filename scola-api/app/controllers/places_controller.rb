@@ -55,11 +55,14 @@ class PlacesController < ApplicationController
     scope = scope.where(gender_type: params[:gender_type]) if params[:gender_type].present?
 
     # 정렬
+    popular_score = Arel.sql("(COALESCE(rating, 0) * 100 + LOG(COALESCE(visitor_review_count, 0) + 1) * 20) DESC")
     scope = case params[:sort]
-            when "review"    then scope.order(visitor_review_count: :desc)
-            when "rating"    then scope.order(rating: :desc)
-            when "name"      then scope.order(name: :asc)
-            else                  scope.order(visitor_review_count: :desc)
+            when "popular", "review" then scope.order(popular_score)
+            when "rating"            then scope.order(rating: :desc, visitor_review_count: :desc)
+            when "recent"            then scope.order(created_at: :desc)
+            when "name"              then scope.order(name: :asc)
+            when "daily"             then scope.order(Arel.sql("md5(naver_place_id || CURRENT_DATE::text)"))
+            else                          scope.order(popular_score)
             end
 
     total = scope.count
