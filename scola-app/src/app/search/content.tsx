@@ -9,6 +9,7 @@ import Radio from '@/components/ui/Radio';
 import Checkbox from '@/components/ui/Checkbox';
 import Select from '@/components/ui/Select';
 import api from '@/lib/api';
+import LazyImage from '@/components/ui/LazyImage';
 import type { Place, PlacesResponse } from '@/types/place';
 import {
   PageWrap, SearchBar, SearchBarInner, SearchInput, ResultCount,
@@ -51,7 +52,7 @@ function SearchContent() {
   const [query, setQuery] = useState(searchParams.get('q') ?? '');
   const [category, setCategory] = useState(searchParams.get('category') ?? '');
   const [region, setRegion] = useState('');
-  const [sort, setSort] = useState('popular');
+  const [sort, setSort] = useState('recommend');
   const [is24hours, setIs24hours] = useState(false);
   const [hasRestaurant, setHasRestaurant] = useState(false);
   const [hasSleepRoom, setHasSleepRoom] = useState(false);
@@ -93,7 +94,7 @@ function SearchContent() {
   useEffect(() => { setPage(1); }, [query, category, region, sort, is24hours, hasRestaurant, hasSleepRoom, hasMassage, hasGym, kidsFacility]);
 
   const resetFilters = () => {
-    setQuery(''); setCategory(''); setRegion(''); setSort('review');
+    setQuery(''); setCategory(''); setRegion(''); setSort('recommend');
     setIs24hours(false); setHasRestaurant(false); setHasSleepRoom(false);
     setHasMassage(false); setHasGym(false); setKidsFacility(false);
     setPage(1);
@@ -105,9 +106,10 @@ function SearchContent() {
     .filter(Boolean).length;
 
   const sortOptions = [
-    { value: 'popular', label: '인기순' },
-    { value: 'rating',  label: '평점 높은 순' },
-    { value: 'recent',  label: '최신순' },
+    { value: 'recommend', label: '추천순' },
+    { value: 'popular',   label: '인기순' },
+    { value: 'rating',    label: '평점 높은 순' },
+    { value: 'recent',    label: '최신순' },
   ];
 
   return (
@@ -209,11 +211,10 @@ function SearchContent() {
               places.map((place) => (
                 <PlaceCard key={place.id} onClick={() => router.push(`/place/${place.id}`)}>
                   <CardThumb>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <LazyImage
                       src={place.thumbnail ?? `https://picsum.photos/seed/${place.naver_place_id}/400/200`}
                       alt={place.name}
-                      onError={(e) => { (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${place.naver_place_id}/400/200`; }}
+                      fallback={`https://picsum.photos/seed/${place.naver_place_id}/400/200`}
                     />
                   </CardThumb>
                   <CardBody>

@@ -90,7 +90,6 @@ export const PlaceThumb = styled.div`
   flex-shrink: 0;
   background: ${({ theme }) => theme.colors.gray100};
   overflow: hidden;
-  img { width: 100%; height: 100%; object-fit: cover; display: block; }
 `;
 
 export const PlaceInfo = styled.div`

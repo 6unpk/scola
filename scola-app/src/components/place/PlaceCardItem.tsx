@@ -2,6 +2,7 @@
 
 import styled from 'styled-components';
 import { Star, MapPin, Clock } from 'lucide-react';
+import LazyImage from '@/components/ui/LazyImage';
 import type { Place } from '@/types/place';
 
 // ─── Styled ───────────────────────────────────────────────────────────────────
@@ -22,7 +23,6 @@ export const PlaceThumbnail = styled.div`
   height: 140px;
   overflow: hidden;
   border-bottom: 2px solid ${({ theme }) => theme.colors.dark};
-  img { width: 100%; height: 100%; object-fit: cover; display: block; }
 `;
 
 export const PlaceBody = styled.div`padding: 14px;`;
@@ -134,11 +134,10 @@ export default function PlaceCardItem({ place, onClick }: Props) {
   return (
     <PlaceCard onClick={onClick}>
       <PlaceThumbnail>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <LazyImage
           src={place.thumbnail ?? `https://picsum.photos/seed/${place.naver_place_id}/400/200`}
           alt={place.name}
-          onError={(e) => { (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${place.naver_place_id}/400/200`; }}
+          fallback={`https://picsum.photos/seed/${place.naver_place_id}/400/200`}
         />
       </PlaceThumbnail>
       <PlaceBody>

@@ -10,6 +10,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Select from '@/components/ui/Select';
 import api from '@/lib/api';
+import LazyImage from '@/components/ui/LazyImage';
 import {
   PageWrap, Header, HeaderInner, HeaderLeft, HeaderKicker, HeaderTitle, HeaderStat,
   Body, Grid, ReviewCard, CardTop, PlaceThumb, PlaceInfo, PlaceName, PlaceAddr, Stars,
@@ -130,15 +131,10 @@ function ReviewsContent() {
               <ReviewCard key={r.id}>
                 <CardTop>
                   <PlaceThumb>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <LazyImage
                       src={getThumb(r.place)}
                       alt={r.place.name}
-                      style={{ height: '100%', minHeight: 90 }}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src =
-                          `https://picsum.photos/seed/${r.place.id}/200/200`;
-                      }}
+                      fallback={`https://picsum.photos/seed/${r.place.id}/200/200`}
                     />
                   </PlaceThumb>
                   <PlaceInfo>

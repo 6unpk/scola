@@ -230,7 +230,6 @@ export const CardThumb = styled.div`
   height: 130px;
   overflow: hidden;
   border-bottom: 2px solid ${({ theme }) => theme.colors.dark};
-  img { width: 100%; height: 100%; object-fit: cover; display: block; }
 `;
 
 export const CardBody = styled.div`padding: 14px;`;

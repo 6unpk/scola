@@ -55,14 +55,20 @@ class PlacesController < ApplicationController
     scope = scope.where(gender_type: params[:gender_type]) if params[:gender_type].present?
 
     # 정렬
-    popular_score = Arel.sql("(COALESCE(rating, 0) * 100 + LOG(COALESCE(visitor_review_count, 0) + 1) * 20) DESC")
+    base_score   = "(COALESCE(rating, 0) * 100 + LOG(COALESCE(visitor_review_count, 0) + 1) * 20)"
+    # 인기순: 점수 기반이지만 ±50점 jitter → 상위 그룹 내에서 매번 다른 순서
+    popular_jitter  = Arel.sql("(#{base_score} + random() * 50) DESC")
+    # 추천순: jitter 폭을 넓혀 품질 하한선을 유지하면서 훨씬 다양한 결과 노출
+    recommend_score = Arel.sql("(#{base_score} + random() * 180) DESC")
+
     scope = case params[:sort]
-            when "popular", "review" then scope.order(popular_score)
-            when "rating"            then scope.order(rating: :desc, visitor_review_count: :desc)
-            when "recent"            then scope.order(created_at: :desc)
-            when "name"              then scope.order(name: :asc)
-            when "daily"             then scope.order(Arel.sql("md5(naver_place_id || CURRENT_DATE::text)"))
-            else                          scope.order(popular_score)
+            when "popular"   then scope.order(popular_jitter)
+            when "recommend" then scope.order(recommend_score)
+            when "rating"    then scope.order(rating: :desc, visitor_review_count: :desc)
+            when "recent"    then scope.order(created_at: :desc)
+            when "name"      then scope.order(name: :asc)
+            when "daily"     then scope.order(Arel.sql("md5(naver_place_id || CURRENT_DATE::text)"))
+            else                  scope.order(recommend_score)
             end
 
     total = scope.count

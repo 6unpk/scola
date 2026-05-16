@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_22_000000) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_01_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -124,6 +124,23 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_22_000000) do
     t.index ["latitude", "longitude"], name: "index_places_on_latitude_and_longitude"
     t.index ["naver_place_id"], name: "index_places_on_naver_place_id", unique: true
     t.index ["road_address"], name: "index_places_on_road_address"
+  end
+
+  create_table "posts", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "slug", null: false
+    t.text "body"
+    t.text "excerpt"
+    t.string "thumbnail"
+    t.string "category"
+    t.string "author_name", default: "스콜라 팀"
+    t.boolean "published", default: false, null: false
+    t.datetime "published_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["published"], name: "index_posts_on_published"
+    t.index ["published_at"], name: "index_posts_on_published_at"
+    t.index ["slug"], name: "index_posts_on_slug", unique: true
   end
 
   create_table "reviews", force: :cascade do |t|
