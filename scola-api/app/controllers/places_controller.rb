@@ -34,16 +34,25 @@ class PlacesController < ApplicationController
       scope = scope.where("name ILIKE ? OR address ILIKE ? OR road_address ILIKE ?", q, q, q)
     end
 
-    # 카테고리 필터 (배열 컬럼 — ANY 사용)
-    scope = scope.where("? = ANY(app_category)", params[:category]) if params[:category].present?
+    # 카테고리 필터 (다중 선택 — app_category 배열과 겹치면 매칭)
+    if params[:category].present?
+      cats = Array(params[:category]).reject(&:blank?)
+      scope = scope.where("app_category && ARRAY[?]::varchar[]", cats) if cats.any?
+    end
 
-    # 지역 필터 — 행정구역명 전체로 매핑 후 주소 앞부분 매칭
+    # 지역 필터 (다중 선택) — 행정구역명 전체로 매핑 후 주소 앞부분 매칭, 선택 지역끼리는 OR
     if params[:region].present?
-      prefix = REGION_PREFIXES[params[:region]] || params[:region]
-      scope = scope.where(
-        "road_address ILIKE ? OR (road_address IS NULL AND address ILIKE ?)",
-        "#{prefix}%", "#{prefix}%"
-      )
+      regions = Array(params[:region]).reject(&:blank?)
+      if regions.any?
+        clauses = []
+        values  = []
+        regions.each do |r|
+          prefix = REGION_PREFIXES[r] || r
+          clauses << "(road_address ILIKE ? OR (road_address IS NULL AND address ILIKE ?))"
+          values << "#{prefix}%" << "#{prefix}%"
+        end
+        scope = scope.where(clauses.join(" OR "), *values)
+      end
     end
 
     # 불리언 필터

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, ChevronDown, TrendingUp } from 'lucide-react';
 import { CATEGORY_OPTIONS, SUGGESTION_POOL } from '@/data/home';
+import { recordSearch, fetchPopularSearches, mergeSuggestions, shuffledPool } from '@/lib/search';
 import {
   Hero, AuroraWrapper, Orb, HeroBgDecor, HeroInner,
   HeroTitle, HeroSubtitle,
@@ -22,8 +23,14 @@ export default function HeroSection() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
 
-  const [popularSample] = useState(() =>
-    [...SUGGESTION_POOL].sort(() => Math.random() - 0.5).slice(0, 6)
+  const [hardcodedPool] = useState(() => shuffledPool());
+  const [realPopular, setRealPopular] = useState<string[]>([]);
+
+  useEffect(() => { fetchPopularSearches(6).then(setRealPopular); }, []);
+
+  const popularSample = useMemo(
+    () => mergeSuggestions(realPopular, hardcodedPool, 6),
+    [realPopular, hardcodedPool],
   );
 
   const suggestions = useMemo(() => {
@@ -47,6 +54,7 @@ export default function HeroSection() {
     e.preventDefault();
     setShowSuggestions(false);
     if (!query.trim()) return;
+    recordSearch(query);
     const params = new URLSearchParams({ q: query.trim() });
     if (category) params.set('category', category);
     router.push(`/search?${params.toString()}`);
@@ -55,6 +63,7 @@ export default function HeroSection() {
   const handleSelectSuggestion = (s: string) => {
     setQuery(s);
     setShowSuggestions(false);
+    recordSearch(s);
     const params = new URLSearchParams({ q: s });
     if (category) params.set('category', category);
     router.push(`/search?${params.toString()}`);

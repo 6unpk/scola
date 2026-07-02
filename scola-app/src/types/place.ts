@@ -75,13 +75,3 @@ export interface PlacesResponse {
   meta: { total: number; page: number; per: number; total_pages: number };
   data: Place[];
 }
-
-export interface Review {
-  id: number;
-  place_id: number;
-  place_name: string;
-  author: string;
-  rating: number;
-  content: string;
-  created_at: string;
-}

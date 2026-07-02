@@ -5,7 +5,6 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { Star, MapPin, Clock, SlidersHorizontal, X, ChevronDown, ChevronUp } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import Radio from '@/components/ui/Radio';
 import Checkbox from '@/components/ui/Checkbox';
 import Select from '@/components/ui/Select';
 import api from '@/lib/api';
@@ -50,8 +49,9 @@ function SearchContent() {
   const searchParams = useSearchParams();
 
   const [query, setQuery] = useState(searchParams.get('q') ?? '');
-  const [category, setCategory] = useState(searchParams.get('category') ?? '');
-  const [region, setRegion] = useState('');
+  const initialCategory = searchParams.get('category');
+  const [category, setCategory] = useState<string[]>(initialCategory ? [initialCategory] : []);
+  const [region, setRegion] = useState<string[]>([]);
   const [sort, setSort] = useState('recommend');
   const [is24hours, setIs24hours] = useState(false);
   const [hasRestaurant, setHasRestaurant] = useState(false);
@@ -69,10 +69,10 @@ function SearchContent() {
   const fetchPlaces = useCallback(async () => {
     setLoading(true);
     try {
-      const params: Record<string, string> = { page: String(page), per: '9', sort };
-      if (query)         params.q               = query;
-      if (category)      params.category        = category;
-      if (region)        params.region          = region;
+      const params: Record<string, string | string[]> = { page: String(page), per: '9', sort };
+      if (query)          params.q         = query;
+      if (category.length) params.category = category;
+      if (region.length)   params.region   = region;
       if (is24hours)     params.is_24hours      = 'true';
       if (hasRestaurant) params.has_restaurant  = 'true';
       if (hasSleepRoom)  params.has_sleep_room  = 'true';
@@ -94,16 +94,19 @@ function SearchContent() {
   useEffect(() => { setPage(1); }, [query, category, region, sort, is24hours, hasRestaurant, hasSleepRoom, hasMassage, hasGym, kidsFacility]);
 
   const resetFilters = () => {
-    setQuery(''); setCategory(''); setRegion(''); setSort('recommend');
+    setQuery(''); setCategory([]); setRegion([]); setSort('recommend');
     setIs24hours(false); setHasRestaurant(false); setHasSleepRoom(false);
     setHasMassage(false); setHasGym(false); setKidsFacility(false);
     setPage(1);
   };
 
+  const toggleValue = (list: string[], value: string) =>
+    list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
+
   const displayAddr = (p: Place) => p.road_address ?? p.address ?? '';
   const displayTags = (p: Place) => p.tags?.length ? p.tags : (p.amenities ?? []);
-  const activeFilterCount = [category, region, is24hours, hasRestaurant, hasSleepRoom, hasMassage, hasGym, kidsFacility]
-    .filter(Boolean).length;
+  const activeFilterCount = [is24hours, hasRestaurant, hasSleepRoom, hasMassage, hasGym, kidsFacility]
+    .filter(Boolean).length + category.length + region.length;
 
   const sortOptions = [
     { value: 'recommend', label: '추천순' },
@@ -151,7 +154,6 @@ function SearchContent() {
 
           <FilterSection title="카테고리">
             {[
-              { value: '', label: '전체' },
               { value: 'sauna', label: '사우나' },
               { value: 'jjimjilbang', label: '찜질방' },
               { value: 'spa', label: '스파' },
@@ -159,13 +161,23 @@ function SearchContent() {
               { value: 'hotel', label: '호텔' },
               { value: 'waterpark', label: '워터파크' },
             ].map((opt) => (
-              <Radio key={opt.value} name="category" value={opt.value} checked={category === opt.value} onChange={setCategory} label={opt.label} />
+              <Checkbox
+                key={opt.value}
+                checked={category.includes(opt.value)}
+                onChange={() => setCategory((prev) => toggleValue(prev, opt.value))}
+                label={opt.label}
+              />
             ))}
           </FilterSection>
 
           <FilterSection title="지역">
             {REGIONS.map((r) => (
-              <Radio key={r} name="region" value={r} checked={region === r} onChange={(v) => setRegion(region === v ? '' : v)} label={r} />
+              <Checkbox
+                key={r}
+                checked={region.includes(r)}
+                onChange={() => setRegion((prev) => toggleValue(prev, r))}
+                label={r}
+              />
             ))}
           </FilterSection>
 

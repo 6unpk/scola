@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Search, User, LogOut, TrendingUp, Menu, X, ChevronDown, ChevronRight } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { SUGGESTION_POOL } from '@/data/home';
+import { recordSearch, fetchPopularSearches, mergeSuggestions, shuffledPool } from '@/lib/search';
 import {
   Nav, TopBar, Logo, LogoImg,
   NavSearchWrap, SearchForm, SearchInput, SearchBtn,
@@ -22,10 +23,6 @@ import {
   DrawerFooter, DrawerLoginBtn, DrawerRegisterBtn,
   DrawerUserInfo, DrawerUserName, DrawerLogoutBtn,
 } from './Navbar.styles';
-
-function sampleRandom<T>(arr: T[], n: number): T[] {
-  return [...arr].sort(() => Math.random() - 0.5).slice(0, n);
-}
 
 const NAV_ITEMS = [
   {
@@ -56,15 +53,20 @@ export default function Navbar() {
   const { user, token, logout } = useAuthStore();
   const [query, setQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [popularSample] = useState(() => sampleRandom(SUGGESTION_POOL, 6));
+  const [hardcodedPool] = useState(() => shuffledPool());
+  const [realPopular, setRealPopular] = useState<string[]>([]);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openGroups, setOpenGroups] = useState<string[]>([]);
   const [mobileQuery, setMobileQuery] = useState('');
   const navSearchRef = useRef<HTMLDivElement>(null);
 
+  const popularSample = mergeSuggestions(realPopular, hardcodedPool, 6);
+
   const suggestions = query.trim()
     ? SUGGESTION_POOL.filter((s) => s.toLowerCase().includes(query.trim().toLowerCase())).slice(0, 6)
     : popularSample;
+
+  useEffect(() => { fetchPopularSearches(6).then(setRealPopular); }, []);
 
   useEffect(() => { setMobileOpen(false); }, [pathname]);
 
@@ -86,18 +88,25 @@ export default function Navbar() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setShowSuggestions(false);
-    if (query.trim()) router.push(`/search?q=${encodeURIComponent(query.trim())}`);
+    if (query.trim()) {
+      recordSearch(query);
+      router.push(`/search?q=${encodeURIComponent(query.trim())}`);
+    }
   };
 
   const handleMobileSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setMobileOpen(false);
-    if (mobileQuery.trim()) router.push(`/search?q=${encodeURIComponent(mobileQuery.trim())}`);
+    if (mobileQuery.trim()) {
+      recordSearch(mobileQuery);
+      router.push(`/search?q=${encodeURIComponent(mobileQuery.trim())}`);
+    }
   };
 
   const handleSelectSuggestion = (s: string) => {
     setQuery(s);
     setShowSuggestions(false);
+    recordSearch(s);
     router.push(`/search?q=${encodeURIComponent(s)}`);
   };
 

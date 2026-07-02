@@ -21,6 +21,10 @@ Rails.application.routes.draw do
   get 'reviews', to: 'api/v1/reviews#all'
   get 'api/v1/me/reviews', to: 'api/v1/reviews#mine'
 
+  # 검색어 기록 / 인기 검색어
+  post 'search_queries', to: 'search_queries#create'
+  get  'popular_searches', to: 'search_queries#index'
+
   resources :posts, only: [:index, :show], param: :slug
 
   resources :places, only: [:index, :show, :update] do
