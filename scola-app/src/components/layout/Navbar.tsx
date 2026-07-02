@@ -34,6 +34,7 @@ const NAV_ITEMS = [
       { label: '스파', href: '/search?category=spa', desc: '전국 스파 검색' },
     ],
   },
+  { label: '지도', href: '/map' },
   { label: '매거진', href: '/posts' },
   { label: '후기', href: '/reviews' },
   {

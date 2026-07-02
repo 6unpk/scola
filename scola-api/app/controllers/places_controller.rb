@@ -98,6 +98,33 @@ class PlacesController < ApplicationController
     }
   end
 
+  # GET /places/markers  — 지도용 경량 마커 목록 (좌표 있는 전량, 페이지네이션 없음)
+  def markers
+    scope = Place.where.not(latitude: nil).where.not(longitude: nil)
+
+    if params[:category].present?
+      cats = Array(params[:category]).reject(&:blank?)
+      scope = scope.where("app_category && ARRAY[?]::varchar[]", cats) if cats.any?
+    end
+
+    places = scope.select(:id, :name, :latitude, :longitude, :app_category, :thumbnail, :road_address, :address)
+
+    render json: {
+      status: { code: 200 },
+      data: places.map { |p|
+        {
+          id: p.id,
+          name: p.name,
+          latitude: p.latitude.to_f,
+          longitude: p.longitude.to_f,
+          app_category: p.app_category,
+          thumbnail: p.thumbnail,
+          road_address: p.road_address || p.address,
+        }
+      }
+    }
+  end
+
   # GET /places/:id
   def show
     render json: { status: { code: 200 }, data: @place }

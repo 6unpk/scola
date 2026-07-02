@@ -75,3 +75,14 @@ export interface PlacesResponse {
   meta: { total: number; page: number; per: number; total_pages: number };
   data: Place[];
 }
+
+// 지도용 경량 마커 (GET /places/markers)
+export interface PlaceMarker {
+  id: number;
+  name: string;
+  latitude: number;
+  longitude: number;
+  app_category: string[];
+  thumbnail: string | null;
+  road_address: string | null;
+}

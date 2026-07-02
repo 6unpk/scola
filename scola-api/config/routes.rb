@@ -28,6 +28,9 @@ Rails.application.routes.draw do
   resources :posts, only: [:index, :show], param: :slug
 
   resources :places, only: [:index, :show, :update] do
+    collection do
+      get :markers
+    end
     resources :reviews, only: [:index, :create, :update, :destroy], module: 'api/v1'
   end
 
