@@ -64,7 +64,13 @@ class PlacesController < ApplicationController
     scope = scope.where(gender_type: params[:gender_type]) if params[:gender_type].present?
 
     # 정렬
-    base_score   = "(COALESCE(rating, 0) * 100 + LOG(COALESCE(visitor_review_count, 0) + 1) * 20)"
+    # 회원 후기 평점은 베이지안 평균으로 반영 → 후기 표본이 적으면 기준값(PRIOR_MEAN)으로
+    # 수렴하므로, 후기 1~2개짜리 장소가 만점으로 상단을 독점하지 못하게 함.
+    prior_mean   = 3.8   # 사전 평균(리뷰가 없을 때의 기준 평점)
+    prior_weight = 20    # 사전 표본 수(이만큼 후기가 쌓여야 실제 평점이 절반 반영)
+    bayes_rating = "((COALESCE(review_count, 0) * COALESCE(rating, #{prior_mean}) + #{prior_weight} * #{prior_mean}) / (COALESCE(review_count, 0) + #{prior_weight}))"
+    # 평점 기여도(≈76~100)와 방문자 수 기여도(LOG, 최대 ≈150)를 비슷한 스케일로 맞춤
+    base_score   = "(#{bayes_rating} * 20 + LOG(COALESCE(visitor_review_count, 0) + 1) * 20)"
     # 인기순: 점수 기반이지만 ±50점 jitter → 상위 그룹 내에서 매번 다른 순서
     popular_jitter  = Arel.sql("(#{base_score} + random() * 50) DESC")
     # 추천순: jitter 폭을 넓혀 품질 하한선을 유지하면서 훨씬 다양한 결과 노출

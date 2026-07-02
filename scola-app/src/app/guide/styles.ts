@@ -48,21 +48,20 @@ export const HeroEyebrow = styled.p`
   display: inline-block;
   font-size: 12px;
   font-weight: 800;
-  letter-spacing: 2.5px;
+  letter-spacing: 3px;
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.primary};
-  border: 1.5px solid ${({ theme }) => theme.colors.primary}55;
-  padding: 5px 14px;
-  border-radius: ${({ theme }) => theme.radius.full};
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 `;
 
 export const HeroTitle = styled.h1`
-  font-size: clamp(34px, 6vw, 60px);
-  font-weight: 900;
+  font-family: var(--font-bagel-fat-one), sans-serif;
+  font-size: clamp(38px, 6.5vw, 66px);
+  font-weight: 400;
   color: white;
-  line-height: 1.12;
-  margin-bottom: 8px;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  margin-bottom: 14px;
 
   em {
     font-style: normal;
@@ -161,7 +160,6 @@ export const IntroBullet = styled.div`
   align-items: flex-start;
   gap: 14px;
   padding: 18px 20px;
-  border: 2px solid ${({ theme }) => theme.colors.dark};
   border-radius: ${({ theme }) => theme.radius.lg};
   background: ${({ theme }) => theme.colors.gray50};
 `;
@@ -209,10 +207,11 @@ export const RoutineFlow = styled.div`
   grid-template-columns: repeat(3, 1fr) auto;
   align-items: stretch;
   gap: 0;
-  border: 2px solid ${({ theme }) => theme.colors.dark};
+  border: 1px solid ${({ theme }) => theme.colors.gray200};
   border-radius: ${({ theme }) => theme.radius.lg};
   overflow: hidden;
   background: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 
   @media (max-width: 650px) {
     grid-template-columns: 1fr;
@@ -331,16 +330,16 @@ export const StyleGrid = styled.div`
 export const StyleCard = styled(Link)<{ $dark?: boolean }>`
   display: flex;
   flex-direction: column;
-  border: 2px solid ${({ theme }) => theme.colors.dark};
   border-radius: ${({ theme }) => theme.radius.lg};
   overflow: hidden;
   text-decoration: none;
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition: transform 0.18s, box-shadow 0.18s;
   background: ${({ $dark, theme }) => $dark ? theme.colors.dark : 'white'};
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 
   &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    transform: translateY(-4px);
+    box-shadow: 0 14px 32px rgba(0,0,0,0.12);
   }
 `;
 
@@ -467,10 +466,11 @@ export const EtiquetteList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0;
-  border: 2px solid ${({ theme }) => theme.colors.dark};
+  border: 1px solid ${({ theme }) => theme.colors.gray200};
   border-radius: ${({ theme }) => theme.radius.lg};
   background: white;
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 `;
 
 export const EtiquetteItem = styled.div`
@@ -536,8 +536,8 @@ export const CtaBtn = styled(Link)`
   font-size: 16px;
   font-weight: 800;
   border-radius: ${({ theme }) => theme.radius.full};
-  border: 2px solid ${({ theme }) => theme.colors.dark};
   text-decoration: none;
-  transition: background 0.15s;
-  &:hover { background: ${({ theme }) => theme.colors.primaryHover}; }
+  box-shadow: 0 6px 18px rgba(166,33,33,0.28);
+  transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+  &:hover { background: ${({ theme }) => theme.colors.primaryHover}; transform: translateY(-2px); box-shadow: 0 10px 24px rgba(166,33,33,0.34); }
 `;

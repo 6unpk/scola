@@ -38,10 +38,12 @@ export const HeroKicker = styled.p`
 `;
 
 export const HeroTitle = styled.h1`
-  font-size: clamp(32px, 6vw, 56px);
-  font-weight: 900;
+  font-family: var(--font-bagel-fat-one), sans-serif;
+  font-size: clamp(36px, 6.5vw, 60px);
+  font-weight: 400;
   color: white;
-  line-height: 1.15;
+  line-height: 1.22;
+  letter-spacing: -0.5px;
   margin-bottom: 20px;
 
   em {
@@ -140,7 +142,7 @@ export const KeywordGrid = styled.div`
 
 export const KeywordCard = styled.div<{ $accent: string }>`
   background: white;
-  border: 2px solid ${({ theme }) => theme.colors.dark};
+  border: 1px solid ${({ theme }) => theme.colors.gray200};
   border-top: 5px solid ${({ $accent }) => $accent};
   border-radius: ${({ theme }) => theme.radius.lg};
   padding: 28px 24px;
@@ -190,7 +192,7 @@ export const StepList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0;
-  border: 2px solid ${({ theme }) => theme.colors.dark};
+  border: 1px solid ${({ theme }) => theme.colors.gray200};
   border-radius: ${({ theme }) => theme.radius.lg};
   overflow: hidden;
 `;
@@ -327,7 +329,7 @@ export const EtiquetteGrid = styled.div`
 
 export const EtiquetteCard = styled.div`
   background: white;
-  border: 2px solid ${({ theme }) => theme.colors.dark};
+  border: 1px solid ${({ theme }) => theme.colors.gray200};
   border-radius: ${({ theme }) => theme.radius.lg};
   padding: 24px;
 `;
@@ -389,7 +391,7 @@ export const CtaBtn = styled(Link)`
   font-size: 16px;
   font-weight: 800;
   border-radius: ${({ theme }) => theme.radius.full};
-  border: 2px solid ${({ theme }) => theme.colors.dark};
+  border: 1px solid ${({ theme }) => theme.colors.gray200};
   text-decoration: none;
   transition: background 0.15s;
   &:hover { background: ${({ theme }) => theme.colors.primaryHover}; }
