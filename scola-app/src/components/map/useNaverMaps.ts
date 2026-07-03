@@ -2,12 +2,9 @@
 
 import { useEffect, useState } from 'react';
 
-// 네이버 지도 SDK + MarkerClustering 헬퍼를 순서대로 로드하는 훅.
-// SDK가 먼저 로드된 뒤 MarkerClustering(전역)이 로드돼야 하므로 동적 주입으로 순서를 보장한다.
-
-const CLIENT_ID = process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID;
-const SDK_SRC = CLIENT_ID
-  ? `https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${CLIENT_ID}`
+const KEY_ID = process.env.NEXT_PUBLIC_NAVER_MAP_KEY_ID;
+const SDK_SRC = KEY_ID
+  ? `https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${KEY_ID}`
   : '';
 const CLUSTER_SRC = '/vendor/marker-clustering.js';
 
@@ -37,7 +34,7 @@ export function useNaverMaps() {
   const [status, setStatus] = useState<Status>('idle');
 
   useEffect(() => {
-    if (!CLIENT_ID) { setStatus('error'); return; }
+    if (!KEY_ID) { setStatus('error'); return; }
 
     const w = window as unknown as { naver?: { maps?: unknown }; MarkerClustering?: unknown };
     if (w.naver?.maps && w.MarkerClustering) { setStatus('ready'); return; }
@@ -62,6 +59,6 @@ export function useNaverMaps() {
     ready: status === 'ready',
     error: status === 'error',
     loading: status === 'loading' || status === 'idle',
-    hasKey: !!CLIENT_ID,
+    hasKey: !!KEY_ID,
   };
 }

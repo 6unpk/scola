@@ -90,7 +90,7 @@ export default function MapContent() {
             <MapFallback>
               <MapPin size={28} />
               <strong>지도를 불러올 수 없습니다</strong>
-              <span>지도 API 키(NEXT_PUBLIC_NAVER_MAP_CLIENT_ID)가 설정되지 않았습니다.</span>
+              <span>지도 API 키(NEXT_PUBLIC_NAVER_MAP_KEY_ID)가 설정되지 않았습니다.</span>
             </MapFallback>
           ) : error ? (
             <MapFallback>
