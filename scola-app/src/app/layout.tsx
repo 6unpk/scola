@@ -11,13 +11,18 @@ const bagelFatOne = Bagel_Fat_One({
   display: 'swap',
 });
 
-// 실제 사용 웨이트만: 300·500 제거, 한국어는 시스템폰트 폴백 사용
+// 실제 사용 웨이트만 (400/600/700). 300·500 제거.
 const ibmPlexSansKR = IBM_Plex_Sans_KR({
   weight: ['400', '600', '700'],
   subsets: ['latin'],
   variable: '--font-ibm-plex-sans-kr',
-  display: 'optional', // swap→optional: 로드 안되면 시스템폰트 유지(CLS 방지)
-  preload: false,       // body 폰트는 비critical — 비동기 로드
+  // swap: optional은 첫 방문 시 IBM Plex를 아예 건너뛰고 시스템폰트로 남는 경우가 많아
+  // "폰트가 늦게 뜬다"처럼 보였음. swap으로 로드되는 즉시 적용.
+  display: 'swap',
+  // preload: 초기부터 폰트를 우선 요청해 늦게 붙는 현상 완화 (라틴 서브셋 프리로드).
+  preload: true,
+  // 스왑 시 레이아웃 밀림 최소화용 사이즈 조정 폴백 (기본 on, 명시).
+  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = {
