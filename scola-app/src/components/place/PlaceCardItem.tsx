@@ -135,9 +135,9 @@ export default function PlaceCardItem({ place, onClick }: Props) {
     <PlaceCard onClick={onClick}>
       <PlaceThumbnail>
         <LazyImage
-          src={place.thumbnail ?? `https://picsum.photos/seed/${place.naver_place_id}/400/200`}
+          src={place.thumbnail ?? '/place-placeholder.svg'}
           alt={place.name}
-          fallback={`https://picsum.photos/seed/${place.naver_place_id}/400/200`}
+          fallback="/place-placeholder.svg"
         />
       </PlaceThumbnail>
       <PlaceBody>

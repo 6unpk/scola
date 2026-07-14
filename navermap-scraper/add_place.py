@@ -5,6 +5,9 @@
 #   "playwright-stealth>=2.0.2",
 #   "google-generativeai>=0.8.0",
 #   "python-dotenv>=1.0.0",
+#   "boto3>=1.34.0",
+#   "pillow>=10.0.0",
+#   "httpx>=0.27.0",
 # ]
 # ///
 
@@ -40,6 +43,7 @@ from dotenv import load_dotenv
 
 from scraper import NaverMapScraper, PlaceInfo
 from enrich import scrape_naver_reviews, call_gemini, GEMINI_MODEL, MAX_REVIEWS_TO_SCRAPE
+import r2
 
 load_dotenv()
 
@@ -145,6 +149,13 @@ async def fetch_place(scraper: NaverMapScraper, place_id: str) -> PlaceInfo | No
             data["thumbnail"] = unwrap_image(og)
     except Exception:
         pass
+
+    # 썸네일을 R2로 업로드(설정된 경우) → 핫링크 대신 자체 URL 저장
+    if data.get("thumbnail") and r2.configured() and not r2.is_r2_url(data["thumbnail"]):
+        r2_url = r2.upload_place_image(place_id, data["thumbnail"])
+        if r2_url:
+            data["thumbnail"] = r2_url
+            print(f"  [{place_id}] 이미지 R2 업로드 완료")
 
     place = PlaceInfo(place_id=place_id, search_keyword="manual", **data)
 

@@ -38,7 +38,8 @@ export async function generateMetadata(
     categories && `시설 유형: ${categories}`,
   ].filter(Boolean).join(' | ').slice(0, 160) || `${place.name} 정보, 위치, 이용 후기를 확인하세요.`;
 
-  const images = place.thumbnail ? [{ url: place.thumbnail, width: 1200, height: 630, alt: place.name }] : [];
+  // 크기는 이미지마다 달라 하드코딩하지 않음(잘못된 1200×630 선언 제거). R2 호스팅 최적화 이미지.
+  const images = place.thumbnail ? [{ url: place.thumbnail, alt: place.name }] : [];
 
   return {
     title: place.name,

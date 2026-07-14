@@ -1,15 +1,18 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
+import Link from 'next/link';
 import { MapPin } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import PlacesMap from '@/components/map/PlacesMap';
 import { useNaverMaps } from '@/components/map/useNaverMaps';
+import { REGIONS } from '@/data/regions';
 import api from '@/lib/api';
 import type { PlaceMarker } from '@/types/place';
 import {
   PageWrap, MapBody, ControlPanel, PanelTitle, SearchInput,
   ChipGroup, Chip, ResultCount, MapArea, MapFallback, FieldLabel,
+  RegionLinks, RegionLink,
 } from './styles';
 
 const CATEGORIES = [
@@ -54,7 +57,7 @@ export default function MapContent() {
       <Navbar />
       <MapBody>
         <ControlPanel>
-          <PanelTitle>지도에서 찾기</PanelTitle>
+          <PanelTitle>전국 사우나·찜질방 지도</PanelTitle>
 
           <div>
             <FieldLabel style={{ marginBottom: 8 }}>검색</FieldLabel>
@@ -83,6 +86,15 @@ export default function MapContent() {
           <ResultCount>
             지도에 <strong>{filtered.length.toLocaleString()}곳</strong> 표시 중
           </ResultCount>
+
+          <div>
+            <FieldLabel style={{ marginBottom: 10 }}>지역별 보기</FieldLabel>
+            <RegionLinks>
+              {REGIONS.map((r) => (
+                <RegionLink key={r.slug} href={`/sauna/${r.slug}`}>{r.name}</RegionLink>
+              ))}
+            </RegionLinks>
+          </div>
         </ControlPanel>
 
         <MapArea>

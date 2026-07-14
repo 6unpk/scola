@@ -30,13 +30,13 @@ function clusterIcon(naver: any, size: number) {
 }
 
 function infoHtml(p: PlaceMarker) {
-  const thumb = p.thumbnail ?? `https://picsum.photos/seed/${p.id}/120/90`;
+  const thumb = p.thumbnail ?? '/place-placeholder.svg';
   const addr = p.road_address ?? '';
   return (
     `<div style="width:220px;padding:12px;font-family:inherit;">` +
       `<div style="display:flex;gap:10px;">` +
         `<img src="${thumb}" alt="" style="width:64px;height:64px;object-fit:cover;border-radius:8px;flex-shrink:0;" ` +
-          `onerror="this.src='https://picsum.photos/seed/${p.id}/120/90'"/>` +
+          `onerror="this.src='/place-placeholder.svg'"/>` +
         `<div style="min-width:0;">` +
           `<div style="font-weight:800;font-size:14px;color:#1a1a1a;line-height:1.3;margin-bottom:4px;">${p.name}</div>` +
           (addr ? `<div style="font-size:11px;color:#888;line-height:1.4;overflow:hidden;">${addr}</div>` : '') +

@@ -73,7 +73,7 @@ function ReviewsContent() {
     new Date(iso).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
 
   const getThumb = (place: ReviewPlace) =>
-    place.thumbnail ?? `https://picsum.photos/seed/${place.naver_place_id ?? place.id}/200/200`;
+    place.thumbnail ?? '/place-placeholder.svg';
 
   const getAddr = (place: ReviewPlace) => place.road_address ?? place.address ?? '';
 
@@ -134,7 +134,7 @@ function ReviewsContent() {
                     <LazyImage
                       src={getThumb(r.place)}
                       alt={r.place.name}
-                      fallback={`https://picsum.photos/seed/${r.place.id}/200/200`}
+                      fallback="/place-placeholder.svg"
                     />
                   </PlaceThumb>
                   <PlaceInfo>

@@ -122,7 +122,7 @@ export default function MyPage() {
     new Date(iso).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
 
   const thumb = (place: Review['place']) =>
-    place.thumbnail ?? `https://picsum.photos/seed/${place.naver_place_id}/200/200`;
+    place.thumbnail ?? '/place-placeholder.svg';
 
   if (!token) return null;
 
@@ -241,7 +241,7 @@ export default function MyPage() {
                       <img
                         src={thumb(r.place)}
                         alt={r.place.name}
-                        onError={(e) => { (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${r.place.naver_place_id}/200/200`; }}
+                        onError={(e) => { (e.target as HTMLImageElement).src = '/place-placeholder.svg'; }}
                       />
                     </PlaceThumb>
                     <ReviewContent>

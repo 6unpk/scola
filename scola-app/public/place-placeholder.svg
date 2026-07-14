@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FBEEEE"/>
+      <stop offset="1" stop-color="#F1DADA"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <g fill="none" stroke="#A62121" stroke-opacity="0.28" stroke-width="7" stroke-linecap="round">
+    <!-- 김(steam) -->
+    <path d="M170 108 q-14 -18 0 -36 q14 -18 0 -36"/>
+    <path d="M200 108 q-14 -18 0 -36 q14 -18 0 -36"/>
+    <path d="M230 108 q-14 -18 0 -36 q14 -18 0 -36"/>
+    <!-- 탕(basin) -->
+    <path d="M132 150 h136 a10 10 0 0 1 10 10 v22 a48 48 0 0 1 -48 48 h-60 a48 48 0 0 1 -48 -48 v-22 a10 10 0 0 1 10 -10 z"/>
+  </g>
+</svg>

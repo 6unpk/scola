@@ -1,6 +1,7 @@
 'use client';
 
 import styled from 'styled-components';
+import Link from 'next/link';
 
 export const PageWrap = styled.div`
   height: 100dvh;
@@ -107,6 +108,24 @@ export const MapFallback = styled.div`
   font-size: 14px;
 
   strong { color: ${({ theme }) => theme.colors.dark}; font-size: 16px; font-weight: 800; }
+`;
+
+export const RegionLinks = styled.nav`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+`;
+
+export const RegionLink = styled(Link)`
+  padding: 5px 11px;
+  border-radius: ${({ theme }) => theme.radius.full};
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid ${({ theme }) => theme.colors.gray200};
+  color: ${({ theme }) => theme.colors.gray700};
+  background: ${({ theme }) => theme.colors.white};
+  &:hover { border-color: ${({ theme }) => theme.colors.primary}; color: ${({ theme }) => theme.colors.primary}; }
 `;
 
 export const FieldLabel = styled.p`

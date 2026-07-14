@@ -126,7 +126,7 @@ export default function PlaceDetailClient({ place }: Props) {
     </PageWrap>
   );
 
-  const thumbSrc = place.thumbnail ?? `https://picsum.photos/seed/${place.naver_place_id}/1200/400`;
+  const thumbSrc = place.thumbnail ?? '/place-placeholder.svg';
   const addr = place.road_address ?? place.address;
   const hasBaths = (place.bath_types?.length ?? 0) > 0;
   const hasSpecialRooms = (place.special_rooms?.length ?? 0) > 0;
@@ -146,7 +146,7 @@ export default function PlaceDetailClient({ place }: Props) {
       <Hero>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={thumbSrc} alt={place.name}
-          onError={(e) => { (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${place.naver_place_id}/1200/400`; }} />
+          onError={(e) => { (e.target as HTMLImageElement).src = '/place-placeholder.svg'; }} />
         <HeroOverlay />
         <HeroContent>
           <BackBtn onClick={() => router.back()}><RiArrowLeftLine size={14} /> 목록으로</BackBtn>

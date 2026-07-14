@@ -4,9 +4,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import logoSrc from '@/assets/logo.png';
 import styled from 'styled-components';
+import { REGIONS } from '@/data/regions';
 
 const NAV_LINKS = [
   { label: '장소 찾기', href: '/search' },
+  { label: '지도', href: '/map' },
   { label: '후기', href: '/reviews' },
   { label: '사우나 즐기는 법', href: '/guide' },
   { label: '핀란드식 가이드', href: '/guide/finland' },
@@ -24,7 +26,7 @@ const FooterInner = styled.div`
   margin: 0 auto;
   padding: 48px 20px 40px;
   display: grid;
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: 220px 1fr 1.5fr;
   gap: 48px;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
@@ -154,6 +156,17 @@ export default function Footer() {
             {NAV_LINKS.map((item) => (
               <li key={item.href}>
                 <NavLink href={item.href}>{item.label}</NavLink>
+              </li>
+            ))}
+          </NavList>
+        </NavCol>
+
+        <NavCol>
+          <NavTitle>지역별 사우나</NavTitle>
+          <NavList>
+            {REGIONS.map((r) => (
+              <li key={r.slug}>
+                <NavLink href={`/sauna/${r.slug}`}>{r.name}</NavLink>
               </li>
             ))}
           </NavList>
