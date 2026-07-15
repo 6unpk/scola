@@ -63,6 +63,9 @@ class PlacesController < ApplicationController
     # 성별 구분 필터
     scope = scope.where(gender_type: params[:gender_type]) if params[:gender_type].present?
 
+    # 대표 이미지 있는 곳만
+    scope = scope.where("thumbnail IS NOT NULL AND thumbnail <> ''") if params[:has_image] == "true"
+
     # 정렬
     # 회원 후기 평점은 베이지안 평균으로 반영 → 후기 표본이 적으면 기준값(PRIOR_MEAN)으로
     # 수렴하므로, 후기 1~2개짜리 장소가 만점으로 상단을 독점하지 못하게 함.

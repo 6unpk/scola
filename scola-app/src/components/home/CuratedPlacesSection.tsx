@@ -15,7 +15,7 @@ export default function CuratedPlacesSection() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get<PlacesResponse>('/places', { params: { sort: 'daily', per: 12 } })
+    api.get<PlacesResponse>('/places', { params: { sort: 'daily', per: 12, has_image: 'true' } })
       .then((res) => setPlaces(res.data.data))
       .catch(console.error)
       .finally(() => setLoading(false));
