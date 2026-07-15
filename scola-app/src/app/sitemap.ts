@@ -26,13 +26,35 @@ async function fetchAllPlaceIds(): Promise<number[]> {
   }
 }
 
+async function fetchPostSlugs(): Promise<string[]> {
+  try {
+    const seen = new Set<string>();
+    let page = 1;
+    let totalPages = 1;
+    while (page <= totalPages) {
+      const res = await fetch(`${API_BASE}/posts?per=50&page=${page}`, { next: { revalidate: 86400 } });
+      if (!res.ok) break;
+      const data = await res.json();
+      const items: { slug: string }[] = data.data ?? [];
+      if (items.length === 0) break;
+      items.forEach((p) => seen.add(p.slug));
+      totalPages = data.meta?.total_pages ?? page;
+      page++;
+    }
+    return [...seen];
+  } catch {
+    return [];
+  }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const placeIds = await fetchAllPlaceIds();
+  const [placeIds, postSlugs] = await Promise.all([fetchAllPlaceIds(), fetchPostSlugs()]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: BASE, lastModified: new Date(), changeFrequency: 'daily', priority: 1.0 },
     { url: `${BASE}/search`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
     { url: `${BASE}/map`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${BASE}/posts`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
     { url: `${BASE}/reviews`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
     { url: `${BASE}/guide`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
     { url: `${BASE}/guide/finland`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
@@ -55,5 +77,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...staticRoutes, ...regionRoutes, ...placeRoutes];
+  const postRoutes: MetadataRoute.Sitemap = postSlugs.map((slug) => ({
+    url: `${BASE}/posts/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly',
+    priority: 0.75,
+  }));
+
+  return [...staticRoutes, ...regionRoutes, ...postRoutes, ...placeRoutes];
 }

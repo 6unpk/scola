@@ -26,6 +26,11 @@ class PostsController < ApplicationController
   private
 
   def serialize(post)
-    post.as_json(only: %i[id title slug body excerpt thumbnail category author_name published_at created_at])
+    post.as_json(only: %i[id title slug body excerpt thumbnail category author_name published_at created_at updated_at])
+        .merge(
+          'meta_title'       => post.effective_meta_title,
+          'meta_description' => post.effective_meta_description,
+          'keywords'         => post.keywords,
+        )
   end
 end

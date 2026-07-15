@@ -25,6 +25,9 @@ Rails.application.routes.draw do
   post 'search_queries', to: 'search_queries#create'
   get  'popular_searches', to: 'search_queries#index'
 
+  # 어드민 에디터 이미지 업로드 → R2
+  post 'admin/uploads', to: 'admin/uploads#create'
+
   resources :posts, only: [:index, :show], param: :slug
 
   resources :places, only: [:index, :show, :update] do

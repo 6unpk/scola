@@ -9,6 +9,7 @@ import { REGIONS } from '@/data/regions';
 const NAV_LINKS = [
   { label: '장소 찾기', href: '/search' },
   { label: '지도', href: '/map' },
+  { label: '매거진', href: '/posts' },
   { label: '후기', href: '/reviews' },
   { label: '사우나 즐기는 법', href: '/guide' },
   { label: '핀란드식 가이드', href: '/guide/finland' },

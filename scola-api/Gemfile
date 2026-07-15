@@ -50,3 +50,6 @@ gem "dotenv-rails", groups: [:development, :test]
 gem "activeadmin"
 gem "sassc-rails"
 gem "kaminari"
+
+# Cloudflare R2 (S3 호환) 이미지 업로드
+gem "aws-sdk-s3", require: false
