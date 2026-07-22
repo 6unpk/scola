@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { MapPin } from 'lucide-react';
+import { MapPin, SlidersHorizontal } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import PlacesMap from '@/components/map/PlacesMap';
 import { useNaverMaps } from '@/components/map/useNaverMaps';
@@ -12,7 +12,7 @@ import type { PlaceMarker } from '@/types/place';
 import {
   PageWrap, MapBody, ControlPanel, PanelTitle, SearchInput,
   ChipGroup, Chip, ResultCount, MapArea, MapFallback, FieldLabel,
-  RegionLinks, RegionLink,
+  RegionLinks, RegionLink, PanelTop, FilterToggle, FilterBody,
 } from './styles';
 
 const CATEGORIES = [
@@ -30,6 +30,7 @@ export default function MapContent() {
   const [markers, setMarkers] = useState<PlaceMarker[]>([]);
   const [category, setCategory] = useState<string[]>([]);
   const [query, setQuery] = useState('');
+  const [filtersOpen, setFiltersOpen] = useState(false); // 모바일 필터 접기 (데스크톱은 항상 표시)
 
   // 마커 전량 1회 로드 → 필터는 클라이언트에서 처리(즉각)
   useEffect(() => {
@@ -59,42 +60,51 @@ export default function MapContent() {
         <ControlPanel>
           <PanelTitle>전국 사우나·찜질방 지도</PanelTitle>
 
-          <div>
-            <FieldLabel style={{ marginBottom: 8 }}>검색</FieldLabel>
+          <PanelTop>
             <SearchInput
               placeholder="이름 또는 지역으로 검색"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
-          </div>
+            <FilterToggle
+              $open={filtersOpen}
+              onClick={() => setFiltersOpen((p) => !p)}
+              aria-expanded={filtersOpen}
+            >
+              <SlidersHorizontal size={14} />
+              필터{category.length > 0 ? ` ${category.length}` : ''}
+            </FilterToggle>
+          </PanelTop>
 
-          <div>
-            <FieldLabel style={{ marginBottom: 10 }}>카테고리</FieldLabel>
-            <ChipGroup>
-              {CATEGORIES.map((c) => (
-                <Chip
-                  key={c.value}
-                  $active={category.includes(c.value)}
-                  onClick={() => toggleCategory(c.value)}
-                >
-                  {c.label}
-                </Chip>
-              ))}
-            </ChipGroup>
-          </div>
+          <FilterBody $open={filtersOpen}>
+            <div>
+              <FieldLabel style={{ marginBottom: 10 }}>카테고리</FieldLabel>
+              <ChipGroup>
+                {CATEGORIES.map((c) => (
+                  <Chip
+                    key={c.value}
+                    $active={category.includes(c.value)}
+                    onClick={() => toggleCategory(c.value)}
+                  >
+                    {c.label}
+                  </Chip>
+                ))}
+              </ChipGroup>
+            </div>
+
+            <div>
+              <FieldLabel style={{ marginBottom: 10 }}>지역별 보기</FieldLabel>
+              <RegionLinks>
+                {REGIONS.map((r) => (
+                  <RegionLink key={r.slug} href={`/sauna/${r.slug}`}>{r.name}</RegionLink>
+                ))}
+              </RegionLinks>
+            </div>
+          </FilterBody>
 
           <ResultCount>
             지도에 <strong>{filtered.length.toLocaleString()}곳</strong> 표시 중
           </ResultCount>
-
-          <div>
-            <FieldLabel style={{ marginBottom: 10 }}>지역별 보기</FieldLabel>
-            <RegionLinks>
-              {REGIONS.map((r) => (
-                <RegionLink key={r.slug} href={`/sauna/${r.slug}`}>{r.name}</RegionLink>
-              ))}
-            </RegionLinks>
-          </div>
         </ControlPanel>
 
         <MapArea>

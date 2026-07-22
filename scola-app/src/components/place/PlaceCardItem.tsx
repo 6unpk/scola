@@ -10,6 +10,7 @@ import type { Place } from '@/types/place';
 export const PlaceCard = styled.div`
   flex: 0 0 260px;
   min-width: 0;
+  max-width: 100%;
   background: ${({ theme }) => theme.colors.white};
   border: 2px solid ${({ theme }) => theme.colors.dark};
   border-radius: ${({ theme }) => theme.radius.lg};
@@ -91,6 +92,10 @@ export const PlaceHours = styled.div`
   font-size: 11px;
   color: ${({ theme }) => theme.colors.gray500};
   margin-top: 8px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 export const SkeletonCard = styled.div`

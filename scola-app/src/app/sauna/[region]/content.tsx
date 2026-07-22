@@ -42,14 +42,16 @@ const Cta = styled(Link)`
   &:hover{border-color:${({ theme }) => theme.colors.primary};color:${({ theme }) => theme.colors.primary};}
 `;
 
+// minmax(0,1fr): 1fr(=minmax(auto,1fr))은 아이템 min-content보다 작아지지 못해
+// 긴 장소명(nowrap)이 있으면 모바일에서 트랙이 화면을 넘침 → 0으로 최소폭 해제
 const Grid = styled.div`
-  display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
-  @media (max-width:${({ theme }) => theme.breakpoints.lg}){grid-template-columns:repeat(2,1fr);}
-  @media (max-width:${({ theme }) => theme.breakpoints.sm}){grid-template-columns:1fr;}
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;
+  @media (max-width:${({ theme }) => theme.breakpoints.lg}){grid-template-columns:repeat(2,minmax(0,1fr));}
+  @media (max-width:${({ theme }) => theme.breakpoints.sm}){grid-template-columns:minmax(0,1fr);}
 `;
 
 // PlaceCardItem을 감싸는 크롤 가능한 링크 (grid 셀을 채움)
-const CardLink = styled(Link)`display:block;text-decoration:none;`;
+const CardLink = styled(Link)`display:block;text-decoration:none;min-width:0;max-width:100%;`;
 
 const Empty = styled.p`text-align:center;padding:60px 0;color:${({ theme }) => theme.colors.gray500};`;
 
