@@ -17,8 +17,9 @@ export const metadata: Metadata = {
     description,
     url: 'https://scola.kr/map',
     type: 'website',
+    images: [{ url: 'https://scola.kr/og-image.png', width: 1200, height: 630, alt: '전국 사우나·찜질방 지도' }],
   },
-  twitter: { card: 'summary_large_image', title: `${title} | 스콜라`, description },
+  twitter: { card: 'summary_large_image', title: `${title} | 스콜라`, description, images: ['https://scola.kr/og-image.png'] },
 };
 
 const jsonLd = {

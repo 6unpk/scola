@@ -16,8 +16,9 @@ export const metadata: Metadata = {
     description,
     url: 'https://scola.kr/posts',
     type: 'website',
+    images: [{ url: 'https://scola.kr/og-image.png', width: 1200, height: 630, alt: '스콜라 매거진' }],
   },
-  twitter: { card: 'summary_large_image', title: `${title} | 스콜라`, description },
+  twitter: { card: 'summary_large_image', title: `${title} | 스콜라`, description, images: ['https://scola.kr/og-image.png'] },
 };
 
 export default function Page() {

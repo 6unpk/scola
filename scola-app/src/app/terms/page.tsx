@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     description: '스콜라 이용약관',
     url: 'https://scola.kr/terms',
     type: 'article',
+    images: [{ url: 'https://scola.kr/og-image.png', width: 1200, height: 630, alt: '스콜라' }],
   },
 };
 

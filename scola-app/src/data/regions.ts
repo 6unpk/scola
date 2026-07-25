@@ -30,3 +30,22 @@ export const REGIONS: RegionInfo[] = [
 export function regionBySlug(slug: string): RegionInfo | undefined {
   return REGIONS.find((r) => r.slug === slug);
 }
+
+// 지역 페이지 FAQ — 화면에 노출 + FAQPage JSON-LD 양쪽에 동일하게 사용
+export function regionFaqs(name: string, count: number): { q: string; a: string }[] {
+  const n = count.toLocaleString();
+  return [
+    {
+      q: `${name}에는 사우나·찜질방이 몇 곳 있나요?`,
+      a: `스콜라에는 현재 ${name} 지역의 사우나·찜질방·스파·불한증막·세신샵 ${n}곳이 등록되어 있습니다. 위치와 시설, 이용 후기를 비교해 원하는 곳을 찾아보세요.`,
+    },
+    {
+      q: `${name}에서 24시간 운영하는 찜질방을 찾을 수 있나요?`,
+      a: `네. 상단 카테고리 필터와 지도에서 24시간 운영, 수면실, 식당 여부로 좁혀 ${name}의 24시간 찜질방·사우나를 찾을 수 있습니다.`,
+    },
+    {
+      q: `${name} 사우나 요금과 시설 정보는 어디서 보나요?`,
+      a: `각 장소 상세 페이지에서 입장 요금, 탕·시설 구성, 영업시간, 주차, 실제 이용 후기까지 한눈에 확인할 수 있습니다.`,
+    },
+  ];
+}
