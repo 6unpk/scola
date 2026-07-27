@@ -7,7 +7,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PlaceCardItem from '@/components/place/PlaceCardItem';
 import LazyImage from '@/components/ui/LazyImage';
-import { REGIONS, regionFaqs, type RegionInfo } from '@/data/regions';
+import { REGIONS, type RegionInfo } from '@/data/regions';
 import type { Place } from '@/types/place';
 
 const CAT_LABEL: Record<string, string> = {
@@ -68,19 +68,11 @@ const CardLink = styled(Link)`display:block;text-decoration:none;min-width:0;max
 
 const Empty = styled.p`text-align:center;padding:60px 0;color:${({ theme }) => theme.colors.gray500};`;
 
-// FAQ
-const SectionTitle = styled.h2`font-size:20px;font-weight:900;color:${({ theme }) => theme.colors.dark};margin:44px 0 16px;`;
-const Faq = styled.div`display:flex;flex-direction:column;gap:12px;`;
-const FaqItem = styled.div`background:#fff;border:1px solid ${({ theme }) => theme.colors.gray200};border-radius:${({ theme }) => theme.radius.md};padding:18px 20px;`;
-const FaqQ = styled.h3`font-size:15px;font-weight:800;color:${({ theme }) => theme.colors.dark};margin-bottom:8px;`;
-const FaqA = styled.p`font-size:14px;line-height:1.75;color:${({ theme }) => theme.colors.gray600};`;
-
 // ─── Component ──────────────────────────────────────────────────────────────────
 
 export default function RegionContent({ region, places }: { region: RegionInfo; places: Place[] }) {
   const count = places.length;
   const heroImg = places.find((p) => p.thumbnail)?.thumbnail ?? null;
-  const faqs = regionFaqs(region.name, count);
 
   // 카테고리별 개수 → 인트로 문장
   const catCounts = places.reduce<Record<string, number>>((acc, p) => {
@@ -153,16 +145,6 @@ export default function RegionContent({ region, places }: { region: RegionInfo; 
             ))}
           </Grid>
         )}
-
-        <SectionTitle>{region.name} 사우나 자주 묻는 질문</SectionTitle>
-        <Faq>
-          {faqs.map((f) => (
-            <FaqItem key={f.q}>
-              <FaqQ>{f.q}</FaqQ>
-              <FaqA>{f.a}</FaqA>
-            </FaqItem>
-          ))}
-        </Faq>
       </Body>
 
       <Footer />

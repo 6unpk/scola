@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { REGIONS, regionBySlug, regionFaqs } from '@/data/regions';
+import { REGIONS, regionBySlug } from '@/data/regions';
 import RegionContent from './content';
 import JsonLd from '@/components/seo/JsonLd';
 import type { Place } from '@/types/place';
@@ -78,16 +78,6 @@ export default async function RegionPage(
     })),
   };
 
-  const faqJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: regionFaqs(info.name, places.length).map((f) => ({
-      '@type': 'Question',
-      name: f.q,
-      acceptedAnswer: { '@type': 'Answer', text: f.a },
-    })),
-  };
-
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -101,7 +91,6 @@ export default async function RegionPage(
   return (
     <>
       <JsonLd data={itemListJsonLd} />
-      <JsonLd data={faqJsonLd} />
       <JsonLd data={breadcrumbJsonLd} />
       <RegionContent region={info} places={places} />
     </>
