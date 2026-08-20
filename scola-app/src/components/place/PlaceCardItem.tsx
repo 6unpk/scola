@@ -11,6 +11,9 @@ export const PlaceCard = styled.div`
   flex: 0 0 260px;
   min-width: 0;
   max-width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   background: ${({ theme }) => theme.colors.white};
   border: 2px solid ${({ theme }) => theme.colors.dark};
   border-radius: ${({ theme }) => theme.radius.lg};
@@ -26,7 +29,7 @@ export const PlaceThumbnail = styled.div`
   border-bottom: 2px solid ${({ theme }) => theme.colors.dark};
 `;
 
-export const PlaceBody = styled.div`padding: 14px;`;
+export const PlaceBody = styled.div`padding: 14px; flex: 1;`;
 
 export const PlaceName = styled.h3`
   font-size: 15px;

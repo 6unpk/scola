@@ -133,6 +133,13 @@ class PlacesController < ApplicationController
     render json: { status: { code: 200 }, data: @place }
   end
 
+  # POST /places/:id/view
+  # ponytail: 방문자 dedup 없음(새로고침마다 +1). 필요해지면 IP/세션 캐시 추가.
+  def view
+    Place.where(id: params[:id]).update_all("views = views + 1")
+    head :no_content
+  end
+
   # PATCH /places/:id  — 수동 데이터 보강용 (인증 필요)
   def update
     authenticate_user!

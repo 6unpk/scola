@@ -21,6 +21,9 @@ Rails.application.routes.draw do
   get 'reviews', to: 'api/v1/reviews#all'
   get 'api/v1/me/reviews', to: 'api/v1/reviews#mine'
 
+  # 조회수 증가
+  post 'posts/:slug/view', to: 'posts#view'
+
   # 검색어 기록 / 인기 검색어
   post 'search_queries', to: 'search_queries#create'
   get  'popular_searches', to: 'search_queries#index'
@@ -33,6 +36,9 @@ Rails.application.routes.draw do
   resources :places, only: [:index, :show, :update] do
     collection do
       get :markers
+    end
+    member do
+      post :view
     end
     resources :reviews, only: [:index, :create, :update, :destroy], module: 'api/v1'
   end

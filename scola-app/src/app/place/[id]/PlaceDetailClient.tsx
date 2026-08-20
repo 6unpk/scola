@@ -1,17 +1,19 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 import {
   RiMapPin2Line, RiPhoneLine, RiTimeLine, RiGlobalLine, RiArrowLeftLine,
   RiCarLine, RiGroupLine, RiTempHotLine, RiStarFill,
   RiCoinLine, RiCheckLine, RiCloseLine, RiSubtractLine,
-  RiDropLine, RiFireLine, RiSnowflakeLine,
+  RiDropLine, RiFireLine, RiSnowflakeLine, RiEyeLine,
 } from '@remixicon/react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ReviewsSection from '@/components/place/ReviewsSection';
 import NearbyPlacesSection from '@/components/place/NearbyPlacesSection';
+import api from '@/lib/api';
 import type { Place } from '@/types/place';
 
 const BATH_COLORS: Record<string, string> = {
@@ -114,6 +116,8 @@ interface Props { place: Place | null; }
 
 export default function PlaceDetailClient({ place }: Props) {
   const router = useRouter();
+  const placeId = place?.id;
+  useEffect(() => { if (placeId) api.post(`/places/${placeId}/view`).catch(() => {}); }, [placeId]);
 
   if (!place) return (
     <PageWrap>
@@ -380,6 +384,9 @@ export default function PlaceDetailClient({ place }: Props) {
                 </ReviewStat>
               </>
             )}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#9E9E9E', marginBottom: 14 }}>
+              <RiEyeLine size={13} /> 조회 {(place.views ?? 0).toLocaleString()}
+            </div>
             <NaverBtn href={`https://map.naver.com/p/entry/place/${place.naver_place_id}`} target="_blank" rel="noopener noreferrer">
               <RiMapPin2Line size={13} /> 네이버 지도에서 보기
             </NaverBtn>

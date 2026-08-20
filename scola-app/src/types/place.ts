@@ -43,6 +43,7 @@ export interface Place {
   app_category: ('sauna' | 'jjimjilbang' | 'spa' | 'seshin' | 'hotel' | 'waterpark')[];
   rating: number | null;
   review_count: number | null;
+  views: number;
   tags: string[];
   open_hours: string | null;
   place_profile: {

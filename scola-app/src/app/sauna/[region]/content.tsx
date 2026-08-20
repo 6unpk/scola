@@ -64,7 +64,7 @@ const Grid = styled.div`
   @media (max-width:${({ theme }) => theme.breakpoints.lg}){grid-template-columns:repeat(2,minmax(0,1fr));}
   @media (max-width:${({ theme }) => theme.breakpoints.sm}){grid-template-columns:minmax(0,1fr);}
 `;
-const CardLink = styled(Link)`display:block;text-decoration:none;min-width:0;max-width:100%;`;
+const CardLink = styled(Link)`display:block;text-decoration:none;min-width:0;max-width:100%;height:100%;`;
 
 const Empty = styled.p`text-align:center;padding:60px 0;color:${({ theme }) => theme.colors.gray500};`;
 

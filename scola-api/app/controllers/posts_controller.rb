@@ -23,10 +23,16 @@ class PostsController < ApplicationController
     render json: { error: '찾을 수 없습니다.' }, status: :not_found
   end
 
+  # ponytail: 방문자 dedup 없음(새로고침마다 +1). 필요해지면 IP/세션 캐시 추가.
+  def view
+    Post.where(slug: params[:slug]).update_all("views = views + 1")
+    head :no_content
+  end
+
   private
 
   def serialize(post)
-    post.as_json(only: %i[id title slug body excerpt thumbnail category author_name published_at created_at updated_at])
+    post.as_json(only: %i[id title slug body excerpt thumbnail category author_name published_at created_at updated_at views])
         .merge(
           'meta_title'       => post.effective_meta_title,
           'meta_description' => post.effective_meta_description,

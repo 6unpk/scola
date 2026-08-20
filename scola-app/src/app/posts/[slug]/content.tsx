@@ -1,13 +1,15 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
-import { ArrowLeft, Calendar, User } from 'lucide-react';
+import { ArrowLeft, Calendar, User, Eye } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import LazyImage from '@/components/ui/LazyImage';
+import api from '@/lib/api';
 import type { Post } from '@/types/post';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
@@ -63,6 +65,7 @@ const CAT_LABELS: Record<string, string> = {
 
 export default function PostContent({ post }: { post: Post }) {
   const router = useRouter();
+  useEffect(() => { api.post(`/posts/${post.slug}/view`).catch(() => {}); }, [post.slug]);
   const formatDate = (d: string | null) => (d ? format(new Date(d), 'yyyy년 M월 d일', { locale: ko }) : '');
 
   const heroMeta = (
@@ -72,6 +75,7 @@ export default function PostContent({ post }: { post: Post }) {
       <HeroInfo>
         <HeroInfoItem><User size={13} />{post.author_name}</HeroInfoItem>
         <HeroInfoItem><Calendar size={13} />{formatDate(post.published_at)}</HeroInfoItem>
+        <HeroInfoItem><Eye size={13} />{(post.views ?? 0).toLocaleString()}</HeroInfoItem>
       </HeroInfo>
     </HeroMeta>
   );
