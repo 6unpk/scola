@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Star, MapPin, Clock, SlidersHorizontal, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { Star, MapPin, Clock, SlidersHorizontal, X, ChevronDown, ChevronUp, Eye } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Checkbox from '@/components/ui/Checkbox';
@@ -253,6 +253,9 @@ function SearchContent() {
                           </span>
                         )}
                       </CardRating>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 3, fontSize: 11, color: '#9E9E9E', flexShrink: 0 }}>
+                        <Eye size={12} />{(place.views ?? 0).toLocaleString()}
+                      </span>
                     </CardMeta>
                     {(place.open_hours ?? place.business_hours) && (
                       <CardHours>
