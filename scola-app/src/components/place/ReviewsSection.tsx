@@ -17,7 +17,8 @@ interface Review {
   rating: number;
   visited_at: string | null;
   created_at: string;
-  user: { id: number; nickname: string };
+  user: { id: number; nickname: string } | null;
+  author_name: string | null;
 }
 
 // ─── Styled ───────────────────────────────────────────────────────────────────
@@ -273,6 +274,7 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
   const [hovered, setHovered] = useState(0);
   const [body, setBody] = useState('');
   const [visitedAt, setVisitedAt] = useState('');
+  const [authorName, setAuthorName] = useState('');
 
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editBody, setEditBody] = useState('');
@@ -292,21 +294,23 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
 
   useEffect(() => { fetchReviews(); }, [fetchReviews]);
 
-  const hasMyReview = !!user && reviews.some((r) => r.user.id === user.id);
+  const hasMyReview = !!user && reviews.some((r) => r.user?.id === user.id);
 
   const handleSubmit = async () => {
     if (!body.trim() || body.length < 10) { setError('후기는 10자 이상 작성해주세요.'); return; }
+    if (!authed && !authorName.trim()) { setError('닉네임을 입력해주세요.'); return; }
     setError('');
     setSubmitting(true);
     try {
       await api.post(
         `/places/${placeId}/reviews`,
-        { review: { body, rating, visited_at: visitedAt || null } },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { review: { body, rating, visited_at: visitedAt || null, author_name: authed ? undefined : authorName.trim() } },
+        authed ? { headers: { Authorization: `Bearer ${token}` } } : undefined
       );
       setBody('');
       setRating(5);
       setVisitedAt('');
+      setAuthorName('');
       await fetchReviews();
     } catch (e: any) {
       const msgs = e.response?.data?.errors;
@@ -369,10 +373,20 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
           스콜라 이용 후기 {reviews.length > 0 && `(${reviews.length})`}
         </SectionTitle>
 
-        {/* 작성 폼 */}
-        {authed && !hasMyReview && (
+        {/* 작성 폼 (회원 or 게스트) */}
+        {!hasMyReview && (
           <FormCard style={{ marginBottom: 20 }}>
             <FormTitle>후기 남기기</FormTitle>
+            {!authed && (
+              <DateInput
+                type="text"
+                placeholder="닉네임"
+                value={authorName}
+                maxLength={20}
+                onChange={(e) => setAuthorName(e.target.value)}
+                style={{ width: '100%', boxSizing: 'border-box', marginBottom: 12 }}
+              />
+            )}
             <StarRow>
               {[1, 2, 3, 4, 5].map((n) => (
                 <StarBtn
@@ -405,23 +419,17 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
             {error && <ErrMsg>{error}</ErrMsg>}
             <FormActions>
               <CharCount>{body.length} / 1000</CharCount>
-              <SubmitBtn onClick={handleSubmit} disabled={submitting || body.length < 10}>
+              <SubmitBtn onClick={handleSubmit} disabled={submitting || body.length < 10 || (!authed && !authorName.trim())}>
                 {submitting ? '등록 중...' : '후기 등록'}
               </SubmitBtn>
             </FormActions>
           </FormCard>
         )}
 
-        {authed && hasMyReview && (
+        {hasMyReview && (
           <FormCard style={{ marginBottom: 20 }}>
             <LoginNudge style={{ padding: '4px 0' }}>이미 후기를 작성했습니다.</LoginNudge>
           </FormCard>
-        )}
-
-        {!authed && (
-          <LoginNudge>
-            <a href="/login">로그인</a> 후 후기를 남길 수 있습니다.
-          </LoginNudge>
         )}
 
         {/* 후기 목록 */}
@@ -437,7 +445,7 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
                   <ReviewUser>
                     <Avatar><RiUserLine size={15} /></Avatar>
                     <ReviewMeta>
-                      <ReviewNick>{r.user.nickname}</ReviewNick>
+                      <ReviewNick>{r.user?.nickname ?? r.author_name ?? '익명'}</ReviewNick>
                       <ReviewDate>
                         {formatDate(r.created_at)}
                       </ReviewDate>
@@ -453,7 +461,7 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
                         ))}
                       </Stars>
                     )}
-                    {user?.id === r.user.id && editingId !== r.id && (
+                    {!!r.user && user?.id === r.user.id && editingId !== r.id && (
                       <>
                         <ActionBtn onClick={() => startEdit(r)}><RiPencilLine size={14} /></ActionBtn>
                         <ActionBtn $danger onClick={() => handleDelete(r.id)}><RiDeleteBinLine size={14} /></ActionBtn>

@@ -1,7 +1,7 @@
 module Api
   module V1
     class ReviewsController < BaseController
-      before_action :authenticate_user!, only: [:create, :update, :destroy, :mine]
+      before_action :authenticate_user!, only: [:update, :destroy, :mine]
 
       # GET /reviews  (전체 후기)
       def all
@@ -35,10 +35,14 @@ module Api
         }
       end
 
-      # POST /places/:place_id/reviews
+      # POST /places/:place_id/reviews  (회원 or 게스트)
       def create
         place = Place.find(params[:place_id])
-        review = place.reviews.build(review_params.merge(user: current_user))
+        review = place.reviews.build(review_params)
+        if current_user
+          review.user = current_user
+          review.author_name = nil   # 회원은 닉네임 표시명 사용
+        end
         if review.save
           render json: { data: serialize(review) }, status: :created
         else
@@ -70,7 +74,7 @@ module Api
       private
 
       def review_params
-        params.require(:review).permit(:body, :rating, :visited_at)
+        params.require(:review).permit(:body, :rating, :visited_at, :author_name)
       end
 
       def serialize(r, with_place: false)
@@ -80,7 +84,8 @@ module Api
           rating: r.rating,
           visited_at: r.visited_at,
           created_at: r.created_at,
-          user: { id: r.user.id, nickname: r.user.name }
+          user: r.user ? { id: r.user.id, nickname: r.user.name } : nil,
+          author_name: r.author_name,
         }
         if with_place
           data[:place] = {

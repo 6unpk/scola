@@ -35,7 +35,8 @@ interface Review {
   rating: number;
   visited_at: string | null;
   created_at: string;
-  user: { id: number; nickname: string };
+  user: { id: number; nickname: string } | null;
+  author_name: string | null;
   place: ReviewPlace;
 }
 
@@ -162,7 +163,7 @@ function ReviewsContent() {
                   <CardMeta>
                     <UserInfo>
                       <Avatar><RiUserLine size={13} /></Avatar>
-                      <UserName>{r.user.nickname}</UserName>
+                      <UserName>{r.user?.nickname ?? r.author_name ?? '익명'}</UserName>
                     </UserInfo>
                     <DateInfo>
                       <RiCalendarLine size={12} />
