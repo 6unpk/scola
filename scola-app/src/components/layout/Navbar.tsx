@@ -30,6 +30,7 @@ const NAV_ITEMS = [
     href: '/search',
     children: [
       { label: '사우나', href: '/search?category=sauna', desc: '전국 사우나 검색' },
+      { label: '목욕탕', href: '/search?category=bath', desc: '동네 목욕탕 검색' },
       { label: '찜질방', href: '/search?category=jjimjilbang', desc: '전국 찜질방 검색' },
       { label: '스파', href: '/search?category=spa', desc: '전국 스파 검색' },
     ],

@@ -28,7 +28,7 @@ const SPECIAL_COLORS: Record<string, string> = {
   황토방: '#A1887F', 불한증막: '#C62828', 한증막: '#EF5350', 불가마: '#F44336',
 };
 const CATEGORY_LABEL: Record<string, string> = {
-  sauna: '사우나', jjimjilbang: '찜질방', spa: '스파',
+  sauna: '사우나', bath: '목욕탕', jjimjilbang: '찜질방', spa: '스파',
 };
 
 const PageWrap = styled.div`min-height:100vh;background:${({theme})=>theme.colors.gray50};display:flex;flex-direction:column;`;

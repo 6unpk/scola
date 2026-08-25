@@ -161,7 +161,7 @@ export default function ReviewsSection() {
         <SectionHeader>
           <SectionTitle>생생한 이용 후기</SectionTitle>
         </SectionHeader>
-        <AutoCarousel duration={45}>
+        <AutoCarousel duration={60} mobileFactor={3.2}>
           {reviews.map((review) => (
             <ReviewCard key={review.key} onClick={() => router.push(`/place/${review.place_id}`)}>
               <ReviewTop>

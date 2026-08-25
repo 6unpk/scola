@@ -18,28 +18,33 @@ namespace :places do
     updated = 0
     skipped = 0
 
-    Place.find_each do |place|
-      text = [place.name, place.naver_category, place.search_keyword].compact.join(' ').downcase
+    bath_name_re  = /목욕탕|대중탕|목욕관|해수탕|약수탕/
+    other_name_re = /사우나|찜질|불가마|한증|스파|온천|아쿠아|워터|세신|호텔/
 
-      new_cats = RULES.each_with_object([]) do |rule, arr|
-        arr << rule[:category] if rule[:keywords].any? { |kw| text.include?(kw) }
+    Place.find_each do |place|
+      name = place.name.to_s.downcase
+      text = [place.name, place.naver_category, place.search_keyword].compact.join(' ').downcase
+      existing = (place.app_category || []).compact.reject(&:blank?)
+
+      if name.match?(bath_name_re) && !name.match?(other_name_re)
+        target = ['bath']
+      else
+        computed = RULES.each_with_object([]) do |rule, arr|
+          arr << rule[:category] if rule[:keywords].any? { |kw| text.include?(kw) }
+        end
+        computed << 'bath' if name.match?(bath_name_re)
+        next if computed.empty?
+        target = (existing + computed).uniq
       end
 
-      next if new_cats.empty?
-
-      existing = (place.app_category || []).compact.reject(&:blank?)
-      merged = (existing + new_cats).uniq
-      if merged.sort == existing.sort
+      if target.sort == existing.sort
         skipped += 1
         next
       end
 
-      unless dry_run
-        place.update_columns(app_category: merged)
-      end
-
+      place.update_columns(app_category: target) unless dry_run
       updated += 1
-      puts "  #{place.name}: #{place.app_category&.inspect} → #{merged.inspect}" if dry_run
+      puts "  #{place.name}: #{existing.inspect} → #{target.inspect}" if dry_run
     end
 
     puts "\n완료: #{updated}개 업데이트 (스킵 #{skipped}개)"

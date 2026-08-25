@@ -30,7 +30,7 @@ export async function generateMetadata(
 
   const addr = place.road_address ?? place.address ?? '';
   const categories = (place.app_category ?? [])
-    .map((c: string) => ({ sauna: '사우나', jjimjilbang: '찜질방', spa: '스파' }[c] ?? c))
+    .map((c: string) => ({ sauna: '사우나', bath: '목욕탕', jjimjilbang: '찜질방', spa: '스파' }[c] ?? c))
     .join(', ');
   const description = [
     place.description,

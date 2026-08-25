@@ -52,6 +52,8 @@ function SearchContent() {
   const initialCategory = searchParams.get('category');
   const [category, setCategory] = useState<string[]>(initialCategory ? [initialCategory] : []);
   const [region, setRegion] = useState<string[]>([]);
+  const [subregion, setSubregion] = useState<string[]>([]);
+  const [subOptions, setSubOptions] = useState<{ value: string; region: string; label: string; count: number }[]>([]);
   const [sort, setSort] = useState('recommend');
   const [is24hours, setIs24hours] = useState(false);
   const [hasRestaurant, setHasRestaurant] = useState(false);
@@ -73,6 +75,7 @@ function SearchContent() {
       if (query)          params.q         = query;
       if (category.length) params.category = category;
       if (region.length)   params.region   = region;
+      if (subregion.length) params.subregion = subregion;
       if (is24hours)     params.is_24hours      = 'true';
       if (hasRestaurant) params.has_restaurant  = 'true';
       if (hasSleepRoom)  params.has_sleep_room  = 'true';
@@ -88,13 +91,25 @@ function SearchContent() {
     } finally {
       setLoading(false);
     }
-  }, [query, category, region, sort, is24hours, hasRestaurant, hasSleepRoom, hasMassage, hasGym, kidsFacility, page]);
+  }, [query, category, region, subregion, sort, is24hours, hasRestaurant, hasSleepRoom, hasMassage, hasGym, kidsFacility, page]);
 
   useEffect(() => { fetchPlaces(); }, [fetchPlaces]);
-  useEffect(() => { setPage(1); }, [query, category, region, sort, is24hours, hasRestaurant, hasSleepRoom, hasMassage, hasGym, kidsFacility]);
+  useEffect(() => { setPage(1); }, [query, category, region, subregion, sort, is24hours, hasRestaurant, hasSleepRoom, hasMassage, hasGym, kidsFacility]);
+
+  useEffect(() => {
+    if (region.length === 0) { setSubOptions([]); setSubregion([]); return; }
+    api.get<{ data: typeof subOptions }>('/places/subregions', { params: { region } })
+      .then((res) => {
+        const opts = res.data.data ?? [];
+        setSubOptions(opts);
+        const valid = new Set(opts.map((o) => o.value));
+        setSubregion((prev) => prev.filter((v) => valid.has(v)));
+      })
+      .catch(() => { setSubOptions([]); });
+  }, [region]);
 
   const resetFilters = () => {
-    setQuery(''); setCategory([]); setRegion([]); setSort('recommend');
+    setQuery(''); setCategory([]); setRegion([]); setSubregion([]); setSort('recommend');
     setIs24hours(false); setHasRestaurant(false); setHasSleepRoom(false);
     setHasMassage(false); setHasGym(false); setKidsFacility(false);
     setPage(1);
@@ -106,7 +121,7 @@ function SearchContent() {
   const displayAddr = (p: Place) => p.road_address ?? p.address ?? '';
   const displayTags = (p: Place) => p.tags?.length ? p.tags : (p.amenities ?? []);
   const activeFilterCount = [is24hours, hasRestaurant, hasSleepRoom, hasMassage, hasGym, kidsFacility]
-    .filter(Boolean).length + category.length + region.length;
+    .filter(Boolean).length + category.length + region.length + subregion.length;
 
   const sortOptions = [
     { value: 'recommend', label: '추천순' },
@@ -155,6 +170,7 @@ function SearchContent() {
           <FilterSection title="카테고리">
             {[
               { value: 'sauna', label: '사우나' },
+              { value: 'bath', label: '목욕탕' },
               { value: 'jjimjilbang', label: '찜질방' },
               { value: 'spa', label: '스파' },
               { value: 'seshin', label: '세신샵' },
@@ -180,6 +196,19 @@ function SearchContent() {
               />
             ))}
           </FilterSection>
+
+          {subOptions.length > 0 && (
+            <FilterSection title="세부 지역">
+              {subOptions.map((o) => (
+                <Checkbox
+                  key={o.value}
+                  checked={subregion.includes(o.value)}
+                  onChange={() => setSubregion((prev) => toggleValue(prev, o.value))}
+                  label={`${region.length > 1 ? `${o.region} ` : ''}${o.label} (${o.count})`}
+                />
+              ))}
+            </FilterSection>
+          )}
 
           <FilterSection title="운영 조건">
             {[

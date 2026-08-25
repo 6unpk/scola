@@ -8,6 +8,7 @@ export const HERO_BANNERS = [
 export const CATEGORY_OPTIONS = [
   { value: '', label: '전체' },
   { value: 'sauna', label: '사우나' },
+  { value: 'bath', label: '목욕탕' },
   { value: 'jjimjilbang', label: '찜질방' },
   { value: 'spa', label: '스파' },
   { value: 'seshin', label: '세신샵' },

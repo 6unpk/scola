@@ -55,6 +55,20 @@ class PlacesController < ApplicationController
       end
     end
 
+    # 2차 지역(시군구) 필터 — 값은 "시도 시군구" 전체 prefix
+    if params[:subregion].present?
+      subs = Array(params[:subregion]).reject(&:blank?)
+      if subs.any?
+        clauses = []
+        values  = []
+        subs.each do |s|
+          clauses << "(road_address ILIKE ? OR (road_address IS NULL AND address ILIKE ?))"
+          values << "#{s}%" << "#{s}%"
+        end
+        scope = scope.where(clauses.join(" OR "), *values)
+      end
+    end
+
     # 불리언 필터
     %w[is_24hours has_restaurant has_sleep_room has_massage has_gym kids_facility membership_available].each do |flag|
       scope = scope.where(flag => true) if params[flag] == "true"
@@ -99,6 +113,31 @@ class PlacesController < ApplicationController
       meta: { total: total, page: page, per: per, total_pages: (total.to_f / per).ceil },
       data: places
     }
+  end
+
+  # GET /places/subregions?region[]=서울  — 선택 시도의 시군구 목록(데이터 기반, 개수 포함)
+  def subregions
+    regions = Array(params[:region]).reject(&:blank?)
+    return render json: { data: [] } if regions.empty?
+
+    prefixes = regions.map { |r| REGION_PREFIXES[r] || r }
+    rev = REGION_PREFIXES.invert
+    where = prefixes.map { "COALESCE(road_address, address) ILIKE ?" }.join(" OR ")
+    addr2 = "split_part(COALESCE(road_address, address), ' ', 1) || ' ' || split_part(COALESCE(road_address, address), ' ', 2)"
+
+    rows = Place
+      .where("COALESCE(road_address, address) IS NOT NULL")
+      .where(where, *prefixes.map { |p| "#{p}%" })
+      .select(Arel.sql("#{addr2} AS prefix2, COUNT(*) AS cnt"))
+      .group(Arel.sql("prefix2"))
+      .order(Arel.sql("cnt DESC"))
+
+    data = rows.filter_map do |r|
+      parts = r.prefix2.to_s.split(" ")
+      next if parts.size < 2 || parts[1].blank?
+      { value: r.prefix2, region: rev[parts[0]] || parts[0], label: parts[1], count: r.cnt }
+    end
+    render json: { data: data }
   end
 
   # GET /places/markers  — 지도용 경량 마커 목록 (좌표 있는 전량, 페이지네이션 없음)

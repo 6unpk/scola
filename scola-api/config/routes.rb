@@ -36,6 +36,7 @@ Rails.application.routes.draw do
   resources :places, only: [:index, :show, :update] do
     collection do
       get :markers
+      get :subregions
     end
     member do
       post :view

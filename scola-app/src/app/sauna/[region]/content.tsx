@@ -11,7 +11,7 @@ import { REGIONS, type RegionInfo } from '@/data/regions';
 import type { Place } from '@/types/place';
 
 const CAT_LABEL: Record<string, string> = {
-  sauna: '사우나', jjimjilbang: '찜질방', spa: '스파', seshin: '세신샵', hotel: '호텔', waterpark: '워터파크',
+  sauna: '사우나', bath: '목욕탕', jjimjilbang: '찜질방', spa: '스파', seshin: '세신샵', hotel: '호텔', waterpark: '워터파크',
 };
 
 // ─── Styled ───────────────────────────────────────────────────────────────────
