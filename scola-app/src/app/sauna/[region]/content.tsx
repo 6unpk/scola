@@ -68,9 +68,20 @@ const CardLink = styled(Link)`display:block;text-decoration:none;min-width:0;max
 
 const Empty = styled.p`text-align:center;padding:60px 0;color:${({ theme }) => theme.colors.gray500};`;
 
+const SubTitle = styled.h2`font-size:16px;font-weight:800;color:${({ theme }) => theme.colors.dark};margin:8px 0 12px;`;
+const SubLinks = styled.nav`display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;`;
+const SubLink = styled(Link)`
+  padding:7px 13px;border-radius:${({ theme }) => theme.radius.full};font-size:13px;font-weight:600;text-decoration:none;
+  border:1px solid ${({ theme }) => theme.colors.gray200};background:${({ theme }) => theme.colors.white};color:${({ theme }) => theme.colors.gray700};
+  &:hover{border-color:${({ theme }) => theme.colors.primary};color:${({ theme }) => theme.colors.primary};}
+`;
+
 // ─── Component ──────────────────────────────────────────────────────────────────
 
-export default function RegionContent({ region, places }: { region: RegionInfo; places: Place[] }) {
+export default function RegionContent(
+  { region, places, subLinks }:
+  { region: RegionInfo; places: Place[]; subLinks?: { href: string; label: string; count: number }[] },
+) {
   const count = places.length;
   const heroImg = places.find((p) => p.thumbnail)?.thumbnail ?? null;
 
@@ -128,6 +139,17 @@ export default function RegionContent({ region, places }: { region: RegionInfo; 
               {region.name}에서 가장 잘 맞는 사우나를 찾아보세요. 위치는 <Link href="/map" style={{ color: '#A62121', fontWeight: 700 }}>지도</Link>에서도 한눈에 확인할 수 있습니다.
             </IntroP>
           </Intro>
+        )}
+
+        {subLinks && subLinks.length > 0 && (
+          <>
+            <SubTitle>{region.name} 세부 지역</SubTitle>
+            <SubLinks aria-label="세부 지역">
+              {subLinks.map((s) => (
+                <SubLink key={s.href} href={s.href}>{s.label} ({s.count})</SubLink>
+              ))}
+            </SubLinks>
+          </>
         )}
 
         <Cta href="/map">

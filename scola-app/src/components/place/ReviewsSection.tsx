@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import styled from 'styled-components';
 import {
   RiStarFill, RiStarLine, RiUserLine, RiDeleteBinLine,
@@ -275,6 +275,12 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
   const [body, setBody] = useState('');
   const [visitedAt, setVisitedAt] = useState('');
   const [authorName, setAuthorName] = useState('');
+  const bodyRef = useRef<HTMLTextAreaElement>(null);
+
+  const focusForm = () => {
+    bodyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    bodyRef.current?.focus();
+  };
 
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editBody, setEditBody] = useState('');
@@ -366,7 +372,7 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
     new Date(iso).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
 
   return (
-    <Wrap>
+    <Wrap id="reviews">
       <Card>
         <SectionTitle>
           <RiPencilLine size={14} />
@@ -411,6 +417,7 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
               />
             </VisitedRow>
             <Textarea
+              ref={bodyRef}
               placeholder="이 곳에서의 경험을 자유롭게 적어주세요. (10자 이상)"
               value={body}
               onChange={(e) => setBody(e.target.value)}
@@ -436,7 +443,11 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
         {loading ? (
           <EmptyState>불러오는 중...</EmptyState>
         ) : reviews.length === 0 ? (
-          <EmptyState>아직 후기가 없습니다. 첫 번째 후기를 남겨보세요!</EmptyState>
+          <EmptyState>
+            <p style={{ fontSize: 15, fontWeight: 700, color: '#424242', marginBottom: 6 }}>아직 이곳의 후기가 없어요.</p>
+            <p style={{ fontSize: 13, marginBottom: 16 }}>첫 리뷰를 남기고 다른 방문객에게 도움을 주세요!</p>
+            {!hasMyReview && <SubmitBtn onClick={focusForm}>첫 리뷰 남기기</SubmitBtn>}
+          </EmptyState>
         ) : (
           <ReviewList>
             {reviews.map((r) => (

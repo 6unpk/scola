@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 import {
   RiMapPin2Line, RiPhoneLine, RiTimeLine, RiGlobalLine, RiArrowLeftLine,
   RiCarLine, RiGroupLine, RiTempHotLine, RiStarFill,
   RiCoinLine, RiCheckLine, RiCloseLine, RiSubtractLine,
-  RiDropLine, RiFireLine, RiSnowflakeLine, RiEyeLine,
+  RiDropLine, RiFireLine, RiSnowflakeLine, RiEyeLine, RiPencilLine,
 } from '@remixicon/react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -66,6 +66,11 @@ const PriceRow = styled.div`display:flex;justify-content:space-between;align-ite
 const ReviewStat = styled.div`display:flex;gap:20px;`;
 const ReviewNum = styled.div`display:flex;flex-direction:column;gap:2px;span:first-child{font-size:26px;font-weight:800;color:${({theme})=>theme.colors.dark};}span:last-child{font-size:11px;color:${({theme})=>theme.colors.gray400};font-weight:600;text-transform:uppercase;letter-spacing:0.3px;}`;
 const NaverBtn = styled.a`display:inline-flex;align-items:center;gap:5px;padding:7px 14px;background:#03C75A;border:1.5px solid #03C75A;border-radius:${({theme})=>theme.radius.full};color:white;font-size:12px;font-weight:700;text-decoration:none;transition:opacity 0.15s;&:hover{opacity:0.88;}`;
+const ReviewCtaBtn = styled.button`width:100%;display:flex;align-items:center;justify-content:center;gap:6px;padding:11px;margin-bottom:10px;background:${({theme})=>theme.colors.primary};color:#fff;border:none;border-radius:${({theme})=>theme.radius.md};font-size:14px;font-weight:800;cursor:pointer;&:hover{opacity:0.9;}`;
+const NudgeBar = styled.div`position:fixed;left:0;right:0;bottom:0;z-index:400;display:flex;align-items:center;justify-content:center;gap:14px;padding:12px 44px;background:${({theme})=>theme.colors.dark};color:#fff;box-shadow:0 -4px 16px rgba(0,0,0,0.22);`;
+const NudgeText = styled.span`font-size:14px;font-weight:600;@media (max-width:480px){font-size:12.5px;}`;
+const NudgeBtn = styled.button`flex-shrink:0;padding:8px 16px;background:${({theme})=>theme.colors.primary};color:#fff;border:none;border-radius:${({theme})=>theme.radius.full};font-size:13px;font-weight:800;cursor:pointer;`;
+const NudgeClose = styled.button`position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,0.55);cursor:pointer;line-height:1;`;
 const SkeletonHero = styled.div`width:100%;height:340px;background:${({theme})=>theme.colors.gray200};`;
 const SkeletonBlock = styled.div<{$h?:string;$w?:string}>`height:${({$h})=>$h??'16px'};width:${({$w})=>$w??'100%'};border-radius:6px;background:${({theme})=>theme.colors.gray100};`;
 
@@ -118,6 +123,16 @@ export default function PlaceDetailClient({ place }: Props) {
   const router = useRouter();
   const placeId = place?.id;
   useEffect(() => { if (placeId) api.post(`/places/${placeId}/view`).catch(() => {}); }, [placeId]);
+
+  const [showNudge, setShowNudge] = useState(false);
+  const [nudgeDismissed, setNudgeDismissed] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setShowNudge(window.scrollY > 700);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const scrollToReviews = () => document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' });
 
   if (!place) return (
     <PageWrap>
@@ -387,6 +402,9 @@ export default function PlaceDetailClient({ place }: Props) {
             <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#9E9E9E', marginBottom: 14 }}>
               <RiEyeLine size={13} /> 조회 {(place.views ?? 0).toLocaleString()}
             </div>
+            <ReviewCtaBtn onClick={scrollToReviews}>
+              <RiPencilLine size={15} /> 이곳 리뷰 남기기
+            </ReviewCtaBtn>
             <NaverBtn href={`https://map.naver.com/p/entry/place/${place.naver_place_id}`} target="_blank" rel="noopener noreferrer">
               <RiMapPin2Line size={13} /> 네이버 지도에서 보기
             </NaverBtn>
@@ -403,6 +421,15 @@ export default function PlaceDetailClient({ place }: Props) {
         </Sidebar>
       </Content>
       <NearbyPlacesSection currentPlaceId={place.id} address={place.road_address ?? place.address} />
+
+      {showNudge && !nudgeDismissed && (
+        <NudgeBar>
+          <NudgeText>이곳 다녀오셨다면 후기를 남겨주세요 🙌</NudgeText>
+          <NudgeBtn onClick={() => { setNudgeDismissed(true); scrollToReviews(); }}>후기 쓰기</NudgeBtn>
+          <NudgeClose onClick={() => setNudgeDismissed(true)} aria-label="닫기"><RiCloseLine size={18} /></NudgeClose>
+        </NudgeBar>
+      )}
+
       <Footer />
     </PageWrap>
   );

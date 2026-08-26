@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { REGIONS, regionBySlug } from '@/data/regions';
+import { fetchSubregions, sigunguSlug, MIN_SUBREGION_PLACES } from '@/lib/sigungu';
 import RegionContent from './content';
 import JsonLd from '@/components/seo/JsonLd';
 import type { Place } from '@/types/place';
@@ -65,6 +66,11 @@ export default async function RegionPage(
 
   const places = await fetchRegionPlaces(info.name);
 
+  const subs = await fetchSubregions(info.name);
+  const subLinks = subs
+    .filter((s) => s.count >= MIN_SUBREGION_PLACES)
+    .map((s) => ({ href: `/sauna/${region}/${sigunguSlug(s.label)}`, label: s.label, count: s.count }));
+
   const itemListJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
@@ -92,7 +98,7 @@ export default async function RegionPage(
     <>
       <JsonLd data={itemListJsonLd} />
       <JsonLd data={breadcrumbJsonLd} />
-      <RegionContent region={info} places={places} />
+      <RegionContent region={info} places={places} subLinks={subLinks} />
     </>
   );
 }

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { REGIONS } from '@/data/regions';
+import { fetchSubregions, sigunguSlug, MIN_SUBREGION_PLACES } from '@/lib/sigungu';
 
 const BASE = 'https://scola.kr';
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.scola.kr';
@@ -70,6 +71,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.85,
   }));
 
+  const subregionLists = await Promise.all(REGIONS.map((r) => fetchSubregions(r.name)));
+  const sigunguRoutes: MetadataRoute.Sitemap = REGIONS.flatMap((r, i) =>
+    subregionLists[i]
+      .filter((s) => s.count >= MIN_SUBREGION_PLACES)
+      .map((s) => ({
+        url: `${BASE}/sauna/${r.slug}/${sigunguSlug(s.label)}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.8,
+      })),
+  );
+
   const placeRoutes: MetadataRoute.Sitemap = placeIds.map((id) => ({
     url: `${BASE}/place/${id}`,
     lastModified: new Date(),
@@ -84,5 +97,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.75,
   }));
 
-  return [...staticRoutes, ...regionRoutes, ...postRoutes, ...placeRoutes];
+  return [...staticRoutes, ...regionRoutes, ...sigunguRoutes, ...postRoutes, ...placeRoutes];
 }
