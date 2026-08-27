@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import PlaceDetailClient from './PlaceDetailClient';
 import JsonLd from '@/components/seo/JsonLd';
+import { resolvePlaceLinks } from '@/lib/sigungu';
 import type { Place } from '@/types/place';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.scola.kr';
@@ -86,11 +87,12 @@ export default async function PlaceDetailPage(
 ) {
   const { id } = await params;
   const place = await fetchPlace(id);
+  const regionLinks = place ? await resolvePlaceLinks(place.road_address ?? place.address) : null;
 
   return (
     <>
       {place && <JsonLd data={buildJsonLd(place, id)} />}
-      <PlaceDetailClient place={place} />
+      <PlaceDetailClient place={place} regionLinks={regionLinks} />
     </>
   );
 }

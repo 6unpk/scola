@@ -9,12 +9,14 @@ import {
   RiCoinLine, RiCheckLine, RiCloseLine, RiSubtractLine,
   RiDropLine, RiFireLine, RiSnowflakeLine, RiEyeLine, RiPencilLine,
 } from '@remixicon/react';
+import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ReviewsSection from '@/components/place/ReviewsSection';
 import NearbyPlacesSection from '@/components/place/NearbyPlacesSection';
 import api from '@/lib/api';
 import type { Place } from '@/types/place';
+import type { PlaceRegionLinks } from '@/lib/sigungu';
 
 const BATH_COLORS: Record<string, string> = {
   온탕: '#E57373', 열탕: '#C62828', 냉탕: '#42A5F5', 노천탕: '#66BB6A',
@@ -71,6 +73,7 @@ const NudgeBar = styled.div`position:fixed;left:0;right:0;bottom:0;z-index:400;d
 const NudgeText = styled.span`font-size:14px;font-weight:600;@media (max-width:480px){font-size:12.5px;}`;
 const NudgeBtn = styled.button`flex-shrink:0;padding:8px 16px;background:${({theme})=>theme.colors.primary};color:#fff;border:none;border-radius:${({theme})=>theme.radius.full};font-size:13px;font-weight:800;cursor:pointer;`;
 const NudgeClose = styled.button`position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,0.55);cursor:pointer;line-height:1;`;
+const RegionMoreLink = styled(Link)`display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border:1px solid ${({theme})=>theme.colors.gray200};border-radius:${({theme})=>theme.radius.md};font-size:14px;font-weight:700;color:${({theme})=>theme.colors.dark};text-decoration:none;&:hover{border-color:${({theme})=>theme.colors.primary};color:${({theme})=>theme.colors.primary};}&+&{margin-top:8px;}`;
 const SkeletonHero = styled.div`width:100%;height:340px;background:${({theme})=>theme.colors.gray200};`;
 const SkeletonBlock = styled.div<{$h?:string;$w?:string}>`height:${({$h})=>$h??'16px'};width:${({$w})=>$w??'100%'};border-radius:6px;background:${({theme})=>theme.colors.gray100};`;
 
@@ -117,9 +120,9 @@ function getStatus(place: Place, def: AmenityDef): 'yes' | 'no' | 'unknown' {
   return 'unknown';
 }
 
-interface Props { place: Place | null; }
+interface Props { place: Place | null; regionLinks?: PlaceRegionLinks | null; }
 
-export default function PlaceDetailClient({ place }: Props) {
+export default function PlaceDetailClient({ place, regionLinks }: Props) {
   const router = useRouter();
   const placeId = place?.id;
   useEffect(() => { if (placeId) api.post(`/places/${placeId}/view`).catch(() => {}); }, [placeId]);
@@ -409,6 +412,20 @@ export default function PlaceDetailClient({ place }: Props) {
               <RiMapPin2Line size={13} /> 네이버 지도에서 보기
             </NaverBtn>
           </Card>
+
+          {regionLinks && (
+            <Card>
+              <SectionTitle><RiMapPin2Line size={14} /> 이 지역 더 보기</SectionTitle>
+              <RegionMoreLink href={`/sauna/${regionLinks.region.slug}`}>
+                <span>{regionLinks.region.name} 사우나·찜질방</span><span>›</span>
+              </RegionMoreLink>
+              {regionLinks.sigungu && (
+                <RegionMoreLink href={`/sauna/${regionLinks.region.slug}/${regionLinks.sigungu.slug}`}>
+                  <span>{regionLinks.sigungu.label} 사우나·목욕탕</span><span>›</span>
+                </RegionMoreLink>
+              )}
+            </Card>
+          )}
 
           {(hasPriceTiers || (place.price_info?.length ?? 0) > 0 || place.admission_fee) && (
             <Card>
