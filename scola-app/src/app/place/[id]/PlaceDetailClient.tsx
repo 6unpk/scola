@@ -14,6 +14,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ReviewsSection from '@/components/place/ReviewsSection';
 import NearbyPlacesSection from '@/components/place/NearbyPlacesSection';
+import SuggestionModal from '@/components/place/SuggestionModal';
 import api from '@/lib/api';
 import type { Place } from '@/types/place';
 import type { PlaceRegionLinks } from '@/lib/sigungu';
@@ -74,6 +75,10 @@ const NudgeText = styled.span`font-size:14px;font-weight:600;@media (max-width:4
 const NudgeBtn = styled.button`flex-shrink:0;padding:8px 16px;background:${({theme})=>theme.colors.primary};color:#fff;border:none;border-radius:${({theme})=>theme.radius.full};font-size:13px;font-weight:800;cursor:pointer;`;
 const NudgeClose = styled.button`position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,0.55);cursor:pointer;line-height:1;`;
 const RegionMoreLink = styled(Link)`display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border:1px solid ${({theme})=>theme.colors.gray200};border-radius:${({theme})=>theme.radius.md};font-size:14px;font-weight:700;color:${({theme})=>theme.colors.dark};text-decoration:none;&:hover{border-color:${({theme})=>theme.colors.primary};color:${({theme})=>theme.colors.primary};}&+&{margin-top:8px;}`;
+const SuggestBtn = styled.button`margin-left:auto;display:inline-flex;align-items:center;gap:3px;padding:3px 9px;background:none;border:1px solid ${({theme})=>theme.colors.gray200};border-radius:${({theme})=>theme.radius.full};font-size:11px;font-weight:700;color:${({theme})=>theme.colors.gray500};cursor:pointer;letter-spacing:0;text-transform:none;&:hover{border-color:${({theme})=>theme.colors.primary};color:${({theme})=>theme.colors.primary};}`;
+const InfoSuggestCta = styled.button`width:100%;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;padding:10px;background:white;color:${({theme})=>theme.colors.gray700};border:1.5px solid ${({theme})=>theme.colors.gray300};border-radius:${({theme})=>theme.radius.md};font-size:13px;font-weight:700;cursor:pointer;&:hover{border-color:${({theme})=>theme.colors.dark};color:${({theme})=>theme.colors.dark};}`;
+const EmptyInfo = styled.div`display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px 12px;text-align:center;p{font-size:14px;color:${({theme})=>theme.colors.gray500};line-height:1.6;}`;
+const EmptyBtn = styled.button`display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:${({theme})=>theme.colors.primary};color:#fff;border:none;border-radius:${({theme})=>theme.radius.full};font-size:13px;font-weight:800;cursor:pointer;&:hover{opacity:0.9;}`;
 const SkeletonHero = styled.div`width:100%;height:340px;background:${({theme})=>theme.colors.gray200};`;
 const SkeletonBlock = styled.div<{$h?:string;$w?:string}>`height:${({$h})=>$h??'16px'};width:${({$w})=>$w??'100%'};border-radius:6px;background:${({theme})=>theme.colors.gray100};`;
 
@@ -129,6 +134,7 @@ export default function PlaceDetailClient({ place, regionLinks }: Props) {
 
   const [showNudge, setShowNudge] = useState(false);
   const [nudgeDismissed, setNudgeDismissed] = useState(false);
+  const [suggestOpen, setSuggestOpen] = useState(false);
   useEffect(() => {
     const onScroll = () => setShowNudge(window.scrollY > 700);
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -256,9 +262,19 @@ export default function PlaceDetailClient({ place, regionLinks }: Props) {
             </Card>
           )}
 
-          {hasSaunaSpec && (
+          {!hasSaunaSpec && (
             <Card>
               <SectionTitle><RiTempHotLine size={14} /> 사우나 정보</SectionTitle>
+              <EmptyInfo>
+                <p>아직 등록된 상세 정보가 없어요.<br />다녀오셨다면 온도·탕 종류 등을 알려주세요!</p>
+                <EmptyBtn onClick={() => setSuggestOpen(true)}><RiPencilLine size={14} /> 정보 알려주기</EmptyBtn>
+              </EmptyInfo>
+            </Card>
+          )}
+
+          {hasSaunaSpec && (
+            <Card>
+              <SectionTitle><RiTempHotLine size={14} /> 사우나 정보<SuggestBtn onClick={() => setSuggestOpen(true)}><RiPencilLine size={12} /> 제보</SuggestBtn></SectionTitle>
               {place.sauna_type && <SpecRow><SpecLabel>종류</SpecLabel><SpecValue>{place.sauna_type}</SpecValue></SpecRow>}
               {place.room_count && <SpecRow><SpecLabel>방 개수</SpecLabel><SpecValue>{place.room_count}개</SpecValue></SpecRow>}
               {place.sauna_temp && <SpecRow><SpecLabel><RiFireLine size={14} color="#EF5350" /> 사우나 온도</SpecLabel><SpecValue style={{color:'#C62828'}}>{place.sauna_temp}</SpecValue></SpecRow>}
@@ -307,7 +323,7 @@ export default function PlaceDetailClient({ place, regionLinks }: Props) {
 
           {(hasFacilityData || hasAmenities) && (
             <Card>
-              <SectionTitle>편의시설</SectionTitle>
+              <SectionTitle>편의시설<SuggestBtn onClick={() => setSuggestOpen(true)}><RiPencilLine size={12} /> 제보</SuggestBtn></SectionTitle>
               <AmenityGrid>
                 {AMENITY_DEFS.map((def) => {
                   const status = getStatus(place, def);
@@ -411,6 +427,9 @@ export default function PlaceDetailClient({ place, regionLinks }: Props) {
             <NaverBtn href={`https://map.naver.com/p/entry/place/${place.naver_place_id}`} target="_blank" rel="noopener noreferrer">
               <RiMapPin2Line size={13} /> 네이버 지도에서 보기
             </NaverBtn>
+            <InfoSuggestCta onClick={() => setSuggestOpen(true)}>
+              <RiPencilLine size={13} /> 정보 수정·제보하기
+            </InfoSuggestCta>
           </Card>
 
           {regionLinks && (
@@ -446,6 +465,8 @@ export default function PlaceDetailClient({ place, regionLinks }: Props) {
           <NudgeClose onClick={() => setNudgeDismissed(true)} aria-label="닫기"><RiCloseLine size={18} /></NudgeClose>
         </NudgeBar>
       )}
+
+      <SuggestionModal place={place} open={suggestOpen} onClose={() => setSuggestOpen(false)} />
 
       <Footer />
     </PageWrap>

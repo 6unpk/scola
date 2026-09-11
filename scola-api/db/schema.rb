@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_08_23_000000) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_11_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -69,6 +69,20 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_23_000000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_lessons_on_user_id"
+  end
+
+  create_table "place_suggestions", force: :cascade do |t|
+    t.bigint "place_id", null: false
+    t.bigint "user_id"
+    t.string "author_name"
+    t.jsonb "payload", default: {}, null: false
+    t.text "note"
+    t.string "status", default: "pending", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["place_id"], name: "index_place_suggestions_on_place_id"
+    t.index ["status"], name: "index_place_suggestions_on_status"
+    t.index ["user_id"], name: "index_place_suggestions_on_user_id"
   end
 
   create_table "places", force: :cascade do |t|
@@ -207,6 +221,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_23_000000) do
   add_foreign_key "lesson_enrollments", "lessons"
   add_foreign_key "lesson_enrollments", "students"
   add_foreign_key "lessons", "users"
+  add_foreign_key "place_suggestions", "places"
   add_foreign_key "reviews", "places"
   add_foreign_key "reviews", "users"
   add_foreign_key "students", "users"

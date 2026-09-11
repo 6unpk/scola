@@ -42,6 +42,7 @@ Rails.application.routes.draw do
       post :view
     end
     resources :reviews, only: [:index, :create, :update, :destroy], module: 'api/v1'
+    resources :suggestions, only: [:create], module: 'api/v1', controller: 'place_suggestions'
   end
 
   resources :students
