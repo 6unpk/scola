@@ -179,6 +179,14 @@ class PlacesController < ApplicationController
     head :no_content
   end
 
+  def track_event
+    type = params[:event_type].to_s
+    if PlaceEvent::EVENT_TYPES.include?(type) && Place.exists?(id: params[:id])
+      PlaceEvent.create(place_id: params[:id], event_type: type)
+    end
+    head :no_content
+  end
+
   # PATCH /places/:id  — 수동 데이터 보강용 (인증 필요)
   def update
     authenticate_user!

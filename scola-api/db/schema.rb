@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_09_11_000000) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_14_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -69,6 +69,14 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_11_000000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_lessons_on_user_id"
+  end
+
+  create_table "place_events", force: :cascade do |t|
+    t.bigint "place_id", null: false
+    t.string "event_type", null: false
+    t.datetime "created_at", null: false
+    t.index ["event_type", "created_at"], name: "index_place_events_on_event_type_and_created_at"
+    t.index ["place_id", "created_at"], name: "index_place_events_on_place_id_and_created_at"
   end
 
   create_table "place_suggestions", force: :cascade do |t|
@@ -221,6 +229,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_11_000000) do
   add_foreign_key "lesson_enrollments", "lessons"
   add_foreign_key "lesson_enrollments", "students"
   add_foreign_key "lessons", "users"
+  add_foreign_key "place_events", "places"
   add_foreign_key "place_suggestions", "places"
   add_foreign_key "reviews", "places"
   add_foreign_key "reviews", "users"

@@ -1,6 +1,7 @@
 class Place < ApplicationRecord
   has_many :reviews, dependent: :destroy
   has_many :place_suggestions, dependent: :destroy
+  has_many :place_events, dependent: :destroy
 
   def self.ransackable_attributes(auth_object = nil)
     %w[address admission_fee age_restriction amenities app_category bath_types

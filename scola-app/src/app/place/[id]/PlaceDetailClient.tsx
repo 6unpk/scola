@@ -154,6 +154,8 @@ export default function PlaceDetailClient({ place, regionLinks }: Props) {
     </PageWrap>
   );
 
+  const track = (type: string) => api.post(`/places/${place.id}/events`, { event_type: type }).catch(() => {});
+
   const thumbSrc = place.thumbnail ?? '/place-placeholder.svg';
   const addr = place.road_address ?? place.address;
   const hasBaths = (place.bath_types?.length ?? 0) > 0;
@@ -196,7 +198,7 @@ export default function PlaceDetailClient({ place, regionLinks }: Props) {
             <SectionTitle>기본 정보</SectionTitle>
             <InfoList>
               {addr && <InfoRow><RiMapPin2Line size={15} /><span>{addr}</span></InfoRow>}
-              {place.phone && <InfoRow><RiPhoneLine size={15} /><a href={`tel:${place.phone}`}>{place.phone}</a></InfoRow>}
+              {place.phone && <InfoRow><RiPhoneLine size={15} /><a href={`tel:${place.phone}`} onClick={() => track('call')}>{place.phone}</a></InfoRow>}
               {(place.open_hours ?? place.business_hours) && (
                 <InfoRow>
                   <RiTimeLine size={15} />
@@ -208,7 +210,7 @@ export default function PlaceDetailClient({ place, regionLinks }: Props) {
                   </div>
                 </InfoRow>
               )}
-              {place.homepage && <InfoRow><RiGlobalLine size={15} /><a href={place.homepage} target="_blank" rel="noopener noreferrer">{place.homepage}</a></InfoRow>}
+              {place.homepage && <InfoRow><RiGlobalLine size={15} /><a href={place.homepage} target="_blank" rel="noopener noreferrer" onClick={() => track('homepage')}>{place.homepage}</a></InfoRow>}
               {place.parking && <InfoRow><RiCarLine size={15} /><span>{place.parking}{place.parking_count ? ` (${place.parking_count}대)` : ''}</span></InfoRow>}
               {place.age_restriction && <InfoRow><RiGroupLine size={15} /><span>{place.age_restriction}</span></InfoRow>}
             </InfoList>
@@ -424,7 +426,7 @@ export default function PlaceDetailClient({ place, regionLinks }: Props) {
             <ReviewCtaBtn onClick={scrollToReviews}>
               <RiPencilLine size={15} /> 이곳 리뷰 남기기
             </ReviewCtaBtn>
-            <NaverBtn href={`https://map.naver.com/p/entry/place/${place.naver_place_id}`} target="_blank" rel="noopener noreferrer">
+            <NaverBtn href={`https://map.naver.com/p/entry/place/${place.naver_place_id}`} target="_blank" rel="noopener noreferrer" onClick={() => track('naver_map')}>
               <RiMapPin2Line size={13} /> 네이버 지도에서 보기
             </NaverBtn>
             <InfoSuggestCta onClick={() => setSuggestOpen(true)}>
