@@ -18,6 +18,7 @@ import SuggestionModal from '@/components/place/SuggestionModal';
 import api from '@/lib/api';
 import type { Place } from '@/types/place';
 import type { PlaceRegionLinks } from '@/lib/sigungu';
+import { CATEGORY_LABEL } from '@/data/categories';
 
 const BATH_COLORS: Record<string, string> = {
   온탕: '#E57373', 열탕: '#C62828', 냉탕: '#42A5F5', 노천탕: '#66BB6A',
@@ -30,10 +31,6 @@ const SPECIAL_COLORS: Record<string, string> = {
   숯가마: '#546E7A', 맥반석방: '#8D6E63', 게르마늄방: '#66BB6A', 편백방: '#81C784',
   황토방: '#A1887F', 불한증막: '#C62828', 한증막: '#EF5350', 불가마: '#F44336',
 };
-const CATEGORY_LABEL: Record<string, string> = {
-  sauna: '사우나', bath: '목욕탕', jjimjilbang: '찜질방', spa: '스파',
-};
-
 const PageWrap = styled.div`min-height:100vh;background:${({theme})=>theme.colors.gray50};display:flex;flex-direction:column;`;
 const Hero = styled.div`width:100%;height:340px;overflow:hidden;background:${({theme})=>theme.colors.dark};position:relative;img{width:100%;height:100%;object-fit:cover;display:block;opacity:0.8;}`;
 const HeroOverlay = styled.div`position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.65) 100%);`;

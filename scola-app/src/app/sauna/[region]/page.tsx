@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { REGIONS, regionBySlug } from '@/data/regions';
-import { fetchSubregions, sigunguSlug, MIN_SUBREGION_PLACES } from '@/lib/sigungu';
+import { fetchSubregions, sigunguSlug, MIN_SUBREGION_PLACES, excludeWaterparks } from '@/lib/sigungu';
 import RegionContent from './content';
 import JsonLd from '@/components/seo/JsonLd';
 import type { Place } from '@/types/place';
@@ -23,7 +23,7 @@ async function fetchRegionPlaces(name: string): Promise<Place[]> {
     );
     if (!res.ok) return [];
     const data = await res.json();
-    return data.data ?? [];
+    return excludeWaterparks(data.data ?? []);
   } catch {
     return [];
   }

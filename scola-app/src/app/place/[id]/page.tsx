@@ -3,6 +3,7 @@ import PlaceDetailClient from './PlaceDetailClient';
 import JsonLd from '@/components/seo/JsonLd';
 import { resolvePlaceLinks } from '@/lib/sigungu';
 import type { Place } from '@/types/place';
+import { categoryLabel } from '@/data/categories';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.scola.kr';
 
@@ -31,7 +32,7 @@ export async function generateMetadata(
 
   const addr = place.road_address ?? place.address ?? '';
   const categories = (place.app_category ?? [])
-    .map((c: string) => ({ sauna: '사우나', bath: '목욕탕', jjimjilbang: '찜질방', spa: '스파' }[c] ?? c))
+    .map((c: string) => categoryLabel(c))
     .join(', ');
   const description = [
     place.description,

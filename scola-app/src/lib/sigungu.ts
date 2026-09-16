@@ -1,7 +1,18 @@
 import { romanize } from 'es-hangul';
 import { regionBySlug } from '@/data/regions';
+import type { Place } from '@/types/place';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.scola.kr';
+
+const CORE_SAUNA_CATS = ['sauna', 'jjimjilbang', 'bath', 'spa', 'seshin'];
+
+export function excludeWaterparks(places: Place[]): Place[] {
+  return places.filter((p) => {
+    const cats = p.app_category ?? [];
+    if (!cats.includes('waterpark')) return true;
+    return cats.some((c) => CORE_SAUNA_CATS.includes(c));
+  });
+}
 
 const FULL_NAME_TO_SLUG: Record<string, string> = {
   '서울특별시': 'seoul', '부산광역시': 'busan', '인천광역시': 'incheon', '대구광역시': 'daegu',

@@ -9,10 +9,7 @@ import PlaceCardItem from '@/components/place/PlaceCardItem';
 import LazyImage from '@/components/ui/LazyImage';
 import { REGIONS, type RegionInfo } from '@/data/regions';
 import type { Place } from '@/types/place';
-
-const CAT_LABEL: Record<string, string> = {
-  sauna: '사우나', bath: '목욕탕', jjimjilbang: '찜질방', spa: '스파', seshin: '세신샵', hotel: '호텔', waterpark: '워터파크',
-};
+import { CATEGORY_LABEL as CAT_LABEL } from '@/data/categories';
 
 // ─── Styled ───────────────────────────────────────────────────────────────────
 
@@ -91,7 +88,7 @@ export default function RegionContent(
     return acc;
   }, {});
   const catSummary = Object.entries(catCounts)
-    .filter(([c]) => CAT_LABEL[c])
+    .filter(([c]) => CAT_LABEL[c] && c !== 'waterpark')
     .sort((a, b) => b[1] - a[1])
     .slice(0, 4)
     .map(([c, n]) => `${CAT_LABEL[c]} ${n.toLocaleString()}곳`)
