@@ -4,7 +4,10 @@ import { motion } from 'motion/react';
 // ─── Hero 배경 ────────────────────────────────────────────────────────────────
 
 export const Hero = styled.section`
-  background: linear-gradient(135deg, ${({ theme }) => theme.colors.dark} 0%, ${({ theme }) => theme.colors.primaryDark} 50%, ${({ theme }) => theme.colors.primary} 100%);
+  background:
+    linear-gradient(135deg, rgba(13,13,13,0.9) 0%, rgba(89,21,21,0.72) 55%, rgba(166,33,33,0.5) 100%),
+    url('/hero-bg.webp') center / cover no-repeat;
+  background-color: ${({ theme }) => theme.colors.dark};
   padding: 80px 20px 100px;
   position: relative;
 `;
@@ -14,6 +17,7 @@ export const AuroraWrapper = styled.div`
   inset: 0;
   overflow: hidden;
   pointer-events: none;
+  opacity: 0.5;
   z-index: 0;
 `;
 
