@@ -5,7 +5,7 @@ import { motion } from 'motion/react';
 
 export const Hero = styled.section`
   background:
-    linear-gradient(135deg, rgba(13,13,13,0.9) 0%, rgba(89,21,21,0.72) 55%, rgba(166,33,33,0.5) 100%),
+    linear-gradient(180deg, rgba(13,13,13,0.45) 0%, rgba(13,13,13,0.28) 55%, rgba(89,21,21,0.4) 100%),
     url('/hero-bg.webp') center / cover no-repeat;
   background-color: ${({ theme }) => theme.colors.dark};
   padding: 80px 20px 100px;
@@ -17,7 +17,7 @@ export const AuroraWrapper = styled.div`
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.3;
   z-index: 0;
 `;
 
