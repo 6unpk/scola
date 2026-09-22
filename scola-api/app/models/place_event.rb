@@ -1,7 +1,7 @@
 class PlaceEvent < ApplicationRecord
   belongs_to :place
 
-  EVENT_TYPES = %w[call naver_map homepage].freeze
+  EVENT_TYPES = %w[call naver_map homepage share].freeze
 
   validates :event_type, inclusion: { in: EVENT_TYPES }
 

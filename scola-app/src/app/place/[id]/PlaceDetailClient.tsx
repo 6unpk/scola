@@ -15,6 +15,7 @@ import Footer from '@/components/layout/Footer';
 import ReviewsSection from '@/components/place/ReviewsSection';
 import NearbyPlacesSection from '@/components/place/NearbyPlacesSection';
 import SuggestionModal from '@/components/place/SuggestionModal';
+import ShareButton from '@/components/place/ShareButton';
 import api from '@/lib/api';
 import type { Place } from '@/types/place';
 import type { PlaceRegionLinks } from '@/lib/sigungu';
@@ -429,6 +430,7 @@ export default function PlaceDetailClient({ place, regionLinks }: Props) {
             <InfoSuggestCta onClick={() => setSuggestOpen(true)}>
               <RiPencilLine size={13} /> 정보 수정·제보하기
             </InfoSuggestCta>
+            <ShareButton id={place.id} name={place.name} />
           </Card>
 
           {regionLinks && (

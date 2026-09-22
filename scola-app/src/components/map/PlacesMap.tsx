@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef } from 'react';
 import type { PlaceMarker } from '@/types/place';
+import { sharePlace } from '@/lib/share';
 
 const BRAND = '#A62121';
 
@@ -42,9 +43,14 @@ function infoHtml(p: PlaceMarker) {
           (addr ? `<div style="font-size:11px;color:#888;line-height:1.4;overflow:hidden;">${addr}</div>` : '') +
         `</div>` +
       `</div>` +
-      `<a href="/place/${p.id}" style="display:block;margin-top:10px;text-align:center;` +
-        `background:${BRAND};color:#fff;font-size:12px;font-weight:700;padding:8px 0;` +
-        `border-radius:8px;text-decoration:none;">상세보기</a>` +
+      `<div style="display:flex;gap:6px;margin-top:10px;">` +
+        `<a href="/place/${p.id}" style="flex:1;text-align:center;` +
+          `background:${BRAND};color:#fff;font-size:12px;font-weight:700;padding:8px 0;` +
+          `border-radius:8px;text-decoration:none;">상세보기</a>` +
+        `<button type="button" onclick="window.__scolaShare&&window.__scolaShare(${p.id})" ` +
+          `style="flex:0 0 auto;background:#fff;border:1.5px solid #ddd;color:#333;font-size:12px;` +
+          `font-weight:700;padding:8px 12px;border-radius:8px;cursor:pointer;">공유</button>` +
+      `</div>` +
     `</div>`
   );
 }
@@ -60,6 +66,14 @@ export default function PlacesMap({ places, ready }: Props) {
   const clusterRef = useRef<any>(null);
   const infoRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
+
+  useEffect(() => {
+    (window as any).__scolaShare = (id: number) => {
+      const p = places.find((x) => String(x.id) === String(id));
+      sharePlace(id, p?.name ?? '');
+    };
+    return () => { delete (window as any).__scolaShare; };
+  }, [places]);
 
   // 지도 1회 초기화
   useEffect(() => {
