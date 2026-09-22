@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { ChevronRight, Map as MapIcon } from 'lucide-react';
@@ -27,8 +28,15 @@ const H1 = styled.h1`font-size:clamp(26px,5vw,40px);font-weight:900;line-height:
 const Blurb = styled.p`font-size:15px;line-height:1.7;color:rgba(255,255,255,0.72);max-width:640px;`;
 const Count = styled.p`margin-top:16px;font-size:14px;color:rgba(255,255,255,0.55);strong{color:#fff;font-weight:800;}`;
 
-const RegionNav = styled.nav`max-width:1100px;margin:24px auto 0;padding:0 20px;display:flex;flex-wrap:wrap;gap:8px;`;
+const RegionNav = styled.nav`
+  max-width:1100px;margin:24px auto 0;padding:0 20px;display:flex;flex-wrap:wrap;gap:8px;
+  @media (max-width:${({ theme }) => theme.breakpoints.md}){
+    flex-wrap:nowrap;overflow-x:auto;scroll-padding:0 20px;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    &::-webkit-scrollbar{display:none;}
+  }
+`;
 const RegionChip = styled(Link)<{ $active?: boolean }>`
+  flex-shrink:0;white-space:nowrap;
   padding:7px 14px;border-radius:${({ theme }) => theme.radius.full};font-size:13px;font-weight:700;text-decoration:none;
   border:1.5px solid ${({ $active, theme }) => ($active ? theme.colors.primary : theme.colors.gray200)};
   background:${({ $active, theme }) => ($active ? theme.colors.primary : theme.colors.white)};
@@ -66,8 +74,15 @@ const CardLink = styled(Link)`display:block;text-decoration:none;min-width:0;max
 const Empty = styled.p`text-align:center;padding:60px 0;color:${({ theme }) => theme.colors.gray500};`;
 
 const SubTitle = styled.h2`font-size:16px;font-weight:800;color:${({ theme }) => theme.colors.dark};margin:8px 0 12px;`;
-const SubLinks = styled.nav`display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;`;
+const SubLinks = styled.nav`
+  display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;
+  @media (max-width:${({ theme }) => theme.breakpoints.md}){
+    flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    &::-webkit-scrollbar{display:none;}
+  }
+`;
 const SubLink = styled(Link)`
+  flex-shrink:0;white-space:nowrap;
   padding:7px 13px;border-radius:${({ theme }) => theme.radius.full};font-size:13px;font-weight:600;text-decoration:none;
   border:1px solid ${({ theme }) => theme.colors.gray200};background:${({ theme }) => theme.colors.white};color:${({ theme }) => theme.colors.gray700};
   &:hover{border-color:${({ theme }) => theme.colors.primary};color:${({ theme }) => theme.colors.primary};}
@@ -81,6 +96,14 @@ export default function RegionContent(
 ) {
   const count = places.length;
   const heroImg = places.find((p) => p.thumbnail)?.thumbnail ?? null;
+
+  const navRef = useRef<HTMLElement>(null);
+  const activeChipRef = useRef<HTMLAnchorElement>(null);
+  useEffect(() => {
+    const nav = navRef.current;
+    const chip = activeChipRef.current;
+    if (nav && chip) nav.scrollLeft = chip.offsetLeft - nav.clientWidth / 2 + chip.clientWidth / 2;
+  }, [region.slug]);
 
   // 카테고리별 개수 → 인트로 문장
   const catCounts = places.reduce<Record<string, number>>((acc, p) => {
@@ -115,9 +138,14 @@ export default function RegionContent(
         </HeroInner>
       </Hero>
 
-      <RegionNav aria-label="지역 선택">
+      <RegionNav aria-label="지역 선택" ref={navRef}>
         {REGIONS.map((r) => (
-          <RegionChip key={r.slug} href={`/sauna/${r.slug}`} $active={r.slug === region.slug}>
+          <RegionChip
+            key={r.slug}
+            href={`/sauna/${r.slug}`}
+            $active={r.slug === region.slug}
+            ref={r.slug === region.slug ? activeChipRef : undefined}
+          >
             {r.name}
           </RegionChip>
         ))}
