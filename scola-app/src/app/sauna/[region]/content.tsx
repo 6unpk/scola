@@ -29,7 +29,7 @@ const Blurb = styled.p`font-size:15px;line-height:1.7;color:rgba(255,255,255,0.7
 const Count = styled.p`margin-top:16px;font-size:14px;color:rgba(255,255,255,0.55);strong{color:#fff;font-weight:800;}`;
 
 const RegionNav = styled.nav`
-  max-width:1100px;margin:24px auto 0;padding:0 20px;display:flex;flex-wrap:wrap;gap:8px;
+  max-width:1100px;margin:24px auto 0;padding:0 20px;display:flex;flex-wrap:wrap;gap:8px;min-width:0;
   @media (max-width:${({ theme }) => theme.breakpoints.md}){
     flex-wrap:nowrap;overflow-x:auto;scroll-padding:0 20px;scrollbar-width:none;-webkit-overflow-scrolling:touch;
     &::-webkit-scrollbar{display:none;}
