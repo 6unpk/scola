@@ -461,7 +461,7 @@ export default function PlaceDetailClient({ place, regionLinks }: Props) {
 
       {showNudge && !nudgeDismissed && (
         <NudgeBar>
-          <NudgeText>이곳 다녀오셨다면 후기를 남겨주세요 🙌</NudgeText>
+          <NudgeText>다녀오셨다면 후기를 남겨주세요</NudgeText>
           <NudgeBtn onClick={() => { setNudgeDismissed(true); scrollToReviews(); }}>후기 쓰기</NudgeBtn>
           <NudgeClose onClick={() => setNudgeDismissed(true)} aria-label="닫기"><RiCloseLine size={18} /></NudgeClose>
         </NudgeBar>
