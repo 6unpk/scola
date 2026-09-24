@@ -31,7 +31,7 @@ const Count = styled.p`margin-top:16px;font-size:14px;color:rgba(255,255,255,0.5
 const RegionNav = styled.nav`
   max-width:1100px;margin:24px auto 0;padding:0 20px;display:flex;flex-wrap:wrap;gap:8px;min-width:0;
   @media (max-width:${({ theme }) => theme.breakpoints.md}){
-    flex-wrap:nowrap;overflow-x:auto;scroll-padding:0 20px;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    flex-wrap:nowrap;overflow-x:auto;max-width:100%;scroll-padding:0 20px;scrollbar-width:none;-webkit-overflow-scrolling:touch;
     &::-webkit-scrollbar{display:none;}
   }
 `;
