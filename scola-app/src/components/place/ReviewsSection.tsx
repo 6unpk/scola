@@ -8,6 +8,7 @@ import {
 } from '@remixicon/react';
 import api from '@/lib/api';
 import { useAuthStore } from '@/store/authStore';
+import { QUICK_TAGS } from '@/data/reviewTags';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -19,6 +20,7 @@ interface Review {
   created_at: string;
   user: { id: number; nickname: string } | null;
   author_name: string | null;
+  tags: string[];
 }
 
 // ─── Styled ───────────────────────────────────────────────────────────────────
@@ -61,6 +63,42 @@ const StarRow = styled.div`
   display: flex;
   gap: 4px;
   margin-bottom: 12px;
+`;
+
+const TagChipRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 12px;
+`;
+
+const TagChip = styled.button<{ $active: boolean }>`
+  padding: 6px 12px;
+  border-radius: ${({ theme }) => theme.radius.full};
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.12s;
+  border: 1.5px solid ${({ $active, theme }) => ($active ? theme.colors.primary : theme.colors.gray200)};
+  background: ${({ $active, theme }) => ($active ? theme.colors.primaryLight : theme.colors.white)};
+  color: ${({ $active, theme }) => ($active ? theme.colors.primary : theme.colors.gray600)};
+`;
+
+const TagList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+`;
+
+const TagBadge = styled.span`
+  padding: 4px 10px;
+  border-radius: ${({ theme }) => theme.radius.full};
+  font-size: 11.5px;
+  font-weight: 700;
+  background: ${({ theme }) => theme.colors.gray50};
+  border: 1px solid ${({ theme }) => theme.colors.gray200};
+  color: ${({ theme }) => theme.colors.gray600};
 `;
 
 const StarBtn = styled.button<{ $active: boolean }>`
@@ -273,9 +311,13 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
   const [rating, setRating] = useState(5);
   const [hovered, setHovered] = useState(0);
   const [body, setBody] = useState('');
+  const [tags, setTags] = useState<string[]>([]);
   const [visitedAt, setVisitedAt] = useState('');
   const [authorName, setAuthorName] = useState('');
   const bodyRef = useRef<HTMLTextAreaElement>(null);
+
+  const toggleTag = (t: string, current: string[], set: (v: string[]) => void) =>
+    set(current.includes(t) ? current.filter((x) => x !== t) : [...current, t]);
 
   const focusForm = () => {
     bodyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -285,6 +327,7 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editBody, setEditBody] = useState('');
   const [editRating, setEditRating] = useState(5);
+  const [editTags, setEditTags] = useState<string[]>([]);
   const [editVisitedAt, setEditVisitedAt] = useState('');
   const [editError, setEditError] = useState('');
   const [editSubmitting, setEditSubmitting] = useState(false);
@@ -303,18 +346,18 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
   const hasMyReview = !!user && reviews.some((r) => r.user?.id === user.id);
 
   const handleSubmit = async () => {
-    if (!body.trim() || body.length < 10) { setError('후기는 10자 이상 작성해주세요.'); return; }
     if (!authed && !authorName.trim()) { setError('닉네임을 입력해주세요.'); return; }
     setError('');
     setSubmitting(true);
     try {
       await api.post(
         `/places/${placeId}/reviews`,
-        { review: { body, rating, visited_at: visitedAt || null, author_name: authed ? undefined : authorName.trim() } },
+        { review: { body: body.trim(), rating, tags, visited_at: visitedAt || null, author_name: authed ? undefined : authorName.trim() } },
         authed ? { headers: { Authorization: `Bearer ${token}` } } : undefined
       );
       setBody('');
       setRating(5);
+      setTags([]);
       setVisitedAt('');
       setAuthorName('');
       await fetchReviews();
@@ -328,8 +371,9 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
 
   const startEdit = (r: Review) => {
     setEditingId(r.id);
-    setEditBody(r.body);
+    setEditBody(r.body ?? '');
     setEditRating(r.rating);
+    setEditTags(r.tags ?? []);
     setEditVisitedAt(r.visited_at ? r.visited_at.slice(0, 10) : '');
     setEditError('');
   };
@@ -337,13 +381,12 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
   const cancelEdit = () => { setEditingId(null); setEditError(''); };
 
   const handleUpdate = async (id: number) => {
-    if (editBody.trim().length < 10) { setEditError('후기는 10자 이상 작성해주세요.'); return; }
     setEditSubmitting(true);
     setEditError('');
     try {
       const res = await api.patch(
         `/places/${placeId}/reviews/${id}`,
-        { review: { body: editBody, rating: editRating, visited_at: editVisitedAt || null } },
+        { review: { body: editBody.trim(), rating: editRating, tags: editTags, visited_at: editVisitedAt || null } },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setReviews((prev) => prev.map((r) => r.id === id ? res.data.data : r));
@@ -406,6 +449,13 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
                 </StarBtn>
               ))}
             </StarRow>
+            <TagChipRow>
+              {QUICK_TAGS.map((t) => (
+                <TagChip key={t} type="button" $active={tags.includes(t)} onClick={() => toggleTag(t, tags, setTags)}>
+                  {t}
+                </TagChip>
+              ))}
+            </TagChipRow>
             <VisitedRow>
               <RiCalendarLine size={13} />
               <span>방문일 (선택)</span>
@@ -418,7 +468,7 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
             </VisitedRow>
             <Textarea
               ref={bodyRef}
-              placeholder="이 곳에서의 경험을 자유롭게 적어주세요. (10자 이상)"
+              placeholder="한 줄 후기 (선택) — 별점·태그만 남겨도 좋아요"
               value={body}
               onChange={(e) => setBody(e.target.value)}
               maxLength={1000}
@@ -426,7 +476,7 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
             {error && <ErrMsg>{error}</ErrMsg>}
             <FormActions>
               <CharCount>{body.length} / 1000</CharCount>
-              <SubmitBtn onClick={handleSubmit} disabled={submitting || body.length < 10 || (!authed && !authorName.trim())}>
+              <SubmitBtn onClick={handleSubmit} disabled={submitting || (!authed && !authorName.trim())}>
                 {submitting ? '등록 중...' : '후기 등록'}
               </SubmitBtn>
             </FormActions>
@@ -490,6 +540,13 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
                         </StarBtn>
                       ))}
                     </StarRow>
+                    <TagChipRow>
+                      {QUICK_TAGS.map((t) => (
+                        <TagChip key={t} type="button" $active={editTags.includes(t)} onClick={() => toggleTag(t, editTags, setEditTags)}>
+                          {t}
+                        </TagChip>
+                      ))}
+                    </TagChipRow>
                     <VisitedRow>
                       <RiCalendarLine size={13} />
                       <span>방문일</span>
@@ -511,7 +568,7 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
                       <CharCount>{editBody.length} / 1000</CharCount>
                       <div style={{ display: 'flex', gap: 8 }}>
                         <CancelBtn onClick={cancelEdit}>취소</CancelBtn>
-                        <SaveBtn onClick={() => handleUpdate(r.id)} disabled={editSubmitting || editBody.length < 10}>
+                        <SaveBtn onClick={() => handleUpdate(r.id)} disabled={editSubmitting}>
                           {editSubmitting ? '저장 중...' : '저장'}
                         </SaveBtn>
                       </div>
@@ -519,7 +576,12 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
                   </EditForm>
                 ) : (
                   <>
-                    <ReviewBody>{r.body}</ReviewBody>
+                    {r.body && <ReviewBody>{r.body}</ReviewBody>}
+                    {r.tags?.length > 0 && (
+                      <TagList>
+                        {r.tags.map((t) => <TagBadge key={t}>{t}</TagBadge>)}
+                      </TagList>
+                    )}
                     {r.visited_at && (
                       <VisitedTag>
                         <RiCalendarLine size={11} />

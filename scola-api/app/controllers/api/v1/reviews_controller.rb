@@ -74,7 +74,7 @@ module Api
       private
 
       def review_params
-        params.require(:review).permit(:body, :rating, :visited_at, :author_name)
+        params.require(:review).permit(:body, :rating, :visited_at, :author_name, tags: [])
       end
 
       def serialize(r, with_place: false)
@@ -86,6 +86,7 @@ module Api
           created_at: r.created_at,
           user: r.user ? { id: r.user.id, nickname: r.user.name } : nil,
           author_name: r.author_name,
+          tags: r.tags || [],
         }
         if with_place
           data[:place] = {
