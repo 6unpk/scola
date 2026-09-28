@@ -16,6 +16,7 @@ import ReviewsSection from '@/components/place/ReviewsSection';
 import NearbyPlacesSection from '@/components/place/NearbyPlacesSection';
 import SuggestionModal from '@/components/place/SuggestionModal';
 import ShareButton from '@/components/place/ShareButton';
+import PlaceLocationMap from '@/components/place/PlaceLocationMap';
 import api from '@/lib/api';
 import type { Place } from '@/types/place';
 import type { PlaceRegionLinks } from '@/lib/sigungu';
@@ -216,6 +217,14 @@ export default function PlaceDetailClient({ place, regionLinks }: Props) {
               <p style={{ marginTop:18,fontSize:14,lineHeight:1.75,color:'#616161',borderTop:'1px solid #f0f0f0',paddingTop:16 }}>{place.description}</p>
             )}
           </Card>
+
+          {place.latitude != null && place.longitude != null && (
+            <Card>
+              <SectionTitle><RiMapPin2Line size={14} /> 위치</SectionTitle>
+              <PlaceLocationMap lat={place.latitude} lng={place.longitude} name={place.name} />
+              {addr && <p style={{ marginTop:12, fontSize:14, color:'#616161' }}>{addr}</p>}
+            </Card>
+          )}
 
           {hasProfile && (
             <Card>
