@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Bagel_Fat_One, IBM_Plex_Sans_KR } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
+import Script from 'next/script';
 import StyledRegistry from '@/lib/StyledRegistry';
 import QueryProvider from '@/lib/QueryProvider';
 
@@ -69,6 +70,13 @@ export default function RootLayout({
           <QueryProvider>{children}</QueryProvider>
         </StyledRegistry>
         <Analytics />
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-358590L5PJ" strategy="afterInteractive" />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-358590L5PJ');`}
+        </Script>
       </body>
     </html>
   );
