@@ -29,10 +29,15 @@ class PostsController < ApplicationController
     head :no_content
   end
 
+  def like
+    Post.where(slug: params[:slug]).update_all("likes = likes + 1")
+    head :no_content
+  end
+
   private
 
   def serialize(post)
-    post.as_json(only: %i[id title slug body excerpt thumbnail category author_name published_at created_at updated_at views])
+    post.as_json(only: %i[id title slug body excerpt thumbnail category author_name published_at created_at updated_at views likes])
         .merge(
           'meta_title'       => post.effective_meta_title,
           'meta_description' => post.effective_meta_description,

@@ -11,6 +11,7 @@ export interface Post {
   created_at: string;
   updated_at?: string | null;
   views?: number;
+  likes?: number;
   meta_title?: string | null;
   meta_description?: string | null;
   keywords?: string | null;

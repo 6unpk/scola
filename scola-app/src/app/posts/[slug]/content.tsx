@@ -1,16 +1,18 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
-import { ArrowLeft, Calendar, User, Eye } from 'lucide-react';
+import { ArrowLeft, Calendar, User, Eye, Heart, MapPin } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import LazyImage from '@/components/ui/LazyImage';
+import PlaceCardItem from '@/components/place/PlaceCardItem';
 import api from '@/lib/api';
 import type { Post } from '@/types/post';
+import type { Place, PlacesResponse } from '@/types/place';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 
@@ -20,7 +22,7 @@ const PageWrap = styled.div`min-height:100vh;background:${({ theme }) => theme.c
 
 const Hero = styled.div`width:100%;height:380px;overflow:hidden;position:relative;background:${({ theme }) => theme.colors.dark};`;
 const HeroOverlay = styled.div`position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.75) 100%);`;
-const HeroContent = styled.div`position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:24px 28px;max-width:860px;margin:0 auto;width:100%;left:50%;transform:translateX(-50%);`;
+const HeroContent = styled.div`position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:24px 28px;max-width:860px;margin:0 auto;width:100%;`;
 const BackBtn = styled.button`
   display:flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(0,0,0,0.4);
   border:1.5px solid rgba(255,255,255,0.25);border-radius:${({ theme }) => theme.radius.full};color:white;
@@ -57,6 +59,25 @@ const Body = styled.div`
 
 const PlaceholderHero = styled.div`width:100%;height:380px;background:linear-gradient(135deg,${({ theme }) => theme.colors.dark} 0%,#2a2a2a 100%);position:relative;`;
 
+const LikeRow = styled.div`display:flex;justify-content:center;margin:28px 0 8px;`;
+const LikeBtn = styled.button<{ $liked: boolean }>`
+  display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:${({ theme }) => theme.radius.full};
+  border:2px solid ${({ $liked, theme }) => ($liked ? theme.colors.primary : theme.colors.gray200)};
+  background:${({ $liked, theme }) => ($liked ? theme.colors.primaryLight : theme.colors.white)};
+  color:${({ $liked, theme }) => ($liked ? theme.colors.primary : theme.colors.gray700)};
+  font-size:15px;font-weight:800;cursor:pointer;transition:all 0.15s;
+  &:hover{border-color:${({ theme }) => theme.colors.primary};color:${({ theme }) => theme.colors.primary};}
+  svg{fill:${({ $liked }) => ($liked ? 'currentColor' : 'none')};}
+`;
+const RecoSection = styled.section`margin-top:40px;`;
+const RecoTitle = styled.h2`font-size:18px;font-weight:900;color:${({ theme }) => theme.colors.dark};margin-bottom:16px;`;
+const RecoGrid = styled.div`display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;@media (max-width:760px){grid-template-columns:minmax(0,1fr);}`;
+const CtaBtn = styled.button`
+  width:100%;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:8px;padding:16px;
+  background:${({ theme }) => theme.colors.primary};color:#fff;border:none;border-radius:${({ theme }) => theme.radius.lg};
+  font-size:16px;font-weight:800;cursor:pointer;&:hover{opacity:0.92;}
+`;
+
 const CAT_LABELS: Record<string, string> = {
   sauna: '사우나 이야기', wellness: '건강 & 웰빙', travel: '여행 & 지역', guide: '가이드', etc: '기타',
 };
@@ -67,6 +88,27 @@ export default function PostContent({ post }: { post: Post }) {
   const router = useRouter();
   useEffect(() => { api.post(`/posts/${post.slug}/view`).catch(() => {}); }, [post.slug]);
   const formatDate = (d: string | null) => (d ? format(new Date(d), 'yyyy년 M월 d일', { locale: ko }) : '');
+
+  const likeKey = `scola-liked-${post.slug}`;
+  const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState(post.likes ?? 0);
+  useEffect(() => {
+    try { setLiked(localStorage.getItem(likeKey) === '1'); } catch {}
+  }, [likeKey]);
+  const handleLike = () => {
+    if (liked) return;
+    setLiked(true);
+    setLikes((n) => n + 1);
+    try { localStorage.setItem(likeKey, '1'); } catch {}
+    api.post(`/posts/${post.slug}/like`).catch(() => {});
+  };
+
+  const [reco, setReco] = useState<Place[]>([]);
+  useEffect(() => {
+    api.get<PlacesResponse>('/places', { params: { sort: 'recommend', per: 3, has_image: 'true' } })
+      .then((res) => setReco(res.data.data))
+      .catch(() => {});
+  }, []);
 
   const heroMeta = (
     <HeroMeta>
@@ -112,6 +154,28 @@ export default function PostContent({ post }: { post: Post }) {
             <p style={{ color: '#9E9E9E', textAlign: 'center', padding: '40px 0' }}>내용이 없습니다.</p>
           )}
         </Body>
+
+        <LikeRow>
+          <LikeBtn $liked={liked} onClick={handleLike}>
+            <Heart size={18} />
+            {liked ? '도움이 됐어요!' : '이 글이 도움이 됐나요?'}
+            {likes > 0 && <span>{likes.toLocaleString()}</span>}
+          </LikeBtn>
+        </LikeRow>
+
+        {reco.length > 0 && (
+          <RecoSection>
+            <RecoTitle>스콜라 추천 사우나</RecoTitle>
+            <RecoGrid>
+              {reco.map((p) => (
+                <PlaceCardItem key={p.id} place={p} onClick={() => router.push(`/place/${p.id}`)} />
+              ))}
+            </RecoGrid>
+          </RecoSection>
+        )}
+        <CtaBtn onClick={() => router.push('/map')}>
+          <MapPin size={18} /> 내 주변 사우나·찜질방 찾기
+        </CtaBtn>
       </ArticleWrap>
 
       <Footer />

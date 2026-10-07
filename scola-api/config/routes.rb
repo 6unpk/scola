@@ -23,6 +23,7 @@ Rails.application.routes.draw do
 
   # 조회수 증가
   post 'posts/:slug/view', to: 'posts#view'
+  post 'posts/:slug/like', to: 'posts#like'
 
   # 검색어 기록 / 인기 검색어
   post 'search_queries', to: 'search_queries#create'
