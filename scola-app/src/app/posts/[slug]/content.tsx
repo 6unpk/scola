@@ -51,7 +51,7 @@ const Body = styled.div`
   ul,ol{padding-left:1.5em;margin:1em 0;li{margin:0.4em 0;}}
   code{font-family:'Courier New',monospace;font-size:0.88em;background:${({ theme }) => theme.colors.gray100};padding:2px 6px;border-radius:4px;color:${({ theme }) => theme.colors.primary};}
   pre{background:${({ theme }) => theme.colors.dark};border-radius:${({ theme }) => theme.radius.md};padding:20px;overflow-x:auto;margin:1.5em 0;code{background:none;color:#e0e0e0;padding:0;font-size:0.9em;}}
-  img{max-width:100%;border-radius:${({ theme }) => theme.radius.lg};margin:1.5em 0;}
+  img{display:block;max-width:100%;border-radius:${({ theme }) => theme.radius.lg};margin:1.5em auto;}
   hr{border:none;border-top:1.5px solid ${({ theme }) => theme.colors.gray200};margin:2em 0;}
   table{width:100%;border-collapse:collapse;margin:1.5em 0;font-size:0.93em;th,td{border:1px solid ${({ theme }) => theme.colors.gray200};padding:10px 14px;text-align:left;}th{background:${({ theme }) => theme.colors.gray50};font-weight:700;}}
   strong{font-weight:800;}
