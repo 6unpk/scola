@@ -6,11 +6,11 @@ import type { Post } from '@/types/post';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.scola.kr';
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 async function fetchPost(slug: string): Promise<Post | null> {
   try {
-    const res = await fetch(`${API_BASE}/posts/${encodeURIComponent(slug)}`, { next: { revalidate: 3600 } });
+    const res = await fetch(`${API_BASE}/posts/${encodeURIComponent(slug)}`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const data = await res.json();
     return data.data ?? null;

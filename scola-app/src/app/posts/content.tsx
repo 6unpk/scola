@@ -18,7 +18,7 @@ const PageWrap = styled.div`min-height:100vh;background:${({ theme }) => theme.c
 const Hero = styled.div`background:${({ theme }) => theme.colors.dark};padding:64px 20px 48px;text-align:center;`;
 const HeroTitle = styled.h1`font-size:36px;font-weight:900;color:white;margin-bottom:12px;`;
 const HeroSub = styled.p`font-size:15px;color:rgba(255,255,255,0.55);`;
-const Inner = styled.div`max-width:1100px;margin:0 auto;padding:48px 20px;flex:1;`;
+const Inner = styled.div`max-width:1100px;margin:0 auto;padding:48px 20px;flex:1;width:100%;`;
 const CategoryTabs = styled.div`display:flex;gap:8px;flex-wrap:wrap;margin-bottom:36px;`;
 const Tab = styled.button<{ $active: boolean }>`
   padding:7px 18px;border-radius:${({ theme }) => theme.radius.full};font-size:13px;font-weight:700;
