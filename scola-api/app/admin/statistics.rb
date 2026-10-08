@@ -34,6 +34,15 @@ ActiveAdmin.register_page "Statistics" do
       "SELECT cat, COUNT(*) AS cnt FROM (SELECT unnest(app_category) AS cat FROM places) s WHERE cat <> '' GROUP BY cat ORDER BY cnt DESC"
     )
 
+    post_cat = { "sauna" => "사우나 이야기", "wellness" => "건강 & 웰빙", "travel" => "여행 & 지역", "guide" => "가이드", "etc" => "기타" }
+    posts = Post.order(views: :desc)
+    post_kpis = [
+      ["발행 글", Post.where(published: true).count],
+      ["초안(미발행)", Post.where(published: false).count],
+      ["누적 조회수", number_with_delimiter(Post.sum(:views))],
+      ["누적 좋아요", number_with_delimiter(Post.sum(:likes))],
+    ]
+
     columns do
       column do
         panel "핵심 지표" do
@@ -47,6 +56,21 @@ ActiveAdmin.register_page "Statistics" do
           table_for cat_rows do
             column("카테고리") { |r| cat_labels[r[0]] || r[0] }
             column("개수") { |r| number_with_delimiter(r[1].to_i) }
+          end
+        end
+
+        panel "매거진" do
+          table_for post_kpis do
+            column("항목") { |r| r[0] }
+            column("값") { |r| r[1] }
+          end
+          table_for posts do
+            column("글") { |p| link_to(p.title.truncate(40), admin_post_path(p)) }
+            column("카테고리") { |p| post_cat[p.category] || p.category }
+            column("상태") { |p| p.published ? "발행" : "초안" }
+            column("발행일") { |p| p.published_at&.strftime("%Y-%m-%d") }
+            column("조회") { |p| number_with_delimiter(p.views) }
+            column("좋아요") { |p| number_with_delimiter(p.likes) }
           end
         end
       end
