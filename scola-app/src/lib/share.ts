@@ -4,23 +4,26 @@ const SITE = 'https://scola.kr';
 
 export type ShareResult = 'shared' | 'copied' | 'failed';
 
-export async function sharePlace(id: number | string, name: string): Promise<ShareResult> {
-  const url = `${SITE}/place/${id}`;
-  const title = name ? `${name} | 스콜라` : '스콜라';
+export const SITE_URL = SITE;
 
-  let result: ShareResult = 'failed';
+export async function shareLink(url: string, title: string): Promise<ShareResult> {
   try {
     if (typeof navigator !== 'undefined' && navigator.share) {
       await navigator.share({ title, url });
-      result = 'shared';
-    } else if (typeof navigator !== 'undefined' && navigator.clipboard) {
-      await navigator.clipboard.writeText(url);
-      result = 'copied';
+      return 'shared';
     }
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      await navigator.clipboard.writeText(url);
+      return 'copied';
+    }
+    return 'failed';
   } catch {
     return 'failed';
   }
+}
 
+export async function sharePlace(id: number | string, name: string): Promise<ShareResult> {
+  const result = await shareLink(`${SITE}/place/${id}`, name ? `${name} | 스콜라` : '스콜라');
   if (result !== 'failed') {
     api.post(`/places/${id}/events`, { event_type: 'share' }).catch(() => {});
   }

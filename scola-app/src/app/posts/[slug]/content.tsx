@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
-import { ArrowLeft, Calendar, User, Eye, Heart, MapPin } from 'lucide-react';
+import { ArrowLeft, Calendar, User, Eye, Heart, MapPin, Share2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import Navbar from '@/components/layout/Navbar';
@@ -11,6 +11,7 @@ import Footer from '@/components/layout/Footer';
 import LazyImage from '@/components/ui/LazyImage';
 import PlaceCardItem from '@/components/place/PlaceCardItem';
 import api from '@/lib/api';
+import { shareLink, SITE_URL } from '@/lib/share';
 import type { Post } from '@/types/post';
 import type { Place, PlacesResponse } from '@/types/place';
 import { format } from 'date-fns';
@@ -59,7 +60,7 @@ const Body = styled.div`
 
 const PlaceholderHero = styled.div`width:100%;height:380px;background:linear-gradient(135deg,${({ theme }) => theme.colors.dark} 0%,#2a2a2a 100%);position:relative;`;
 
-const LikeRow = styled.div`display:flex;justify-content:center;margin:28px 0 8px;`;
+const LikeRow = styled.div`display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:28px 0 8px;`;
 const LikeBtn = styled.button<{ $liked: boolean }>`
   display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:${({ theme }) => theme.radius.full};
   border:2px solid ${({ $liked, theme }) => ($liked ? theme.colors.primary : theme.colors.gray200)};
@@ -101,6 +102,15 @@ export default function PostContent({ post }: { post: Post }) {
     setLikes((n) => n + 1);
     try { localStorage.setItem(likeKey, '1'); } catch {}
     api.post(`/posts/${post.slug}/like`).catch(() => {});
+  };
+
+  const [copied, setCopied] = useState(false);
+  const handleShare = async () => {
+    const r = await shareLink(`${SITE_URL}/posts/${post.slug}`, `${post.title} | 스콜라`);
+    if (r === 'copied') {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   const [reco, setReco] = useState<Place[]>([]);
@@ -160,6 +170,10 @@ export default function PostContent({ post }: { post: Post }) {
             <Heart size={18} />
             {liked ? '도움이 됐어요!' : '이 글이 도움이 됐나요?'}
             {likes > 0 && <span>{likes.toLocaleString()}</span>}
+          </LikeBtn>
+          <LikeBtn $liked={copied} onClick={handleShare}>
+            <Share2 size={18} />
+            {copied ? '링크 복사됨' : '공유하기'}
           </LikeBtn>
         </LikeRow>
 
