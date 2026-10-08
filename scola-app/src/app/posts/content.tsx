@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 import { Calendar, User, ChevronRight, Eye } from 'lucide-react';
@@ -67,13 +67,16 @@ const CATEGORIES = [
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function PostsListContent() {
+export default function PostsListContent(
+  { initialPosts, initialMeta }: { initialPosts?: Post[]; initialMeta?: { total: number; total_pages: number } },
+) {
   const router = useRouter();
   const [category, setCategory] = useState('');
   const [page, setPage] = useState(1);
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [meta, setMeta] = useState({ total: 0, total_pages: 1 });
-  const [loading, setLoading] = useState(true);
+  const [posts, setPosts] = useState<Post[]>(initialPosts ?? []);
+  const [meta, setMeta] = useState(initialMeta ?? { total: 0, total_pages: 1 });
+  const [loading, setLoading] = useState(!initialPosts);
+  const skipFirstFetch = useRef(!!initialPosts);
 
   const fetch = useCallback(async () => {
     setLoading(true);
@@ -90,7 +93,10 @@ export default function PostsListContent() {
     }
   }, [category, page]);
 
-  useEffect(() => { fetch(); }, [fetch]);
+  useEffect(() => {
+    if (skipFirstFetch.current) { skipFirstFetch.current = false; return; }
+    fetch();
+  }, [fetch]);
   useEffect(() => { setPage(1); }, [category]);
 
   const formatDate = (d: string | null) => (d ? format(new Date(d), 'yyyy. M. d.', { locale: ko }) : '');

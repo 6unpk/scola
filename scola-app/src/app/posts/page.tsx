@@ -1,5 +1,21 @@
 import type { Metadata } from 'next';
 import PostsListContent from './content';
+import JsonLd from '@/components/seo/JsonLd';
+import type { Post, PostsResponse } from '@/types/post';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.scola.kr';
+
+export const revalidate = 60;
+
+async function fetchFirstPage(): Promise<PostsResponse | null> {
+  try {
+    const res = await fetch(`${API_BASE}/posts?per=9&page=1`, { next: { revalidate: 60 } });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
 
 const title = '스콜라 매거진 — 사우나·찜질방 이야기';
 const description =
@@ -21,6 +37,28 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image', title: `${title} | 스콜라`, description, images: ['https://scola.kr/og-image.png'] },
 };
 
-export default function Page() {
-  return <PostsListContent />;
+export default async function Page() {
+  const first = await fetchFirstPage();
+  const posts: Post[] = first?.data ?? [];
+  const itemList = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: '스콜라 매거진',
+    numberOfItems: posts.length,
+    itemListElement: posts.map((p, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url: `https://scola.kr/posts/${p.slug}`,
+      name: p.title,
+    })),
+  };
+  return (
+    <>
+      {posts.length > 0 && <JsonLd data={itemList} />}
+      <PostsListContent
+        initialPosts={first ? posts : undefined}
+        initialMeta={first ? { total: first.meta.total, total_pages: first.meta.total_pages } : undefined}
+      />
+    </>
+  );
 }
