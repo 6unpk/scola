@@ -88,7 +88,19 @@ export const PanelTitle = styled.h1`
   color: ${({ theme }) => theme.colors.dark};
 
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    display: none;
+    font-size: 15px;
+  }
+`;
+
+export const PanelIntro = styled.p`
+  font-size: 13px;
+  line-height: 1.55;
+  color: ${({ theme }) => theme.colors.gray500};
+  margin-top: -10px;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    font-size: 12px;
+    margin-top: -4px;
   }
 `;
 
@@ -113,7 +125,17 @@ export const ChipGroup = styled.div`
   gap: 8px;
 `;
 
+export const ChipDot = styled.i`
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+`;
+
 export const Chip = styled.button<{ $active: boolean }>`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 7px 14px;
   border-radius: ${({ theme }) => theme.radius.full};
   font-size: 13px;

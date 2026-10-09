@@ -31,10 +31,20 @@ const jsonLd = {
   isPartOf: { '@type': 'WebSite', name: '스콜라', url: 'https://scola.kr' },
 };
 
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: '홈', item: 'https://scola.kr' },
+    { '@type': 'ListItem', position: 2, name: title, item: 'https://scola.kr/map' },
+  ],
+};
+
 export default function Page() {
   return (
     <>
       <JsonLd data={jsonLd} />
+      <JsonLd data={breadcrumbLd} />
       <MapContent />
     </>
   );

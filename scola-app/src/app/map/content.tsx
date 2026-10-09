@@ -4,26 +4,16 @@ import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { MapPin, SlidersHorizontal } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
-import PlacesMap from '@/components/map/PlacesMap';
+import PlacesMap, { CATEGORY_META } from '@/components/map/PlacesMap';
 import { useNaverMaps } from '@/components/map/useNaverMaps';
 import { REGIONS } from '@/data/regions';
 import api from '@/lib/api';
 import type { PlaceMarker } from '@/types/place';
 import {
-  PageWrap, MapBody, ControlPanel, PanelTitle, SearchInput,
-  ChipGroup, Chip, ResultCount, MapArea, MapFallback, FieldLabel,
+  PageWrap, MapBody, ControlPanel, PanelTitle, PanelIntro, SearchInput,
+  ChipGroup, Chip, ChipDot, ResultCount, MapArea, MapFallback, FieldLabel,
   RegionLinks, RegionLink, PanelTop, FilterToggle, FilterBody,
 } from './styles';
-
-const CATEGORIES = [
-  { value: 'sauna', label: '사우나' },
-  { value: 'bath', label: '목욕탕' },
-  { value: 'jjimjilbang', label: '찜질방' },
-  { value: 'spa', label: '스파' },
-  { value: 'seshin', label: '세신샵' },
-  { value: 'hotel', label: '호텔' },
-  { value: 'waterpark', label: '워터파크' },
-];
 
 export default function MapContent() {
   const { ready, error, hasKey } = useNaverMaps();
@@ -60,6 +50,9 @@ export default function MapContent() {
       <MapBody>
         <ControlPanel>
           <PanelTitle>전국 사우나·찜질방 지도</PanelTitle>
+          <PanelIntro>
+            전국 3,000여 곳의 사우나·찜질방·목욕탕·온천을 지도에서 찾아보세요. 지역을 고르면 시군구별 추천 목록으로 이동합니다.
+          </PanelIntro>
 
           <PanelTop>
             <SearchInput
@@ -81,12 +74,13 @@ export default function MapContent() {
             <div>
               <FieldLabel style={{ marginBottom: 10 }}>카테고리</FieldLabel>
               <ChipGroup>
-                {CATEGORIES.map((c) => (
+                {CATEGORY_META.map((c) => (
                   <Chip
                     key={c.value}
                     $active={category.includes(c.value)}
                     onClick={() => toggleCategory(c.value)}
                   >
+                    <ChipDot style={{ background: c.color }} />
                     {c.label}
                   </Chip>
                 ))}
@@ -103,9 +97,11 @@ export default function MapContent() {
             </div>
           </FilterBody>
 
-          <ResultCount>
-            지도에 <strong>{filtered.length.toLocaleString()}곳</strong> 표시 중
-          </ResultCount>
+          {markers.length > 0 && (
+            <ResultCount>
+              지도에 <strong>{filtered.length.toLocaleString()}곳</strong> 표시 중
+            </ResultCount>
+          )}
         </ControlPanel>
 
         <MapArea>

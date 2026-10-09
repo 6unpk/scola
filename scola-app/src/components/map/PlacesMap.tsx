@@ -2,22 +2,46 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef } from 'react';
+import styled from 'styled-components';
 import type { PlaceMarker } from '@/types/place';
 import { sharePlace } from '@/lib/share';
 
 const BRAND = '#A62121';
+const LABEL_MIN_ZOOM = 15;
 
-// 개별 장소 마커 아이콘 (브랜드 레드 도트)
-function markerIcon(naver: any) {
+export const CATEGORY_META: { value: string; label: string; color: string }[] = [
+  { value: 'sauna', label: '사우나', color: BRAND },
+  { value: 'jjimjilbang', label: '찜질방', color: '#E07B1F' },
+  { value: 'bath', label: '목욕탕', color: '#1F7A8C' },
+  { value: 'spa', label: '스파', color: '#3B5BDB' },
+  { value: 'seshin', label: '세신샵', color: '#7B3FA0' },
+  { value: 'hotel', label: '호텔', color: '#5C5C5C' },
+  { value: 'waterpark', label: '워터파크', color: '#0E9F6E' },
+];
+
+const COLOR_BY_CATEGORY = Object.fromEntries(CATEGORY_META.map((c) => [c.value, c.color]));
+
+export function categoryColor(cats: string[] | null | undefined) {
+  const hit = cats?.find((c) => COLOR_BY_CATEGORY[c]);
+  return hit ? COLOR_BY_CATEGORY[hit] : BRAND;
+}
+
+function escapeHtml(s: string) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function markerIcon(naver: any, p: PlaceMarker) {
+  const color = categoryColor(p.app_category);
   return {
     content:
-      `<div style="width:14px;height:14px;border-radius:50%;background:${BRAND};` +
-      `border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.4);cursor:pointer;"></div>`,
+      `<div class="scola-pin">` +
+        `<span class="scola-dot" style="background:${color};"></span>` +
+        `<span class="scola-label">${escapeHtml(p.name)}</span>` +
+      `</div>`,
     anchor: new naver.maps.Point(7, 7),
   };
 }
 
-// 클러스터 아이콘 (크기 티어별 원)
 function clusterIcon(naver: any, size: number) {
   return {
     content:
@@ -33,14 +57,16 @@ function clusterIcon(naver: any, size: number) {
 function infoHtml(p: PlaceMarker) {
   const thumb = p.thumbnail ?? '/place-placeholder.svg';
   const addr = p.road_address ?? '';
+  const cat = CATEGORY_META.find((c) => p.app_category?.includes(c.value));
   return (
     `<div style="width:220px;padding:12px;font-family:inherit;">` +
       `<div style="display:flex;gap:10px;">` +
         `<img src="${thumb}" alt="" style="width:64px;height:64px;object-fit:cover;border-radius:8px;flex-shrink:0;" ` +
           `onerror="this.src='/place-placeholder.svg'"/>` +
         `<div style="min-width:0;">` +
-          `<div style="font-weight:800;font-size:14px;color:#1a1a1a;line-height:1.3;margin-bottom:4px;">${p.name}</div>` +
-          (addr ? `<div style="font-size:11px;color:#888;line-height:1.4;overflow:hidden;">${addr}</div>` : '') +
+          (cat ? `<div style="font-size:11px;font-weight:700;color:${cat.color};margin-bottom:2px;">${cat.label}</div>` : '') +
+          `<div style="font-weight:800;font-size:14px;color:#1a1a1a;line-height:1.3;margin-bottom:4px;">${escapeHtml(p.name)}</div>` +
+          (addr ? `<div style="font-size:11px;color:#888;line-height:1.4;overflow:hidden;">${escapeHtml(addr)}</div>` : '') +
         `</div>` +
       `</div>` +
       `<div style="display:flex;gap:6px;margin-top:10px;">` +
@@ -54,6 +80,87 @@ function infoHtml(p: PlaceMarker) {
     `</div>`
   );
 }
+
+const MapCanvas = styled.div`
+  width: 100%;
+  height: 100%;
+
+  .scola-pin {
+    position: relative;
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+  }
+  .scola-dot {
+    display: block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    box-sizing: border-box;
+  }
+  .scola-label {
+    display: none;
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    max-width: 140px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+    font-size: 12px;
+    font-weight: 700;
+    color: #1a1a1a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
+  }
+  &.show-labels .scola-label {
+    display: block;
+  }
+`;
+
+const Legend = styled.div`
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  max-width: calc(100% - 20px);
+  padding: 7px 10px;
+  border-radius: ${({ theme }) => theme.radius.md};
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid ${({ theme }) => theme.colors.gray200};
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
+  font-size: 11px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.gray700};
+  pointer-events: none;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    max-width: 250px;
+    bottom: 32px;
+  }
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  i {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 1.5px solid #fff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+  }
+`;
 
 interface Props {
   places: PlaceMarker[];
@@ -79,7 +186,8 @@ export default function PlacesMap({ places, ready }: Props) {
   useEffect(() => {
     if (!ready || !elRef.current || mapRef.current) return;
     const naver = (window as any).naver;
-    mapRef.current = new naver.maps.Map(elRef.current, {
+    const el = elRef.current;
+    const map = new naver.maps.Map(el, {
       center: new naver.maps.LatLng(36.5, 127.8),
       zoom: 7,
       minZoom: 6,
@@ -87,6 +195,7 @@ export default function PlacesMap({ places, ready }: Props) {
       mapDataControl: false,
       logoControlOptions: { position: naver.maps.Position.BOTTOM_LEFT },
     });
+    mapRef.current = map;
     infoRef.current = new naver.maps.InfoWindow({
       content: '',
       borderWidth: 0,
@@ -94,6 +203,9 @@ export default function PlacesMap({ places, ready }: Props) {
       anchorSize: new naver.maps.Size(12, 12),
       pixelOffset: new naver.maps.Point(0, -6),
     });
+    const syncLabels = () => el.classList.toggle('show-labels', map.getZoom() >= LABEL_MIN_ZOOM);
+    naver.maps.Event.addListener(map, 'zoom_changed', syncLabels);
+    syncLabels();
   }, [ready]);
 
   // 마커/클러스터 (places 변경 시 재구성)
@@ -112,12 +224,14 @@ export default function PlacesMap({ places, ready }: Props) {
       const marker = new naver.maps.Marker({
         position: new naver.maps.LatLng(p.latitude, p.longitude),
         title: p.name,
-        icon: markerIcon(naver),
+        icon: markerIcon(naver, p),
       });
-      naver.maps.Event.addListener(marker, 'click', () => {
+      const openInfo = () => {
         infoRef.current.setContent(infoHtml(p));
         infoRef.current.open(map, marker);
-      });
+      };
+      naver.maps.Event.addListener(marker, 'click', openInfo);
+      naver.maps.Event.addListener(marker, 'mouseover', openInfo);
       return marker;
     });
     markersRef.current = markers;
@@ -147,5 +261,14 @@ export default function PlacesMap({ places, ready }: Props) {
     };
   }, [ready, places]);
 
-  return <div ref={elRef} style={{ width: '100%', height: '100%' }} />;
+  return (
+    <>
+      <MapCanvas ref={elRef} />
+      <Legend aria-hidden="true">
+        {CATEGORY_META.map((c) => (
+          <span key={c.value}><i style={{ background: c.color }} />{c.label}</span>
+        ))}
+      </Legend>
+    </>
+  );
 }
