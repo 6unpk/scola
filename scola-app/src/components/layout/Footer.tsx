@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import logoSrc from '@/assets/logo.png';
 import styled from 'styled-components';
+import { RiInstagramLine } from '@remixicon/react';
 import { REGIONS } from '@/data/regions';
 
 const NAV_LINKS = [
@@ -53,6 +54,18 @@ const BrandDesc = styled.p`
   font-size: 13px;
   color: rgba(255,255,255,0.4);
   line-height: 1.65;
+`;
+
+const SocialLink = styled.a`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+  transition: color 0.15s;
+  &:hover { color: ${({ theme }) => theme.colors.white}; }
 `;
 
 const NavCol = styled.div`
@@ -149,6 +162,9 @@ export default function Footer() {
           <BrandDesc>
             전국 사우나 · 찜질방 · 스파 정보를<br />한눈에 탐색하세요.
           </BrandDesc>
+          <SocialLink href="https://www.instagram.com/scolakr" target="_blank" rel="noopener noreferrer" aria-label="스콜라 인스타그램">
+            <RiInstagramLine size={16} /> @scolakr
+          </SocialLink>
         </BrandCol>
 
         <NavCol>
