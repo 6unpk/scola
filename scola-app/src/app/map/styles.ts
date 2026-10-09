@@ -153,6 +153,14 @@ export const ResultCount = styled.p`
   strong { color: ${({ theme }) => theme.colors.primary}; font-weight: 800; }
 `;
 
+export const MapColumn = styled.div`
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+`;
+
 export const MapArea = styled.div`
   flex: 1;
   min-width: 0;
@@ -162,8 +170,77 @@ export const MapArea = styled.div`
 
   /* 모바일에서 지도가 화면 대부분을 차지하도록 최소 높이 보장 */
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    min-height: 60vh;
+    min-height: 45vh;
   }
+`;
+
+export const RecoStrip = styled.section`
+  flex-shrink: 0;
+  padding: 10px 16px 12px;
+  border-top: 1px solid ${({ theme }) => theme.colors.gray200};
+  background: ${({ theme }) => theme.colors.white};
+`;
+
+export const RecoTitle = styled.h2`
+  font-size: 12px;
+  font-weight: 800;
+  color: ${({ theme }) => theme.colors.gray500};
+  margin-bottom: 8px;
+`;
+
+export const RecoRow = styled.div`
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+`;
+
+export const RecoCard = styled.a`
+  flex: 0 0 auto;
+  width: 168px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  border: 1px solid ${({ theme }) => theme.colors.gray200};
+  border-radius: ${({ theme }) => theme.radius.md};
+  background: ${({ theme }) => theme.colors.white};
+  text-decoration: none;
+  color: inherit;
+  &:hover { border-color: ${({ theme }) => theme.colors.primary}; }
+
+  img {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+`;
+
+export const RecoText = styled.span`
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`;
+
+export const RecoName = styled.span`
+  font-size: 13px;
+  font-weight: 800;
+  color: ${({ theme }) => theme.colors.dark};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+export const RecoSub = styled.span`
+  font-size: 11px;
+  color: ${({ theme }) => theme.colors.gray500};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export const MapFallback = styled.div`

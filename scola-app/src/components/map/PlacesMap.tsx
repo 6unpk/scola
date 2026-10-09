@@ -1,8 +1,9 @@
 'use client';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { LocateFixed } from 'lucide-react';
 import type { PlaceMarker } from '@/types/place';
 import { sharePlace } from '@/lib/share';
 
@@ -162,17 +163,80 @@ const Legend = styled.div`
   }
 `;
 
+const LocateBtn = styled.button<{ $active: boolean }>`
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 12px;
+  border-radius: ${({ theme }) => theme.radius.full};
+  border: 1.5px solid ${({ $active, theme }) => ($active ? theme.colors.primary : theme.colors.gray200)};
+  background: ${({ theme }) => theme.colors.white};
+  color: ${({ $active, theme }) => ($active ? theme.colors.primary : theme.colors.gray700)};
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+`;
+
+function myLocationIcon(naver: any) {
+  return {
+    content:
+      `<div style="width:18px;height:18px;border-radius:50%;background:#2F80ED;` +
+      `border:3px solid #fff;box-shadow:0 0 0 6px rgba(47,128,237,0.25);"></div>`,
+    anchor: new naver.maps.Point(9, 9),
+  };
+}
+
+type LocateState = 'idle' | 'locating' | 'done' | 'error';
+const LOCATE_LABEL: Record<LocateState, string> = {
+  idle: '내 위치',
+  locating: '위치 찾는 중',
+  done: '내 위치',
+  error: '위치를 가져올 수 없어요',
+};
+
 interface Props {
   places: PlaceMarker[];
   ready: boolean;
+  focus?: { place: PlaceMarker; seq: number } | null;
 }
 
-export default function PlacesMap({ places, ready }: Props) {
+export default function PlacesMap({ places, ready, focus }: Props) {
   const elRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const clusterRef = useRef<any>(null);
   const infoRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
+  const markerByIdRef = useRef<Map<number, any>>(new Map());
+  const myMarkerRef = useRef<any>(null);
+  const [locate, setLocate] = useState<LocateState>('idle');
+
+  const goToMyLocation = () => {
+    if (!mapRef.current || !navigator.geolocation) { setLocate('error'); return; }
+    setLocate('locating');
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const naver = (window as any).naver;
+        const map = mapRef.current;
+        const here = new naver.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+        if (!myMarkerRef.current) {
+          myMarkerRef.current = new naver.maps.Marker({ position: here, map, icon: myLocationIcon(naver), zIndex: 1000 });
+        } else {
+          myMarkerRef.current.setPosition(here);
+        }
+        map.morph(here, 14);
+        setLocate('done');
+      },
+      () => {
+        setLocate('error');
+        setTimeout(() => setLocate('idle'), 2500);
+      },
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 },
+    );
+  };
 
   useEffect(() => {
     (window as any).__scolaShare = (id: number) => {
@@ -206,7 +270,24 @@ export default function PlacesMap({ places, ready }: Props) {
     const syncLabels = () => el.classList.toggle('show-labels', map.getZoom() >= LABEL_MIN_ZOOM);
     naver.maps.Event.addListener(map, 'zoom_changed', syncLabels);
     syncLabels();
+    navigator.permissions?.query({ name: 'geolocation' })
+      .then((status) => { if (status.state === 'granted') goToMyLocation(); })
+      .catch(() => {});
   }, [ready]);
+
+  useEffect(() => {
+    if (!focus || !ready || !mapRef.current) return;
+    const naver = (window as any).naver;
+    const map = mapRef.current;
+    const at = new naver.maps.LatLng(focus.place.latitude, focus.place.longitude);
+    const openInfo = () => {
+      infoRef.current.setContent(infoHtml(focus.place));
+      infoRef.current.open(map, markerByIdRef.current.get(focus.place.id) ?? at);
+    };
+    naver.maps.Event.once(map, 'idle', openInfo);
+    map.morph(at, 16);
+    openInfo();
+  }, [focus, ready]);
 
   // 마커/클러스터 (places 변경 시 재구성)
   useEffect(() => {
@@ -235,6 +316,7 @@ export default function PlacesMap({ places, ready }: Props) {
       return marker;
     });
     markersRef.current = markers;
+    markerByIdRef.current = new Map(places.map((p, i) => [p.id, markers[i]]));
 
     clusterRef.current = new MarkerClustering({
       minClusterSize: 2,
@@ -264,6 +346,10 @@ export default function PlacesMap({ places, ready }: Props) {
   return (
     <>
       <MapCanvas ref={elRef} />
+      <LocateBtn type="button" $active={locate === 'done'} onClick={goToMyLocation} disabled={locate === 'locating'}>
+        <LocateFixed size={15} />
+        {LOCATE_LABEL[locate]}
+      </LocateBtn>
       <Legend aria-hidden="true">
         {CATEGORY_META.map((c) => (
           <span key={c.value}><i style={{ background: c.color }} />{c.label}</span>

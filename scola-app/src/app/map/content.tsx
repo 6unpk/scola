@@ -11,11 +11,19 @@ import api from '@/lib/api';
 import type { PlaceMarker } from '@/types/place';
 import {
   PageWrap, MapBody, ControlPanel, PanelTitle, PanelIntro, SearchInput,
-  ChipGroup, Chip, ChipDot, ResultCount, MapArea, MapFallback, FieldLabel,
+  ChipGroup, Chip, ChipDot, ResultCount, MapColumn, MapArea, MapFallback, FieldLabel,
   RegionLinks, RegionLink, PanelTop, FilterToggle, FilterBody,
+  RecoStrip, RecoTitle, RecoRow, RecoCard, RecoText, RecoName, RecoSub,
 } from './styles';
 
-export default function MapContent() {
+function recoSub(p: PlaceMarker) {
+  const cat = CATEGORY_META.find((c) => p.app_category?.includes(c.value))?.label;
+  const town = p.road_address?.split(' ').slice(0, 2).join(' ');
+  return [cat, town].filter(Boolean).join(' · ');
+}
+
+export default function MapContent({ recommended }: { recommended: PlaceMarker[] }) {
+  const [focus, setFocus] = useState<{ place: PlaceMarker; seq: number } | null>(null);
   const { ready, error, hasKey } = useNaverMaps();
 
   const [markers, setMarkers] = useState<PlaceMarker[]>([]);
@@ -104,23 +112,50 @@ export default function MapContent() {
           )}
         </ControlPanel>
 
-        <MapArea>
-          {!hasKey ? (
-            <MapFallback>
-              <MapPin size={28} />
-              <strong>지도를 불러올 수 없습니다</strong>
-              <span>지도 API 키(NEXT_PUBLIC_NAVER_MAP_KEY_ID)가 설정되지 않았습니다.</span>
-            </MapFallback>
-          ) : error ? (
-            <MapFallback>
-              <MapPin size={28} />
-              <strong>지도를 불러오지 못했습니다</strong>
-              <span>잠시 후 다시 시도해주세요.</span>
-            </MapFallback>
-          ) : (
-            <PlacesMap places={filtered} ready={ready} />
+        <MapColumn>
+          <MapArea>
+            {!hasKey ? (
+              <MapFallback>
+                <MapPin size={28} />
+                <strong>지도를 불러올 수 없습니다</strong>
+                <span>지도 API 키(NEXT_PUBLIC_NAVER_MAP_KEY_ID)가 설정되지 않았습니다.</span>
+              </MapFallback>
+            ) : error ? (
+              <MapFallback>
+                <MapPin size={28} />
+                <strong>지도를 불러오지 못했습니다</strong>
+                <span>잠시 후 다시 시도해주세요.</span>
+              </MapFallback>
+            ) : (
+              <PlacesMap places={filtered} ready={ready} focus={focus} />
+            )}
+          </MapArea>
+
+          {recommended.length > 0 && (
+            <RecoStrip>
+              <RecoTitle>스콜라 추천 사우나·찜질방</RecoTitle>
+              <RecoRow>
+                {recommended.map((p) => (
+                  <RecoCard
+                    key={p.id}
+                    href={`/place/${p.id}`}
+                    onClick={(e) => {
+                      if (!ready) return;
+                      e.preventDefault();
+                      setFocus((f) => ({ place: p, seq: (f?.seq ?? 0) + 1 }));
+                    }}
+                  >
+                    <img src={p.thumbnail ?? '/place-placeholder.svg'} alt="" loading="lazy" />
+                    <RecoText>
+                      <RecoName>{p.name}</RecoName>
+                      <RecoSub>{recoSub(p)}</RecoSub>
+                    </RecoText>
+                  </RecoCard>
+                ))}
+              </RecoRow>
+            </RecoStrip>
           )}
-        </MapArea>
+        </MapColumn>
       </MapBody>
     </PageWrap>
   );

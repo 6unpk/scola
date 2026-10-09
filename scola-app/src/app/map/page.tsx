@@ -1,6 +1,31 @@
 import type { Metadata } from 'next';
 import MapContent from './content';
 import JsonLd from '@/components/seo/JsonLd';
+import type { Place, PlaceMarker } from '@/types/place';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.scola.kr';
+
+async function fetchRecommended(): Promise<PlaceMarker[]> {
+  try {
+    const res = await fetch(`${API_BASE}/places?sort=recommend&per=10&has_image=true`, { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    const items: Place[] = data.data ?? [];
+    return items
+      .filter((p) => p.latitude != null && p.longitude != null)
+      .map((p) => ({
+        id: p.id,
+        name: p.name,
+        latitude: p.latitude as number,
+        longitude: p.longitude as number,
+        app_category: p.app_category,
+        thumbnail: p.thumbnail,
+        road_address: p.road_address ?? p.address,
+      }));
+  } catch {
+    return [];
+  }
+}
 
 const title = '전국 사우나·찜질방 지도';
 const description =
@@ -40,12 +65,13 @@ const breadcrumbLd = {
   ],
 };
 
-export default function Page() {
+export default async function Page() {
+  const recommended = await fetchRecommended();
   return (
     <>
       <JsonLd data={jsonLd} />
       <JsonLd data={breadcrumbLd} />
-      <MapContent />
+      <MapContent recommended={recommended} />
     </>
   );
 }
