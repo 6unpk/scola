@@ -149,7 +149,7 @@ class PlacesController < ApplicationController
       scope = scope.where("app_category && ARRAY[?]::varchar[]", cats) if cats.any?
     end
 
-    places = scope.select(:id, :name, :latitude, :longitude, :app_category, :thumbnail, :road_address, :address)
+    places = scope.select(:id, :name, :latitude, :longitude, :app_category, :thumbnail, :road_address, :address, :rating, :visitor_review_count)
 
     render json: {
       status: { code: 200 },
@@ -162,6 +162,8 @@ class PlacesController < ApplicationController
           app_category: p.app_category,
           thumbnail: p.thumbnail,
           road_address: p.road_address || p.address,
+          rating: p.rating&.to_f,
+          review_count: p.visitor_review_count,
         }
       }
     }

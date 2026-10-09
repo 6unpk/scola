@@ -86,4 +86,6 @@ export interface PlaceMarker {
   app_category: string[];
   thumbnail: string | null;
   road_address: string | null;
+  rating?: number | null;
+  review_count?: number | null;
 }

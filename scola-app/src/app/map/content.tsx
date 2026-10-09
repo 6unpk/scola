@@ -24,6 +24,9 @@ function recoSub(p: PlaceMarker) {
 
 export default function MapContent({ recommended }: { recommended: PlaceMarker[] }) {
   const [focus, setFocus] = useState<{ place: PlaceMarker; seq: number } | null>(null);
+  const [visible, setVisible] = useState<PlaceMarker[]>([]);
+  const strip = visible.length > 0 ? visible : recommended;
+  const stripTitle = visible.length > 0 ? '지금 보는 지역의 추천' : '스콜라 추천 사우나·찜질방';
   const { ready, error, hasKey } = useNaverMaps();
 
   const [markers, setMarkers] = useState<PlaceMarker[]>([]);
@@ -127,15 +130,15 @@ export default function MapContent({ recommended }: { recommended: PlaceMarker[]
                 <span>잠시 후 다시 시도해주세요.</span>
               </MapFallback>
             ) : (
-              <PlacesMap places={filtered} ready={ready} focus={focus} />
+              <PlacesMap places={filtered} ready={ready} focus={focus} onVisibleChange={setVisible} />
             )}
           </MapArea>
 
-          {recommended.length > 0 && (
+          {strip.length > 0 && (
             <RecoStrip>
-              <RecoTitle>스콜라 추천 사우나·찜질방</RecoTitle>
+              <RecoTitle>{stripTitle}</RecoTitle>
               <RecoRow>
-                {recommended.map((p) => (
+                {strip.map((p) => (
                   <RecoCard
                     key={p.id}
                     href={`/place/${p.id}`}

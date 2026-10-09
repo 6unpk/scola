@@ -198,13 +198,29 @@ const LOCATE_LABEL: Record<LocateState, string> = {
   error: '위치를 가져올 수 없어요',
 };
 
+const VISIBLE_LIMIT = 10;
+
+function rankVisible(places: PlaceMarker[], bounds: any): PlaceMarker[] {
+  const sw = bounds.getSW();
+  const ne = bounds.getNE();
+  return places
+    .filter((p) => p.latitude >= sw.lat() && p.latitude <= ne.lat() && p.longitude >= sw.lng() && p.longitude <= ne.lng())
+    .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0) || (b.review_count ?? 0) - (a.review_count ?? 0))
+    .slice(0, VISIBLE_LIMIT);
+}
+
 interface Props {
   places: PlaceMarker[];
   ready: boolean;
   focus?: { place: PlaceMarker; seq: number } | null;
+  onVisibleChange?: (visible: PlaceMarker[]) => void;
 }
 
-export default function PlacesMap({ places, ready, focus }: Props) {
+export default function PlacesMap({ places, ready, focus, onVisibleChange }: Props) {
+  const placesRef = useRef(places);
+  const onVisibleRef = useRef(onVisibleChange);
+  placesRef.current = places;
+  onVisibleRef.current = onVisibleChange;
   const elRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const clusterRef = useRef<any>(null);
@@ -270,6 +286,9 @@ export default function PlacesMap({ places, ready, focus }: Props) {
     const syncLabels = () => el.classList.toggle('show-labels', map.getZoom() >= LABEL_MIN_ZOOM);
     naver.maps.Event.addListener(map, 'zoom_changed', syncLabels);
     syncLabels();
+    naver.maps.Event.addListener(map, 'idle', () => {
+      onVisibleRef.current?.(rankVisible(placesRef.current, map.getBounds()));
+    });
     navigator.permissions?.query({ name: 'geolocation' })
       .then((status) => { if (status.state === 'granted') goToMyLocation(); })
       .catch(() => {});
@@ -317,6 +336,7 @@ export default function PlacesMap({ places, ready, focus }: Props) {
     });
     markersRef.current = markers;
     markerByIdRef.current = new Map(places.map((p, i) => [p.id, markers[i]]));
+    onVisibleRef.current?.(rankVisible(places, map.getBounds()));
 
     clusterRef.current = new MarkerClustering({
       minClusterSize: 2,

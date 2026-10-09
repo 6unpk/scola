@@ -4,6 +4,7 @@ import { REGIONS, regionBySlug } from '@/data/regions';
 import { fetchSubregions, sigunguSlug, MIN_SUBREGION_PLACES, excludeWaterparks } from '@/lib/sigungu';
 import RegionContent from './content';
 import JsonLd from '@/components/seo/JsonLd';
+import { topPlaceNames, pickOgImage, seoTitle } from '@/lib/regionSeo';
 import type { Place } from '@/types/place';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.scola.kr';
@@ -36,16 +37,17 @@ export async function generateMetadata(
   const info = regionBySlug(region);
   if (!info) return { title: '지역을 찾을 수 없습니다' };
 
-  const places = await fetchRegionPlaces(info.name);
+  const [places, subs] = await Promise.all([fetchRegionPlaces(info.name), fetchSubregions(info.name)]);
   const count = places.length;
-  const heroImg = places.find((p) => p.thumbnail)?.thumbnail;
+  const names = topPlaceNames(places);
+  const topSubs = [...subs].sort((a, b) => b.count - a.count).slice(0, 3).map((s) => s.label);
 
-  const title = `${info.name} 사우나·찜질방·스파 추천`;
+  const title = seoTitle(`${info.name} 사우나·찜질방 추천`, count, names);
   const description = count > 0
-    ? `${info.name} 사우나·찜질방·스파 ${count.toLocaleString()}곳을 모았습니다. 24시간 찜질방, 불한증막, 세신샵부터 프리미엄 스파까지 위치·요금·이용 후기를 비교하고 내게 맞는 곳을 찾아보세요.`
+    ? `${topSubs.length ? `${topSubs.join('·')} 등 ` : ''}${info.name} 사우나·찜질방·목욕탕 ${count.toLocaleString()}곳. ${names.join(', ')}처럼 방문자 평이 좋은 곳부터 24시간·불가마·온천 조건과 요금, 실제 이용 후기를 비교하세요.`
     : `${info.name} 지역의 사우나, 찜질방, 스파, 불한증막, 세신샵을 위치·시설·이용 후기와 함께 스콜라에서 확인하세요.`;
   const url = `https://scola.kr/sauna/${region}`;
-  const images = [{ url: heroImg || 'https://scola.kr/og-image.png', width: 1200, height: 630, alt: `${info.name} 사우나·찜질방` }];
+  const images = [{ url: pickOgImage(places), width: 1200, height: 630, alt: `${info.name} 사우나·찜질방` }];
 
   return {
     title,
