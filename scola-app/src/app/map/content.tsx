@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import { MapPin, SlidersHorizontal } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
@@ -15,6 +15,8 @@ import {
   RegionLinks, RegionLink, PanelTop, FilterToggle, FilterBody,
   RecoStrip, RecoTitle, RecoRow, RecoCard, RecoText, RecoName, RecoSub,
 } from './styles';
+
+const FILTER_KEY = 'scola:map:filters';
 
 function recoSub(p: PlaceMarker) {
   const cat = CATEGORY_META.find((c) => p.app_category?.includes(c.value))?.label;
@@ -33,6 +35,24 @@ export default function MapContent({ recommended }: { recommended: PlaceMarker[]
   const [category, setCategory] = useState<string[]>([]);
   const [query, setQuery] = useState('');
   const [filtersOpen, setFiltersOpen] = useState(false); // 모바일 필터 접기 (데스크톱은 항상 표시)
+  const filtersRestored = useRef(false);
+
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(FILTER_KEY);
+      if (raw) {
+        const f = JSON.parse(raw);
+        setCategory(f.category ?? []);
+        setQuery(f.query ?? '');
+      }
+    } catch {}
+    filtersRestored.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (!filtersRestored.current) return;
+    try { sessionStorage.setItem(FILTER_KEY, JSON.stringify({ category, query })); } catch {}
+  }, [category, query]);
 
   // 마커 전량 1회 로드 → 필터는 클라이언트에서 처리(즉각)
   useEffect(() => {

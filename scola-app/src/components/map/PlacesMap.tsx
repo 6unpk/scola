@@ -190,6 +190,24 @@ function myLocationIcon(naver: any) {
   };
 }
 
+const VIEW_KEY = 'scola:map:view';
+
+function readView(): { lat: number; lng: number; zoom: number } | null {
+  try {
+    const raw = sessionStorage.getItem(VIEW_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveView(map: any) {
+  try {
+    const c = map.getCenter();
+    sessionStorage.setItem(VIEW_KEY, JSON.stringify({ lat: c.lat(), lng: c.lng(), zoom: map.getZoom() }));
+  } catch {}
+}
+
 type LocateState = 'idle' | 'locating' | 'done' | 'error';
 const LOCATE_LABEL: Record<LocateState, string> = {
   idle: '내 위치',
@@ -267,9 +285,10 @@ export default function PlacesMap({ places, ready, focus, onVisibleChange }: Pro
     if (!ready || !elRef.current || mapRef.current) return;
     const naver = (window as any).naver;
     const el = elRef.current;
+    const saved = readView();
     const map = new naver.maps.Map(el, {
-      center: new naver.maps.LatLng(36.5, 127.8),
-      zoom: 7,
+      center: new naver.maps.LatLng(saved?.lat ?? 36.5, saved?.lng ?? 127.8),
+      zoom: saved?.zoom ?? 7,
       minZoom: 6,
       scaleControl: false,
       mapDataControl: false,
@@ -287,8 +306,10 @@ export default function PlacesMap({ places, ready, focus, onVisibleChange }: Pro
     naver.maps.Event.addListener(map, 'zoom_changed', syncLabels);
     syncLabels();
     naver.maps.Event.addListener(map, 'idle', () => {
+      saveView(map);
       onVisibleRef.current?.(rankVisible(placesRef.current, map.getBounds()));
     });
+    if (saved) return;
     navigator.permissions?.query({ name: 'geolocation' })
       .then((status) => { if (status.state === 'granted') goToMyLocation(); })
       .catch(() => {});
