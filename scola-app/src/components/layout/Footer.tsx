@@ -6,6 +6,7 @@ import logoSrc from '@/assets/logo.png';
 import styled from 'styled-components';
 import { RiInstagramLine } from '@remixicon/react';
 import { REGIONS } from '@/data/regions';
+import { useIsApp } from '@/lib/useIsApp';
 
 const NAV_LINKS = [
   { label: '장소 찾기', href: '/search' },
@@ -152,6 +153,8 @@ const BottomLink = styled(Link)`
 `;
 
 export default function Footer() {
+  const isApp = useIsApp();
+  if (isApp) return null;
   return (
     <FooterWrap>
       <FooterInner>

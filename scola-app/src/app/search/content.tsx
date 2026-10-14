@@ -55,7 +55,7 @@ function SearchContent() {
   const [subregion, setSubregion] = useState<string[]>([]);
   const [subOptions, setSubOptions] = useState<{ value: string; region: string; label: string; count: number }[]>([]);
   const [sort, setSort] = useState('recommend');
-  const [is24hours, setIs24hours] = useState(false);
+  const [is24hours, setIs24hours] = useState(searchParams.get('is_24hours') === 'true');
   const [hasRestaurant, setHasRestaurant] = useState(false);
   const [hasSleepRoom, setHasSleepRoom] = useState(false);
   const [hasMassage, setHasMassage] = useState(false);

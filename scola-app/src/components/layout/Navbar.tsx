@@ -7,6 +7,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, User, LogOut, TrendingUp, Menu, X, ChevronDown, ChevronRight } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
+import { useIsApp } from '@/lib/useIsApp';
 import { SUGGESTION_POOL } from '@/data/home';
 import { recordSearch, fetchPopularSearches, mergeSuggestions, shuffledPool } from '@/lib/search';
 import {
@@ -58,6 +59,7 @@ export default function Navbar() {
   const [hardcodedPool] = useState(() => shuffledPool());
   const [realPopular, setRealPopular] = useState<string[]>([]);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const isApp = useIsApp();
   const [openGroups, setOpenGroups] = useState<string[]>([]);
   const [mobileQuery, setMobileQuery] = useState('');
   const navSearchRef = useRef<HTMLDivElement>(null);
@@ -117,6 +119,8 @@ export default function Navbar() {
       prev.includes(href) ? prev.filter((h) => h !== href) : [...prev, href]
     );
   };
+
+  if (isApp) return null;
 
   return (
     <>

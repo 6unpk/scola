@@ -91,7 +91,6 @@ const ProfileMeta = styled.div`display:flex;flex-direction:column;gap:10px;margi
 const ProfileMetaRow = styled.div`display:flex;gap:10px;font-size:13px;line-height:1.55;`;
 const ProfileMetaLabel = styled.span`font-weight:800;color:${({theme})=>theme.colors.gray500};white-space:nowrap;min-width:44px;`;
 const ProfileMetaValue = styled.span`color:${({theme})=>theme.colors.gray700};`;
-const CautionValue = styled(ProfileMetaValue)`color:${({theme})=>theme.colors.danger};`;
 
 // ─── 리뷰 요약 ────────────────────────────────────────────────────────────────
 const OverallText = styled.p`font-size:14px;line-height:1.75;color:${({theme})=>theme.colors.gray700};margin-bottom:16px;`;
@@ -263,7 +262,7 @@ export default function PlaceDetailClient({ place, regionLinks }: Props) {
                   {profile!.caution && (
                     <ProfileMetaRow>
                       <ProfileMetaLabel>주의</ProfileMetaLabel>
-                      <CautionValue>{profile!.caution}</CautionValue>
+                      <ProfileMetaValue>{profile!.caution}</ProfileMetaValue>
                     </ProfileMetaRow>
                   )}
                 </ProfileMeta>

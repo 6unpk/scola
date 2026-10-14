@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "스콜라",
+    "slug": "scola",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "kr.scola.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "내 주변 사우나·찜질방을 지도에서 보여주기 위해 위치를 사용합니다."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#A62121",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "kr.scola.app",
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "scheme": "scola",
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "내 주변 사우나·찜질방을 지도에서 보여주기 위해 위치를 사용합니다."
+        }
+      ]
+    ]
+  }
+}
