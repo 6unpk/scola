@@ -152,7 +152,7 @@ export default function PostsListContent(
                   <CardMeta>
                     <MetaItem><User size={11} />{post.author_name}</MetaItem>
                     <MetaItem><Calendar size={11} />{formatDate(post.published_at)}</MetaItem>
-                    <MetaItem><Eye size={11} />{(post.views ?? 0).toLocaleString()}</MetaItem>
+                    {/* <MetaItem><Eye size={11} />{(post.views ?? 0).toLocaleString()}</MetaItem> */}
                     <ReadMore>읽기 <ChevronRight size={12} /></ReadMore>
                   </CardMeta>
                 </CardBody>
