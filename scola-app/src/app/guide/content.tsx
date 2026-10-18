@@ -1,22 +1,19 @@
 'use client';
 
-import {
-  RiArrowRightLine, RiFireLine, RiSnowflakeLine, RiLeafLine,
-  RiCheckLine, RiDropLine, RiShieldLine, RiSparkling2Line,
-} from '@remixicon/react';
+import { RiArrowRightLine, RiCheckLine } from '@remixicon/react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import {
   PageWrap, SectionInner, SectionLabel, Hero, HeroEyebrow, HeroTitle, HeroSubTitle,
   HeroDesc, HeroStats, HeroStat, HeroStatNum, HeroStatLabel,
   IntroSection, IntroGrid, IntroLeft, IntroTitle, IntroDesc, IntroRight,
-  IntroBullet, BulletIcon, BulletText, BulletTitle, BulletDesc,
+  IntroBullet, BulletText, BulletTitle, BulletDesc,
   RoutineSection, RoutineTitle, RoutineSub, RoutineFlow, RoutineStep,
-  RoutineStepIcon, RoutineStepName, RoutineStepTime, RoutineStepDesc,
-  RoutineResult, RoutineResultLabel, RoutineResultWord, RoutineRepeat, RepeatBadge,
-  StyleSection, StyleTitle, StyleGrid, StyleCard, StyleCardTop, StyleCardCountry,
-  StyleCardLabel, StyleCardTitle, StyleCardKeyword, StyleCardBody, StyleCardDesc, StyleCardLink,
-  TipsSection, TipsTitle, TipsGrid, TipCard, TipIconWrap, TipTitle, TipDesc, TipPoint,
+  RoutineStepImage, RoutineStepBody, RoutineStepMeta, RoutineStepName, RoutineStepDesc,
+  RoutineResult, RoutineRepeat, RoutineRepeatText, RepeatBadge,
+  StyleSection, StyleTitle, StyleGrid, StyleCard, StyleCardImage,
+  StyleCardMeta, StyleCardTitle, StyleCardBody, StyleCardDesc, StyleCardLink,
+  TipsSection, TipsTitle, TipsGrid, TipCard, TipTitle, TipDesc, TipPoint,
   EtiquetteSection, EtiquetteTitle, EtiquetteList, EtiquetteItem, EtiquetteNum,
   EtiquetteContent, EtiquetteItemTitle, EtiquetteItemDesc,
   QuoteSection, QuoteText, QuoteSub, CtaBtn,
@@ -25,29 +22,23 @@ import {
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const ROUTINE_STEPS = [
-  { name: '사우나', time: '8~12분', color: '#C62828', accent: '#C62828', desc: '체온을 서서히 올립니다. 무리하지 말고 편안하게.', icon: <RiFireLine size={22} /> },
-  { name: '냉탕', time: '1~2분', color: '#1565C0', accent: '#1565C0', desc: '심부 온도를 급격히 낮춥니다. 자율신경이 자극됩니다.', icon: <RiSnowflakeLine size={22} /> },
-  { name: '외기욕', time: '5~10분', color: '#2E7D32', accent: '#2E7D32', desc: '의자에 앉아 눈 감고 바람을 느낍니다. 이 단계가 핵심입니다.', icon: <RiLeafLine size={22} /> },
+  { name: '사우나', time: '8~12분', desc: '체온을 서서히 올립니다. 무리하지 말고 편안하게.', image: '/guide/step-sauna.webp' },
+  { name: '냉탕', time: '1~2분', desc: '심부 온도를 급격히 낮춥니다. 자율신경이 자극됩니다.', image: '/guide/step-cold.webp' },
+  { name: '외기욕', time: '5~10분', desc: '의자에 앉아 눈 감고 바람을 느낍니다. 이 단계가 핵심입니다.', image: '/guide/step-rest.webp' },
 ];
 
 const TIPS = [
   {
-    icon: <RiShieldLine size={20} />,
-    color: '#7B1FA2',
     title: '사우나 모자 챙기기',
     desc: '양머리 대신 전용 사우나 모자를 챙기세요. 머리와 두피를 열기로부터 보호해 더 오래, 더 깊게 즐길 수 있습니다.',
     point: '핀란드·일본 사우나의 필수 아이템',
   },
   {
-    icon: <RiDropLine size={20} />,
-    color: '#0277BD',
     title: '오로포로 전해질 충전',
     desc: '일본 사우나 마니아들의 국민 음료. 오로나민C와 포카리스웨트를 1:1로 섞으면 비타민과 전해질을 동시에 보충할 수 있습니다.',
     point: '사우나 후 최고의 회복 음료',
   },
   {
-    icon: <RiLeafLine size={20} />,
-    color: '#2E7D32',
     title: '야외 테라스 or 선풍기 활용',
     desc: '핀란드 호수나 일본 외기욕장이 없어도 괜찮습니다. 사우나 테라스나 선풍기 앞, 젖은 몸에 닿는 바람 한 점이 당신을 핀란드 숲속으로 데려다줍니다.',
     point: '외기욕의 한국식 버전',
@@ -72,11 +63,10 @@ export default function GuidePage() {
       {/* ── 히어로 ── */}
       <Hero>
         <SectionInner style={{ position: 'relative', zIndex: 1 }}>
-          <HeroEyebrow>Sauna Guide</HeroEyebrow>
-          <HeroTitle>땀만 빼는 사우나는 끝났다</HeroTitle>
-          <HeroSubTitle>이제는 '사우나 2.0' 시대</HeroSubTitle>
+          <HeroEyebrow>Scola's Sauna Guide</HeroEyebrow>
+          <HeroTitle>스콜라가 전해주는 사우나 가이드</HeroTitle>
+          <HeroSubTitle>핀란드식 힐링과 일본식 쾌감, 그 사이에서 당신만의 루틴을 찾아보세요.</HeroSubTitle>
           <HeroDesc>
-            핀란드식 힐링과 일본식 쾌감, 그 사이에서 당신만의 루틴을 찾아보세요.
             사우나는 단순한 목욕이 아닌, <strong style={{ color: 'white' }}>나를 다시 세우는 가장 완벽한 1시간</strong>입니다.
           </HeroDesc>
           <HeroStats>
@@ -104,12 +94,12 @@ export default function GuidePage() {
               <SectionLabel>Why Sauna</SectionLabel>
               <IntroTitle>
                 우리가 알던 사우나와는<br />
-                <em>완전히 다른 경험</em>
+                <em>색다른 경험</em>
               </IntroTitle>
               <IntroDesc>
-                한국의 사우나 문화는 세계 최고 수준이지만, '피로를 푸는 곳'이라는 고정관념에 갇혀 있기도 합니다.
-                핀란드에서는 영혼을 정돈하는 의식, 일본에서는 뇌를 리셋하는 루틴—이 두 가지 방식을 알고 나면
-                사우나를 보는 눈이 완전히 달라집니다.
+                한국의 사우나 문화는 세계 최고 수준이지만, '피로를 푸는 곳'이라는 고정관념에 갇혀 있기도 합니다. <br />
+                핀란드에서는 영혼을 정돈하는 의식이며, 일본에서는 뇌를 리셋하는 루틴으로 자리잡았습니다. <br />
+                사우나를 보는 새로운 관점을 얻을 수 있습니다.
               </IntroDesc>
               <IntroDesc>
                 이 가이드는 그 진입점입니다.
@@ -117,21 +107,18 @@ export default function GuidePage() {
             </IntroLeft>
             <IntroRight>
               <IntroBullet>
-                <BulletIcon $color="#C62828"><RiFireLine size={18} /></BulletIcon>
                 <BulletText>
                   <BulletTitle>뢸뤼(Löyly)의 원리</BulletTitle>
                   <BulletDesc>달궈진 돌 위에 물을 뿌려 만드는 증기. 건조한 열기가 아닌 촉촉하고 부드러운 열이 몸을 감쌉니다.</BulletDesc>
                 </BulletText>
               </IntroBullet>
               <IntroBullet>
-                <BulletIcon $color="#1565C0"><RiSnowflakeLine size={18} /></BulletIcon>
                 <BulletText>
                   <BulletTitle>온냉 반복의 과학</BulletTitle>
                   <BulletDesc>열기와 냉기를 오가면 자율신경이 균형을 찾고, 뇌가 맑아지며 몸이 붕 뜨는 '토토노우' 상태에 도달합니다.</BulletDesc>
                 </BulletText>
               </IntroBullet>
               <IntroBullet>
-                <BulletIcon $color="#388E3C"><RiLeafLine size={18} /></BulletIcon>
                 <BulletText>
                   <BulletTitle>외기욕(外気浴)의 힘</BulletTitle>
                   <BulletDesc>사우나와 냉탕 이후, 바깥 공기 속 휴식이 핵심입니다. 이 세 번째 단계를 빠뜨리지 마세요.</BulletDesc>
@@ -147,27 +134,28 @@ export default function GuidePage() {
         <SectionInner>
           <SectionLabel>The Routine</SectionLabel>
           <RoutineTitle>황금 루틴: 사우나 → 냉탕 → 외기욕</RoutineTitle>
-          <RoutineSub>이 세 단계의 반복이 몸과 마음을 정돈시키는 핵심입니다. 복잡한 기술 없이, 순서 하나만 지켜보세요.</RoutineSub>
+          <RoutineSub>이 세 단계의 반복이 몸과 마음을 정돈시키는 핵심입니다. <br /> 복잡한 기술 없이, 순서 하나만 지켜보세요.</RoutineSub>
           <RoutineFlow>
-            {ROUTINE_STEPS.map((step) => (
-              <RoutineStep key={step.name} $accent={step.accent}>
-                <RoutineStepIcon $color={step.color}>{step.icon}</RoutineStepIcon>
-                <RoutineStepName $color={step.color}>{step.name}</RoutineStepName>
-                <RoutineStepTime>{step.time}</RoutineStepTime>
-                <RoutineStepDesc>{step.desc}</RoutineStepDesc>
+            {ROUTINE_STEPS.map((step, i) => (
+              <RoutineStep key={step.name}>
+                <RoutineStepImage src={step.image} alt={step.name} loading="lazy" />
+                <RoutineStepBody>
+                  <RoutineStepMeta>STEP {i + 1} · {step.time}</RoutineStepMeta>
+                  <RoutineStepName>{step.name}</RoutineStepName>
+                  <RoutineStepDesc>{step.desc}</RoutineStepDesc>
+                </RoutineStepBody>
               </RoutineStep>
             ))}
-            <RoutineResult>
-              <RiSparkling2Line size={22} color="rgba(255,255,255,0.4)" />
-              <RoutineResultLabel>결과</RoutineResultLabel>
-              <RoutineResultWord>토토노우</RoutineResultWord>
-              <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', textAlign: 'center', marginTop: 4 }}>정돈된 몸과 마음</p>
-            </RoutineResult>
           </RoutineFlow>
-          <RoutineRepeat>
-            <RepeatBadge>×3 반복</RepeatBadge>
-            <span>이 세트를 3번 반복할 때 효과가 가장 좋습니다. 총 소요 시간 약 1시간.</span>
-          </RoutineRepeat>
+          <RoutineResult>
+            <RoutineRepeat>
+              <RepeatBadge>×3 반복</RepeatBadge>
+              <RoutineRepeatText>
+                <strong>총 소요 시간 약 1시간</strong>
+                <span>이 세트를 3번 반복할 때 효과가 가장 좋습니다.</span>
+              </RoutineRepeatText>
+            </RoutineRepeat>
+          </RoutineResult>
         </SectionInner>
       </RoutineSection>
 
@@ -178,13 +166,10 @@ export default function GuidePage() {
           <StyleTitle>두 가지 사우나 철학, 더 깊이 알아보기</StyleTitle>
           <StyleGrid>
             <StyleCard href="/guide/finland">
-              <StyleCardTop $bg="linear-gradient(135deg, #1a1a2e 0%, #6b1a1a 100%)">
-                <StyleCardCountry>Finland</StyleCardCountry>
-                <StyleCardLabel>핀란드식 사우나</StyleCardLabel>
-                <StyleCardTitle>핀란드식<br />사우나 즐기기</StyleCardTitle>
-                <StyleCardKeyword>뢸뤼 · 비흐타 · 아반토</StyleCardKeyword>
-              </StyleCardTop>
+              <StyleCardImage src="/guide/style-finland.webp" alt="핀란드 호숫가 사우나" loading="lazy" />
               <StyleCardBody>
+                <StyleCardMeta>FINLAND · 뢸뤼 · 비흐타 · 아반토</StyleCardMeta>
+                <StyleCardTitle>핀란드식 사우나 즐기기</StyleCardTitle>
                 <StyleCardDesc>
                   핀란드인들에게 사우나는 성당과도 같은 신성한 공간입니다.
                   '온도'가 아닌 '습도'에서 핵심을 찾는 정통 방식—
@@ -197,13 +182,10 @@ export default function GuidePage() {
             </StyleCard>
 
             <StyleCard href="/guide/japan">
-              <StyleCardTop $bg="linear-gradient(135deg, #1a1a1a 0%, #1a2a4a 100%)">
-                <StyleCardCountry>Japan</StyleCardCountry>
-                <StyleCardLabel>일본식 사우나</StyleCardLabel>
-                <StyleCardTitle>일본식<br />사우나 즐기기</StyleCardTitle>
-                <StyleCardKeyword>토토노우 · 사우너 · 사메시</StyleCardKeyword>
-              </StyleCardTop>
+              <StyleCardImage src="/guide/style-japan.webp" alt="도쿄 옥상 사우나 외기욕" loading="lazy" />
               <StyleCardBody>
+                <StyleCardMeta>JAPAN · 토토노우 · 사우너 · 사메시</StyleCardMeta>
+                <StyleCardTitle>일본식 사우나 즐기기</StyleCardTitle>
                 <StyleCardDesc>
                   일본 Z세대가 퇴근 후 술집 대신 사우나로 향하는 이유.
                   핀란드 전통을 독창적인 문화로 발전시킨 일본의 사우나 붐—
@@ -222,11 +204,10 @@ export default function GuidePage() {
       <TipsSection>
         <SectionInner>
           <SectionLabel style={{ color: 'rgba(255,255,255,0.4)' }}>Korean Tips</SectionLabel>
-          <TipsTitle>한국형 사우너를 위한 꿀조합</TipsTitle>
+          <TipsTitle>사우너를 위한 추천</TipsTitle>
           <TipsGrid>
             {TIPS.map((tip) => (
               <TipCard key={tip.title}>
-                <TipIconWrap $color={tip.color}>{tip.icon}</TipIconWrap>
                 <TipTitle>{tip.title}</TipTitle>
                 <TipDesc>{tip.desc}</TipDesc>
                 <TipPoint>{tip.point}</TipPoint>

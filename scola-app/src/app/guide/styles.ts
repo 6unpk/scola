@@ -27,8 +27,8 @@ export const SectionLabel = styled.p`
 // ─── 히어로 ───────────────────────────────────────────────────────────────────
 
 export const Hero = styled.section`
-  background: ${({ theme }) => theme.colors.dark};
-  padding: 100px 20px 80px;
+  background: ${({ theme }) => theme.colors.dark} url('/guide/hero.webp') center / cover no-repeat;
+  padding: 130px 20px 100px;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -38,8 +38,8 @@ export const Hero = styled.section`
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(ellipse at 30% 50%, rgba(166,33,33,0.3) 0%, transparent 60%),
-      radial-gradient(ellipse at 75% 30%, rgba(166,33,33,0.12) 0%, transparent 55%);
+      linear-gradient(180deg, rgba(13,13,13,0.55) 0%, rgba(13,13,13,0.7) 60%, rgba(13,13,13,0.92) 100%),
+      radial-gradient(ellipse at 30% 50%, rgba(166,33,33,0.25) 0%, transparent 60%);
     pointer-events: none;
   }
 `;
@@ -120,39 +120,41 @@ export const IntroSection = styled.section`
 `;
 
 export const IntroGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-  align-items: center;
-
-  @media (max-width: 700px) {
-    grid-template-columns: 1fr;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 `;
 
-export const IntroLeft = styled.div``;
+export const IntroLeft = styled.div`
+  max-width: 720px;
+`;
 
 export const IntroTitle = styled.h2`
-  font-size: clamp(24px, 4vw, 34px);
+  font-size: clamp(30px, 5vw, 46px);
   font-weight: 900;
   color: ${({ theme }) => theme.colors.dark};
-  line-height: 1.25;
-  margin-bottom: 20px;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  margin-bottom: 24px;
 
   em { font-style: normal; color: ${({ theme }) => theme.colors.primary}; }
 `;
 
 export const IntroDesc = styled.p`
-  font-size: 15px;
+  font-size: 17px;
   line-height: 1.85;
   color: ${({ theme }) => theme.colors.gray600};
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 `;
 
 export const IntroRight = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 14px;
+
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const IntroBullet = styled.div`
@@ -204,102 +206,94 @@ export const RoutineSub = styled.p`
 
 export const RoutineFlow = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr) auto;
-  align-items: stretch;
-  gap: 0;
-  border: 1px solid ${({ theme }) => theme.colors.gray200};
-  border-radius: ${({ theme }) => theme.radius.lg};
-  overflow: hidden;
-  background: white;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
 
   @media (max-width: 650px) {
     grid-template-columns: 1fr;
   }
 `;
 
-export const RoutineStep = styled.div<{ $accent: string }>`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 28px 20px;
-  border-right: 1px solid ${({ theme }) => theme.colors.gray100};
-  text-align: center;
-  position: relative;
-
-  &::before {
-    content: '';
-    display: block;
-    height: 4px;
-    width: 100%;
-    background: ${({ $accent }) => $accent};
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-
-  @media (max-width: 650px) {
-    border-right: none;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
-  }
+export const RoutineStep = styled.div`
+  background: white;
+  border: 1px solid ${({ theme }) => theme.colors.gray200};
+  border-radius: ${({ theme }) => theme.radius.lg};
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 `;
 
-export const RoutineStepIcon = styled.div<{ $color: string }>`
-  width: 48px;
-  height: 48px;
-  border-radius: ${({ theme }) => theme.radius.md};
-  background: ${({ $color }) => $color}22;
-  color: ${({ $color }) => $color};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 12px;
+export const RoutineStepImage = styled.img`
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
 `;
-export const RoutineStepName = styled.p<{ $color: string }>`font-size: 16px; font-weight: 900; color: ${({ $color }) => $color}; margin-bottom: 4px;`;
-export const RoutineStepTime = styled.p`font-size: 12px; font-weight: 700; color: ${({ theme }) => theme.colors.gray400}; margin-bottom: 10px;`;
-export const RoutineStepDesc = styled.p`font-size: 12px; color: ${({ theme }) => theme.colors.gray500}; line-height: 1.6;`;
+
+export const RoutineStepBody = styled.div`
+  padding: 18px 20px 22px;
+`;
+
+export const RoutineStepMeta = styled.p`
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: ${({ theme }) => theme.colors.primary};
+  margin-bottom: 6px;
+`;
+
+export const RoutineStepName = styled.p`
+  font-size: 19px;
+  font-weight: 900;
+  color: ${({ theme }) => theme.colors.dark};
+  margin-bottom: 6px;
+`;
+
+export const RoutineStepDesc = styled.p`
+  font-size: 13px;
+  color: ${({ theme }) => theme.colors.gray500};
+  line-height: 1.65;
+`;
 
 export const RoutineResult = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 28px 24px;
+  margin-top: 16px;
+  padding: 24px 28px;
   background: ${({ theme }) => theme.colors.dark};
-  text-align: center;
-  gap: 8px;
-`;
+  border-radius: ${({ theme }) => theme.radius.lg};
 
-export const RoutineResultLabel = styled.p`
-  font-size: 13px;
-  font-weight: 800;
-  color: rgba(255,255,255,0.5);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-`;
-
-export const RoutineResultWord = styled.p`
-  font-size: 22px;
-  font-weight: 900;
-  color: white;
+  @media (max-width: 650px) {
+    padding: 20px;
+  }
 `;
 
 export const RoutineRepeat = styled.div`
-  margin-top: 20px;
   display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  color: ${({ theme }) => theme.colors.gray500};
+  align-items: flex-start;
+  gap: 14px;
+
+  @media (max-width: 650px) {
+    flex-direction: column;
+    gap: 10px;
+  }
 `;
 
 export const RepeatBadge = styled.span`
-  padding: 5px 14px;
-  background: ${({ theme }) => theme.colors.dark};
+  flex-shrink: 0;
+  padding: 6px 14px;
+  background: ${({ theme }) => theme.colors.primary};
   color: white;
   border-radius: ${({ theme }) => theme.radius.full};
   font-size: 13px;
   font-weight: 800;
+  line-height: 1.3;
+`;
+
+export const RoutineRepeatText = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  strong { font-size: 15px; font-weight: 800; color: white; }
+  span { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.5; }
 `;
 
 // ─── 두 가지 스타일 ───────────────────────────────────────────────────────────
@@ -327,15 +321,16 @@ export const StyleGrid = styled.div`
   }
 `;
 
-export const StyleCard = styled(Link)<{ $dark?: boolean }>`
+export const StyleCard = styled(Link)`
   display: flex;
   flex-direction: column;
+  background: white;
+  border: 1px solid ${({ theme }) => theme.colors.gray200};
   border-radius: ${({ theme }) => theme.radius.lg};
   overflow: hidden;
   text-decoration: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   transition: transform 0.18s, box-shadow 0.18s;
-  background: ${({ $dark, theme }) => $dark ? theme.colors.dark : 'white'};
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 
   &:hover {
     transform: translateY(-4px);
@@ -343,42 +338,41 @@ export const StyleCard = styled(Link)<{ $dark?: boolean }>`
   }
 `;
 
-export const StyleCardTop = styled.div<{ $bg: string }>`
-  background: ${({ $bg }) => $bg};
-  padding: 32px 28px 24px;
+export const StyleCardImage = styled.img`
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
 `;
-
-export const StyleCardCountry = styled.div`
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 10px;
-  border-radius: ${({ theme }) => theme.radius.full};
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.2);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  color: rgba(255,255,255,0.7);
-  text-transform: uppercase;
-  margin-bottom: 14px;
-`;
-export const StyleCardLabel = styled.p`font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 6px;`;
-export const StyleCardTitle = styled.h3`font-size: 22px; font-weight: 900; color: white; margin-bottom: 8px; line-height: 1.2;`;
-export const StyleCardKeyword = styled.p`font-size: 14px; color: rgba(255,255,255,0.6); font-style: italic;`;
 
 export const StyleCardBody = styled.div`
-  padding: 20px 28px 24px;
+  padding: 18px 20px 22px;
   flex: 1;
   display: flex;
   flex-direction: column;
 `;
 
+export const StyleCardMeta = styled.p`
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: ${({ theme }) => theme.colors.primary};
+  margin-bottom: 6px;
+`;
+
+export const StyleCardTitle = styled.h3`
+  font-size: 19px;
+  font-weight: 900;
+  color: ${({ theme }) => theme.colors.dark};
+  margin-bottom: 8px;
+`;
+
 export const StyleCardDesc = styled.p`
-  font-size: 14px;
-  line-height: 1.75;
-  color: ${({ theme }) => theme.colors.gray600};
+  font-size: 13px;
+  line-height: 1.65;
+  color: ${({ theme }) => theme.colors.gray500};
   flex: 1;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 `;
 
 export const StyleCardLink = styled.span`
@@ -424,17 +418,6 @@ export const TipCard = styled.div`
   &:hover { background: rgba(255,255,255,0.07); }
 `;
 
-export const TipIconWrap = styled.div<{ $color: string }>`
-  width: 40px;
-  height: 40px;
-  border-radius: ${({ theme }) => theme.radius.md};
-  background: ${({ $color }) => $color}25;
-  color: ${({ $color }) => $color};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 14px;
-`;
 export const TipTitle = styled.h3`font-size: 15px; font-weight: 800; color: white; margin-bottom: 8px;`;
 export const TipDesc = styled.p`font-size: 13px; line-height: 1.75; color: rgba(255,255,255,0.55);`;
 export const TipPoint = styled.p`
