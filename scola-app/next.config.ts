@@ -17,6 +17,16 @@ const nextConfig: NextConfig = {
   compress: true,
   // 불필요한 X-Powered-By 헤더 제거
   poweredByHeader: false,
+  async redirects() {
+    return [
+      {
+        source: '/b2b-event',
+        destination:
+          'https://docs.google.com/forms/d/e/1FAIpQLSfA-ydR-P4GT_SwW9hQ7GbcCFkvKOo-747PIfWQv4zkX_73aQ/viewform?usp=publish-editor',
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
