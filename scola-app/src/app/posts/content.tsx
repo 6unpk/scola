@@ -29,17 +29,18 @@ const Tab = styled.button<{ $active: boolean }>`
 `;
 const Grid = styled.div`display:grid;grid-template-columns:repeat(3,1fr);gap:28px;@media (max-width:900px){grid-template-columns:repeat(2,1fr);}@media (max-width:580px){grid-template-columns:1fr;}`;
 const Card = styled.article`
+  display:flex;flex-direction:column;
   background:white;border-radius:${({ theme }) => theme.radius.lg};overflow:hidden;cursor:pointer;
   border:1px solid ${({ theme }) => theme.colors.gray200};transition:box-shadow 0.2s,transform 0.2s;
   &:hover{box-shadow:0 8px 32px rgba(0,0,0,0.1);transform:translateY(-2px);}
 `;
 const CardThumb = styled.div`width:100%;aspect-ratio:16/9;background:${({ theme }) => theme.colors.gray100};overflow:hidden;`;
 const CardThumbPlaceholder = styled.div`width:100%;height:100%;background:linear-gradient(135deg,#e8e8e8 0%,#d0d0d0 100%);display:flex;align-items:center;justify-content:center;font-size:36px;`;
-const CardBody = styled.div`padding:20px;`;
+const CardBody = styled.div`padding:20px;display:flex;flex-direction:column;flex:1;`;
 const CardCat = styled.span`display:inline-block;padding:3px 10px;border-radius:${({ theme }) => theme.radius.full};background:${({ theme }) => theme.colors.primaryLight ?? '#fef2f2'};color:${({ theme }) => theme.colors.primary};font-size:11px;font-weight:700;margin-bottom:10px;`;
 const CardTitle = styled.h2`font-size:16px;font-weight:800;color:${({ theme }) => theme.colors.dark};line-height:1.45;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;`;
 const CardExcerpt = styled.p`font-size:13px;color:${({ theme }) => theme.colors.gray500};line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:16px;`;
-const CardMeta = styled.div`display:flex;align-items:center;gap:12px;font-size:12px;color:${({ theme }) => theme.colors.gray500};`;
+const CardMeta = styled.div`margin-top:auto;display:flex;align-items:center;gap:12px;font-size:12px;color:${({ theme }) => theme.colors.gray500};`;
 const MetaItem = styled.span`display:flex;align-items:center;gap:4px;`;
 const ReadMore = styled.span`margin-left:auto;display:flex;align-items:center;gap:2px;color:${({ theme }) => theme.colors.primary};font-weight:700;font-size:12px;`;
 const EmptyState = styled.div`text-align:center;padding:80px 20px;color:${({ theme }) => theme.colors.gray500};font-size:15px;`;
