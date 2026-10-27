@@ -7,6 +7,7 @@ import { ChevronRight } from 'lucide-react';
 import { Section, SectionInner, SectionHeader, SectionTitle, SectionMore } from '@/components/home/SectionLayout';
 import api from '@/lib/api';
 import type { Post, PostsResponse } from '@/types/post';
+import { cardBase, cardHover, cardThumbDivider } from '@/components/ui/Card';
 
 const CATEGORY_LABELS: Record<string, string> = {
   sauna: '사우나 이야기',
@@ -31,18 +32,14 @@ const Card = styled.article`
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
-  background: white;
-  border: 1px solid ${({ theme }) => theme.colors.gray200};
-  border-radius: ${({ theme }) => theme.radius.lg};
-  overflow: hidden;
-  cursor: pointer;
-  transition: box-shadow 0.2s;
-  &:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+  ${cardBase}
+  ${cardHover}
 `;
 
 const Thumb = styled.div`
   height: 140px;
   flex-shrink: 0;
+  ${cardThumbDivider}
   background: ${({ theme }) => theme.colors.gray100};
   img { width: 100%; height: 100%; object-fit: cover; display: block; }
 `;
@@ -87,8 +84,7 @@ const Excerpt = styled.p`
 const Skeleton = styled.div`
   flex: 0 0 280px;
   height: 256px;
-  border-radius: ${({ theme }) => theme.radius.lg};
-  background: ${({ theme }) => theme.colors.gray100};
+  ${cardBase}
 `;
 
 export default function MagazineSection() {

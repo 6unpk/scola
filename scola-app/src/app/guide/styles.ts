@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import styled from 'styled-components';
+import { cardBase, cardHover } from '@/components/ui/Card';
 
 // ─── 레이아웃 ─────────────────────────────────────────────────────────────────
 
@@ -215,11 +216,7 @@ export const RoutineFlow = styled.div`
 `;
 
 export const RoutineStep = styled.div`
-  background: white;
-  border: 1px solid ${({ theme }) => theme.colors.gray200};
-  border-radius: ${({ theme }) => theme.radius.lg};
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  ${cardBase}
 `;
 
 export const RoutineStepImage = styled.img`
@@ -324,18 +321,9 @@ export const StyleGrid = styled.div`
 export const StyleCard = styled(Link)`
   display: flex;
   flex-direction: column;
-  background: white;
-  border: 1px solid ${({ theme }) => theme.colors.gray200};
-  border-radius: ${({ theme }) => theme.radius.lg};
-  overflow: hidden;
+  ${cardBase}
+  ${cardHover}
   text-decoration: none;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-  transition: transform 0.18s, box-shadow 0.18s;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 14px 32px rgba(0,0,0,0.12);
-  }
 `;
 
 export const StyleCardImage = styled.img`

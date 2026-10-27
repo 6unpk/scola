@@ -9,6 +9,7 @@ import Footer from '@/components/layout/Footer';
 import api from '@/lib/api';
 import LazyImage from '@/components/ui/LazyImage';
 import type { Post, PostsResponse } from '@/types/post';
+import { cardBase, cardHover, cardThumbDivider } from '@/components/ui/Card';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 
@@ -30,11 +31,10 @@ const Tab = styled.button<{ $active: boolean }>`
 const Grid = styled.div`display:grid;grid-template-columns:repeat(3,1fr);gap:28px;@media (max-width:900px){grid-template-columns:repeat(2,1fr);}@media (max-width:580px){grid-template-columns:1fr;}`;
 const Card = styled.article`
   display:flex;flex-direction:column;
-  background:white;border-radius:${({ theme }) => theme.radius.lg};overflow:hidden;cursor:pointer;
-  border:1px solid ${({ theme }) => theme.colors.gray200};transition:box-shadow 0.2s,transform 0.2s;
-  &:hover{box-shadow:0 8px 32px rgba(0,0,0,0.1);transform:translateY(-2px);}
+  ${cardBase}
+  ${cardHover}
 `;
-const CardThumb = styled.div`width:100%;aspect-ratio:16/9;background:${({ theme }) => theme.colors.gray100};overflow:hidden;`;
+const CardThumb = styled.div`width:100%;aspect-ratio:16/9;background:${({ theme }) => theme.colors.gray100};overflow:hidden;${cardThumbDivider}`;
 const CardThumbPlaceholder = styled.div`width:100%;height:100%;background:linear-gradient(135deg,#e8e8e8 0%,#d0d0d0 100%);display:flex;align-items:center;justify-content:center;font-size:36px;`;
 const CardBody = styled.div`padding:20px;display:flex;flex-direction:column;flex:1;`;
 const CardCat = styled.span`display:inline-block;padding:3px 10px;border-radius:${({ theme }) => theme.radius.full};background:${({ theme }) => theme.colors.primaryLight ?? '#fef2f2'};color:${({ theme }) => theme.colors.primary};font-size:11px;font-weight:700;margin-bottom:10px;`;
@@ -44,7 +44,7 @@ const CardMeta = styled.div`margin-top:auto;display:flex;align-items:center;gap:
 const MetaItem = styled.span`display:flex;align-items:center;gap:4px;`;
 const ReadMore = styled.span`margin-left:auto;display:flex;align-items:center;gap:2px;color:${({ theme }) => theme.colors.primary};font-weight:700;font-size:12px;`;
 const EmptyState = styled.div`text-align:center;padding:80px 20px;color:${({ theme }) => theme.colors.gray500};font-size:15px;`;
-const SkeletonCard = styled.div`background:white;border-radius:${({ theme }) => theme.radius.lg};overflow:hidden;border:1px solid ${({ theme }) => theme.colors.gray200};`;
+const SkeletonCard = styled.div`${cardBase}`;
 const SkeletonThumb = styled.div`width:100%;aspect-ratio:16/9;background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}`;
 const SkeletonBody = styled.div`padding:20px;display:flex;flex-direction:column;gap:8px;`;
 const SkeletonLine = styled.div<{ $w?: string }>`height:14px;border-radius:4px;width:${({ $w }) => $w ?? '100%'};background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;`;

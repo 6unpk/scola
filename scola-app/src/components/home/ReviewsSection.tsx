@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { Star } from 'lucide-react';
 import AutoCarousel from '@/components/ui/AutoCarousel';
 import { Section, SectionInner, SectionHeader, SectionTitle } from '@/components/home/SectionLayout';
+import { cardBase, cardHover } from '@/components/ui/Card';
 import api from '@/lib/api';
 import type { Place } from '@/types/place';
 
@@ -23,16 +24,12 @@ interface NaverReview {
 
 const ReviewCard = styled.div`
   flex: 0 0 300px;
-  background: ${({ theme }) => theme.colors.white};
-  border: 2px solid ${({ theme }) => theme.colors.dark};
-  border-radius: ${({ theme }) => theme.radius.lg};
+  ${cardBase}
+  ${cardHover}
   padding: 18px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  cursor: pointer;
-  transition: transform 0.15s;
-  &:hover { transform: translateY(-2px); }
 `;
 
 const ReviewTop = styled.div`

@@ -11,7 +11,7 @@ const GuideCard = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: ${({ theme }) => theme.colors.dark};
+  background: ${({ theme }) => theme.colors.dark} url('/guide/hero.webp') center / cover no-repeat;
   border: 2px solid ${({ theme }) => theme.colors.dark};
   border-radius: ${({ theme }) => theme.radius.xl};
   padding: 40px 48px;
@@ -19,6 +19,16 @@ const GuideCard = styled.div`
   transition: border-color 0.15s;
   overflow: hidden;
   position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(13,13,13,0.55) 0%, rgba(13,13,13,0.7) 60%, rgba(13,13,13,0.92) 100%),
+      radial-gradient(ellipse at 30% 50%, rgba(166,33,33,0.25) 0%, transparent 60%);
+    pointer-events: none;
+  }
 
   &:hover { border-color: ${({ theme }) => theme.colors.primary}; }
 

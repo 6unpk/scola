@@ -1,12 +1,26 @@
 'use client';
 
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-export const Card = styled.div`
+export const cardBase = css`
   background: ${({ theme }) => theme.colors.white};
-  border: 1px solid ${({ theme }) => theme.colors.gray200};
+  border: 2px solid ${({ theme }) => theme.colors.dark};
   border-radius: ${({ theme }) => theme.radius.lg};
   overflow: hidden;
+`;
+
+export const cardHover = css`
+  cursor: pointer;
+  transition: border-color 0.15s;
+  &:hover { border-color: ${({ theme }) => theme.colors.primary}; }
+`;
+
+export const cardThumbDivider = css`
+  border-bottom: 2px solid ${({ theme }) => theme.colors.dark};
+`;
+
+export const Card = styled.div`
+  ${cardBase}
 `;
 
 export const CardHeader = styled.div<{ $clickable?: boolean }>`

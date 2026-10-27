@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Star, MapPin, Clock, Eye } from 'lucide-react';
 import LazyImage from '@/components/ui/LazyImage';
 import type { Place } from '@/types/place';
+import { cardBase, cardHover, cardThumbDivider } from '@/components/ui/Card';
 
 // ─── Styled ───────────────────────────────────────────────────────────────────
 
@@ -14,19 +15,14 @@ export const PlaceCard = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: ${({ theme }) => theme.colors.white};
-  border: 2px solid ${({ theme }) => theme.colors.dark};
-  border-radius: ${({ theme }) => theme.radius.lg};
-  overflow: hidden;
-  cursor: pointer;
-  transition: border-color 0.15s;
-  &:hover { border-color: ${({ theme }) => theme.colors.primary}; }
+  ${cardBase}
+  ${cardHover}
 `;
 
 export const PlaceThumbnail = styled.div`
   height: 140px;
   overflow: hidden;
-  border-bottom: 2px solid ${({ theme }) => theme.colors.dark};
+  ${cardThumbDivider}
 `;
 
 export const PlaceBody = styled.div`padding: 14px; flex: 1;`;
