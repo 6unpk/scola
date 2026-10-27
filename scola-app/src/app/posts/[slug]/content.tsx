@@ -107,6 +107,7 @@ export default function PostContent({ post }: { post: Post }) {
   const [copied, setCopied] = useState(false);
   const handleShare = async () => {
     const r = await shareLink(`${SITE_URL}/posts/${post.slug}`, `${post.title} | 스콜라`);
+    if (r !== 'failed') api.post(`/posts/${post.slug}/share`).catch(() => {});
     if (r === 'copied') {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);

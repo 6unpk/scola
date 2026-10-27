@@ -5,6 +5,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import HeroSection from '@/components/home/HeroSection';
 import CuratedPlacesSection from '@/components/home/CuratedPlacesSection';
+import MagazineSection from '@/components/home/MagazineSection';
 import PromoBannerSection from '@/components/home/PromoBannerSection';
 import GuideBannerSection from '@/components/home/GuideBannerSection';
 import ReviewsSection from '@/components/home/ReviewsSection';
@@ -22,6 +23,7 @@ export default function HomePage() {
       <Navbar />
       <HeroSection />
       <CuratedPlacesSection />
+      <MagazineSection />
       <PromoBannerSection />
       <GuideBannerSection />
       <ReviewsSection />

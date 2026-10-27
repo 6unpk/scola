@@ -34,6 +34,11 @@ class PostsController < ApplicationController
     head :no_content
   end
 
+  def share
+    Post.where(slug: params[:slug]).update_all("shares = shares + 1")
+    head :no_content
+  end
+
   private
 
   def serialize(post)

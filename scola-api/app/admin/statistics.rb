@@ -41,6 +41,7 @@ ActiveAdmin.register_page "Statistics" do
       ["초안(미발행)", Post.where(published: false).count],
       ["누적 조회수", number_with_delimiter(Post.sum(:views))],
       ["누적 좋아요", number_with_delimiter(Post.sum(:likes))],
+      ["누적 공유", number_with_delimiter(Post.sum(:shares))],
     ]
 
     columns do
@@ -71,6 +72,7 @@ ActiveAdmin.register_page "Statistics" do
             column("발행일") { |p| p.published_at&.strftime("%Y-%m-%d") }
             column("조회") { |p| number_with_delimiter(p.views) }
             column("좋아요") { |p| number_with_delimiter(p.likes) }
+            column("공유") { |p| number_with_delimiter(p.shares) }
           end
         end
       end
