@@ -38,25 +38,24 @@ const Card = styled.article`
   cursor: pointer;
   transition: box-shadow 0.2s;
   &:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    flex-basis: 240px;
-  }
 `;
 
 const Thumb = styled.div`
-  aspect-ratio: 16/9;
+  height: 140px;
+  flex-shrink: 0;
   background: ${({ theme }) => theme.colors.gray100};
   img { width: 100%; height: 100%; object-fit: cover; display: block; }
 `;
 
 const Body = styled.div`
-  padding: 16px;
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
   gap: 6px;
 `;
 
 const Cat = styled.span`
+  height: 14px;
   font-size: 11px;
   font-weight: 700;
   color: ${({ theme }) => theme.colors.primary};
@@ -66,6 +65,7 @@ const Title = styled.h3`
   font-size: 15px;
   font-weight: 800;
   line-height: 1.4;
+  height: 42px;
   color: ${({ theme }) => theme.colors.dark};
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -76,16 +76,17 @@ const Title = styled.h3`
 const Excerpt = styled.p`
   font-size: 13px;
   line-height: 1.5;
+  height: 20px;
   color: ${({ theme }) => theme.colors.gray500};
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
 `;
 
 const Skeleton = styled.div`
   flex: 0 0 280px;
-  height: 260px;
+  height: 256px;
   border-radius: ${({ theme }) => theme.radius.lg};
   background: ${({ theme }) => theme.colors.gray100};
 `;
@@ -120,9 +121,9 @@ export default function MagazineSection() {
                 <Card key={post.id} onClick={() => router.push(`/posts/${post.slug}`)}>
                   <Thumb>{post.thumbnail && <img src={post.thumbnail} alt={post.title} loading="lazy" />}</Thumb>
                   <Body>
-                    {post.category && <Cat>{CATEGORY_LABELS[post.category] ?? post.category}</Cat>}
+                    <Cat>{post.category ? CATEGORY_LABELS[post.category] ?? post.category : ''}</Cat>
                     <Title>{post.title}</Title>
-                    {post.excerpt && <Excerpt>{post.excerpt}</Excerpt>}
+                    <Excerpt>{post.excerpt ?? ''}</Excerpt>
                   </Body>
                 </Card>
               ))}
