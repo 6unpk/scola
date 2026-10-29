@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Star, MapPin, Clock, Eye } from 'lucide-react';
 import LazyImage from '@/components/ui/LazyImage';
 import type { Place } from '@/types/place';
-import { cardBase, cardHover, cardThumbDivider } from '@/components/ui/Card';
+import { cardBase, cardHover, cardThumbDivider, tagBase } from '@/components/ui/Card';
 
 // ─── Styled ───────────────────────────────────────────────────────────────────
 
@@ -60,13 +60,7 @@ export const PlaceTags = styled.div`
 `;
 
 export const PlaceTag = styled.span`
-  padding: 3px 8px;
-  background: ${({ theme }) => theme.colors.primaryLight};
-  border: 1.5px solid ${({ theme }) => theme.colors.primary};
-  border-radius: ${({ theme }) => theme.radius.full};
-  font-size: 11px;
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.primary};
+  ${tagBase}
 `;
 
 export const PlaceMeta = styled.div`

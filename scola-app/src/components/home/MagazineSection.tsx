@@ -7,7 +7,7 @@ import { ChevronRight } from 'lucide-react';
 import { Section, SectionInner, SectionHeader, SectionTitle, SectionMore } from '@/components/home/SectionLayout';
 import api from '@/lib/api';
 import type { Post, PostsResponse } from '@/types/post';
-import { cardBase, cardHover, cardThumbDivider } from '@/components/ui/Card';
+import { cardBase, cardHover, cardThumbDivider, tagBase } from '@/components/ui/Card';
 
 const CATEGORY_LABELS: Record<string, string> = {
   sauna: '사우나 이야기',
@@ -51,11 +51,11 @@ const Body = styled.div`
   gap: 6px;
 `;
 
-const Cat = styled.span`
-  height: 14px;
-  font-size: 11px;
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors.primary};
+const Cat = styled.span<{ $hidden: boolean }>`
+  ${tagBase}
+  align-self: flex-start;
+  height: 23px;
+  visibility: ${({ $hidden }) => ($hidden ? 'hidden' : 'visible')};
 `;
 
 const Title = styled.h3`
@@ -83,7 +83,7 @@ const Excerpt = styled.p`
 
 const Skeleton = styled.div`
   flex: 0 0 280px;
-  height: 256px;
+  height: 265px;
   ${cardBase}
 `;
 
@@ -117,7 +117,7 @@ export default function MagazineSection() {
                 <Card key={post.id} onClick={() => router.push(`/posts/${post.slug}`)}>
                   <Thumb>{post.thumbnail && <img src={post.thumbnail} alt={post.title} loading="lazy" />}</Thumb>
                   <Body>
-                    <Cat>{post.category ? CATEGORY_LABELS[post.category] ?? post.category : ''}</Cat>
+                    <Cat $hidden={!post.category}>{post.category ? CATEGORY_LABELS[post.category] ?? post.category : '-'}</Cat>
                     <Title>{post.title}</Title>
                     <Excerpt>{post.excerpt ?? ''}</Excerpt>
                   </Body>

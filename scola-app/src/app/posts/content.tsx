@@ -9,7 +9,7 @@ import Footer from '@/components/layout/Footer';
 import api from '@/lib/api';
 import LazyImage from '@/components/ui/LazyImage';
 import type { Post, PostsResponse } from '@/types/post';
-import { cardBase, cardHover, cardThumbDivider } from '@/components/ui/Card';
+import { cardBase, cardHover, cardThumbDivider, tagBase } from '@/components/ui/Card';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 
@@ -37,7 +37,7 @@ const Card = styled.article`
 const CardThumb = styled.div`width:100%;aspect-ratio:16/9;background:${({ theme }) => theme.colors.gray100};overflow:hidden;${cardThumbDivider}`;
 const CardThumbPlaceholder = styled.div`width:100%;height:100%;background:linear-gradient(135deg,#e8e8e8 0%,#d0d0d0 100%);display:flex;align-items:center;justify-content:center;font-size:36px;`;
 const CardBody = styled.div`padding:20px;display:flex;flex-direction:column;flex:1;`;
-const CardCat = styled.span`display:inline-block;padding:3px 10px;border-radius:${({ theme }) => theme.radius.full};background:${({ theme }) => theme.colors.primaryLight ?? '#fef2f2'};color:${({ theme }) => theme.colors.primary};font-size:11px;font-weight:700;margin-bottom:10px;`;
+const CardCat = styled.span`${tagBase}margin-bottom:10px;`;
 const CardTitle = styled.h2`font-size:16px;font-weight:800;color:${({ theme }) => theme.colors.dark};line-height:1.45;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;`;
 const CardExcerpt = styled.p`font-size:13px;color:${({ theme }) => theme.colors.gray500};line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:16px;`;
 const CardMeta = styled.div`margin-top:auto;display:flex;align-items:center;gap:12px;font-size:12px;color:${({ theme }) => theme.colors.gray500};`;

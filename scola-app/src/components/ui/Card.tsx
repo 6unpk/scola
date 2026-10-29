@@ -19,6 +19,18 @@ export const cardThumbDivider = css`
   border-bottom: 2px solid ${({ theme }) => theme.colors.dark};
 `;
 
+export const tagBase = css`
+  display: inline-block;
+  padding: 3px 8px;
+  background: ${({ theme }) => theme.colors.primaryLight};
+  border: 1.5px solid ${({ theme }) => theme.colors.primary};
+  border-radius: ${({ theme }) => theme.radius.full};
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: ${({ theme }) => theme.colors.primary};
+`;
+
 export const Card = styled.div`
   ${cardBase}
 `;
