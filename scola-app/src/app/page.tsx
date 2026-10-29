@@ -5,6 +5,7 @@ import JsonLd from '@/components/seo/JsonLd';
 export const metadata: Metadata = {
   title: '스콜라 - 사우나 찜질방 정보 후기',
   description: '전국 사우나, 찜질방, 스파를 한 곳에서 찾아보세요. 위치, 시설 정보, 이용 후기까지.',
+  alternates: { canonical: 'https://scola.kr' },
   openGraph: {
     siteName: '스콜라',
     title: '스콜라 - 사우나 찜질방 정보 후기',

@@ -46,6 +46,7 @@ export async function generateMetadata(
   return {
     title: place.name,
     description,
+    alternates: { canonical: `https://scola.kr/place/${id}` },
     openGraph: {
       siteName: '스콜라',
       title: place.name,
@@ -74,12 +75,9 @@ function buildJsonLd(place: Place, id: string) {
     image: place.thumbnail ?? undefined,
     address: addr ? { '@type': 'PostalAddress', streetAddress: addr, addressCountry: 'KR' } : undefined,
     telephone: place.phone ?? undefined,
-    openingHours: place.open_hours ?? place.business_hours ?? undefined,
-    aggregateRating: (place.visitor_review_count ?? 0) > 0 ? {
-      '@type': 'AggregateRating',
-      ratingValue: place.rating ?? 4,
-      reviewCount: place.visitor_review_count,
-    } : undefined,
+    geo: place.latitude && place.longitude
+      ? { '@type': 'GeoCoordinates', latitude: place.latitude, longitude: place.longitude }
+      : undefined,
   };
 }
 
