@@ -1,4 +1,8 @@
-# 스콜라 (Scola) — 전국 사우나·찜질방·스파 정보
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.scola.kr';
+
+export const revalidate = 3600;
+
+const BASE = `# 스콜라 (Scola) — 전국 사우나·찜질방·스파 정보
 
 > 대한민국 전국의 사우나, 찜질방, 목욕탕, 스파, 세신샵 3,000곳 이상을 위치·시설·요금·실제 이용 후기와 함께 찾는 사우나 디렉토리. 지역별로 큐레이션하고, 수천 개 네이버 방문자 리뷰를 AI로 요약해 내게 맞는 곳을 비교할 수 있습니다.
 
@@ -31,4 +35,27 @@
 ## 주요 페이지
 - [전국 사우나 지도](https://scola.kr/map): 전국 사우나·찜질방 위치를 지도에서 탐색.
 - [사우나·찜질방 검색](https://scola.kr/search): 지역·카테고리·시설 조건으로 검색.
-- [스콜라 매거진](https://scola.kr/posts): 사우나 문화·가이드·추천 콘텐츠.
+- [스콜라 매거진](https://scola.kr/posts): 사우나 문화·가이드·추천 콘텐츠.`;
+
+type PostItem = { slug: string; title: string; meta_description: string | null; excerpt: string | null };
+
+async function fetchPosts(): Promise<PostItem[]> {
+  try {
+    const res = await fetch(`${API_BASE}/posts?per=100&page=1`, { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.data ?? [];
+  } catch {
+    return [];
+  }
+}
+
+export async function GET() {
+  const posts = await fetchPosts();
+  const lines = posts.map((p) => {
+    const summary = (p.meta_description || p.excerpt || '').replace(/\s+/g, ' ').trim();
+    return `- [${p.title}](https://scola.kr/posts/${p.slug})${summary ? `: ${summary}` : ''}`;
+  });
+  const body = lines.length ? `${BASE}\n\n## 매거진\n${lines.join('\n')}\n` : `${BASE}\n`;
+  return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
+}
