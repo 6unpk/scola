@@ -7,7 +7,7 @@ import { ChevronRight } from 'lucide-react';
 import { Section, SectionInner, SectionHeader, SectionTitle, SectionMore } from '@/components/home/SectionLayout';
 import api from '@/lib/api';
 import type { Post, PostsResponse } from '@/types/post';
-import { cardBase, cardHover, cardThumbDivider, tagBase } from '@/components/ui/Card';
+import { cardBase, cardHover, cardThumbDivider } from '@/components/ui/Card';
 
 const CATEGORY_LABELS: Record<string, string> = {
   sauna: '사우나 이야기',
@@ -52,9 +52,11 @@ const Body = styled.div`
 `;
 
 const Cat = styled.span<{ $hidden: boolean }>`
-  ${tagBase}
-  align-self: flex-start;
-  height: 23px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+  height: 18px;
+  color: ${({ theme }) => theme.colors.primary};
   visibility: ${({ $hidden }) => ($hidden ? 'hidden' : 'visible')};
 `;
 
