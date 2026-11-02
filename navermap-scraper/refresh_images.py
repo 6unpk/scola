@@ -92,13 +92,13 @@ async def run(ids: list[str], out_file: str, headless: bool):
                           ensure_ascii=False, indent=2)
 
     json.dump(mapping, open(out_file, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
-    print(f"\n완료: 이미지 확보 {len(mapping)}곳 → {out_file}")
+    print(f"\n완료: 이미지 확보 {len(mapping)}곳 -> {out_file}")
     print("다음: (scola-api에서) bundle exec rails "
           f"'places:set_thumbnails[../navermap-scraper/{out_file}]'")
 
 
 def main():
-    parser = argparse.ArgumentParser(description="이미지 없는 장소 og:image 재스크랩 → R2")
+    parser = argparse.ArgumentParser(description="이미지 없는 장소 og:image 재스크랩 -> R2")
     parser.add_argument("ids_file", help="naver_place_id 배열 JSON 파일")
     parser.add_argument("--out", default="refresh_map.json", help="결과 매핑 파일")
     parser.add_argument("--limit", type=int, default=None, help="처리 수 제한(테스트)")
@@ -107,7 +107,7 @@ def main():
     args = parser.parse_args()
 
     if not r2.configured():
-        raise SystemExit("R2 환경변수 미설정 — .env 확인")
+        raise SystemExit("R2 환경변수 미설정, .env 확인")
     if not r2.check_connection():
         raise SystemExit("R2 버킷 접근 실패")
 

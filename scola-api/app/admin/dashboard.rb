@@ -15,7 +15,7 @@ ActiveAdmin.register_page "Dashboard" do
           end
           column('') { |s| link_to('검토', admin_place_suggestion_path(s)) }
         end
-        para link_to('전체 제보 보기 →', admin_place_suggestions_path)
+        para link_to('전체 제보 보기', admin_place_suggestions_path)
       else
         para '검토할 제보가 없습니다.'
       end

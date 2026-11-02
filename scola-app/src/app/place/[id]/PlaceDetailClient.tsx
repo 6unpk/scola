@@ -146,7 +146,7 @@ export default function PlaceDetailClient({ place, regionLinks }: Props) {
       <Navbar />
       <div style={{ flex:1,display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',gap:16,padding:80 }}>
         <p style={{ fontSize:18, fontWeight:700 }}>장소를 찾을 수 없습니다.</p>
-        <button onClick={() => router.back()} style={{ cursor:'pointer', fontSize:14 }}>← 돌아가기</button>
+        <button onClick={() => router.back()} style={{ cursor:'pointer', fontSize:14 }}>돌아가기</button>
       </div>
       <Footer />
     </PageWrap>

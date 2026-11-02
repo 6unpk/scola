@@ -67,7 +67,7 @@ export const FilterToggle = styled.button<{ $open: boolean }>`
   }
 `;
 
-// 카테고리/지역 등 나머지 필터 — 모바일에선 접힘(열면 최대 42vh까지만)
+// 카테고리/지역 등 나머지 필터. 모바일에선 접힘(열면 최대 42vh까지만)
 export const FilterBody = styled.div<{ $open: boolean }>`
   display: flex;
   flex-direction: column;

@@ -48,6 +48,7 @@ const NAV_ITEMS = [
       { label: '일본식 사우나 즐기기', href: '/guide/japan', desc: '토토노우·사우너·사메시 문화' },
     ],
   },
+  { label: '스콜라에 대해', href: '/about' },
 ];
 
 export default function Navbar() {

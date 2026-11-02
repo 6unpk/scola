@@ -1,7 +1,7 @@
 //= require active_admin/base
 
 // ─── Toast UI 마크다운 에디터 (게시글 본문) ────────────────────────────────
-// #post_body textarea를 마크다운 WYSIWYG 에디터로 대체. 이미지는 /admin/uploads → R2.
+// #post_body textarea를 마크다운 WYSIWYG 에디터로 대체. 이미지는 /admin/uploads -> R2.
 (function () {
   function initEditor() {
     var ta = document.getElementById('post_body');

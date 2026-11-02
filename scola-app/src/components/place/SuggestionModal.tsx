@@ -298,7 +298,7 @@ export default function SuggestionModal({ place, open, onClose }: Props) {
           <DialogFooter>
             <Button variant="outline" onClick={handleClose} disabled={submitting}>취소</Button>
             <Button variant="primary" onClick={handleSubmit} disabled={submitting}>
-              {submitting ? '제출 중…' : '제보하기'}
+              {submitting ? '제출 중...' : '제보하기'}
             </Button>
           </DialogFooter>
         </>

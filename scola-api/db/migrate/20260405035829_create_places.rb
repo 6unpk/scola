@@ -31,7 +31,7 @@ class CreatePlaces < ActiveRecord::Migration[7.2]
       t.string   :parking
       t.integer  :parking_count
 
-      # 사우나 특화 — 수동 입력
+      # 사우나 특화: 수동 입력
       t.string   :gender_type       # 남성전용 / 여성전용 / 남녀공용
       t.string   :sauna_type        # 건식 / 습식 / 건식+습식
       t.integer  :room_count

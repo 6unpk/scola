@@ -168,7 +168,7 @@ ActiveAdmin.register Place do
     f.actions
   end
 
-  # 쉼표 구분 문자열 → 배열 변환
+  # 쉼표 구분 문자열 -> 배열 변환
   before_save do |place|
     %i[bath_types special_rooms amenities tags].each do |field|
       val = params[:place][field]

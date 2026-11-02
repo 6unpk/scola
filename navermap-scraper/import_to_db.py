@@ -1,5 +1,5 @@
 """
-enriched_results.json → Rails API로 description 업데이트 + 리뷰 생성
+enriched_results.json -> Rails API로 description 업데이트 + 리뷰 생성
 
 실행:
   uv run import_to_db.py
@@ -44,7 +44,7 @@ def main():
 
     client = httpx.Client(base_url=args.api_url, headers=headers, timeout=15.0)
 
-    # place_id(네이버) → DB id 매핑 조회
+    # place_id(네이버) -> DB id 매핑 조회
     print("DB 장소 목록 조회 중...")
     resp = client.get("/places", params={"per": 500})
     resp.raise_for_status()
@@ -60,7 +60,7 @@ def main():
         db_id = naver_to_db.get(naver_id)
 
         if not db_id:
-            print(f"[스킵] {name} — DB에 없음 (naver_id={naver_id})")
+            print(f"[스킵] {name}: DB에 없음 (naver_id={naver_id})")
             skip_count += 1
             continue
 
@@ -89,17 +89,17 @@ def main():
                 }
             }
             if args.dry_run:
-                print(f"  [DRY] POST /reviews — {rev.get('author')} ({rev.get('rating')}점)")
+                print(f"  [DRY] POST /reviews: {rev.get('author')} ({rev.get('rating')}점)")
             else:
                 r = client.post("/reviews", json=payload)
                 if r.is_success:
                     review_count += 1
                 else:
-                    print(f"  리뷰 생성 실패: {r.status_code} — {r.text[:80]}")
+                    print(f"  리뷰 생성 실패: {r.status_code} {r.text[:80]}")
                 time.sleep(0.1)
 
         ok_count += 1
-        print(f"[{ok_count}] {name} — description {'O' if description else '-'}, 리뷰 {len(generated)}개")
+        print(f"[{ok_count}] {name}: description {'O' if description else '-'}, 리뷰 {len(generated)}개")
 
     print("\n" + "=" * 60)
     print(f"처리: {ok_count}개 | 스킵: {skip_count}개")

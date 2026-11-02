@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { useAuthStore } from '@/store/authStore';
 
-// 서버 에러 → 사용자 친화적 메시지 변환
+// 서버 에러 -> 사용자 친화적 메시지 변환
 function parseAuthError(error: unknown): string {
   const msgs: string[] = (error as any)?.response?.data?.errors ?? [];
   const status = (error as any)?.response?.status;

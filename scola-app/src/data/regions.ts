@@ -1,5 +1,5 @@
 // 지역 랜딩페이지(/sauna/[region])용 시·도 정보.
-// slug(URL) ↔ name(백엔드 region 파라미터·표시명) 매핑.
+// slug(URL) <-> name(백엔드 region 파라미터·표시명) 매핑.
 
 export interface RegionInfo {
   slug: string;

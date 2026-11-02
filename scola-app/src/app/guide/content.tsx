@@ -133,7 +133,7 @@ export default function GuidePage() {
       <RoutineSection>
         <SectionInner>
           <SectionLabel>The Routine</SectionLabel>
-          <RoutineTitle>황금 루틴: 사우나 → 냉탕 → 외기욕</RoutineTitle>
+          <RoutineTitle>황금 루틴: 사우나, 냉탕, 외기욕</RoutineTitle>
           <RoutineSub>이 세 단계의 반복이 몸과 마음을 정돈시키는 핵심입니다. <br /> 복잡한 기술 없이, 순서 하나만 지켜보세요.</RoutineSub>
           <RoutineFlow>
             {ROUTINE_STEPS.map((step, i) => (
@@ -172,7 +172,7 @@ export default function GuidePage() {
                 <StyleCardTitle>핀란드식 사우나 즐기기</StyleCardTitle>
                 <StyleCardDesc>
                   핀란드인들에게 사우나는 성당과도 같은 신성한 공간입니다.
-                  '온도'가 아닌 '습도'에서 핵심을 찾는 정통 방식—
+                  '온도'가 아닌 '습도'에서 핵심을 찾는 정통 방식.
                   뢸뤼, 비흐타, 아반토 세 가지 키워드로 완전히 이해해 보세요.
                 </StyleCardDesc>
                 <StyleCardLink>
@@ -188,7 +188,7 @@ export default function GuidePage() {
                 <StyleCardTitle>일본식 사우나 즐기기</StyleCardTitle>
                 <StyleCardDesc>
                   일본 Z세대가 퇴근 후 술집 대신 사우나로 향하는 이유.
-                  핀란드 전통을 독창적인 문화로 발전시킨 일본의 사우나 붐—
+                  핀란드 전통을 독창적인 문화로 발전시킨 일본의 사우나 붐.
                   토토노우의 마법과 사우나 라이프스타일을 만나보세요.
                 </StyleCardDesc>
                 <StyleCardLink>

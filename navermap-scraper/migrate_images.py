@@ -11,8 +11,8 @@
 """
 기존 장소 이미지를 전부 Cloudflare R2로 이관.
 
-흐름: API에서 장소 목록 수집 → 네이버 thumbnail 다운로드 → 리사이즈/최적화 → R2 업로드
-     → {place_id, thumbnail(R2 URL)} 매핑을 thumbnail_map.json에 저장.
+흐름: API에서 장소 목록 수집 -> 네이버 thumbnail 다운로드 -> 리사이즈/최적화 -> R2 업로드
+     -> {place_id, thumbnail(R2 URL)} 매핑을 thumbnail_map.json에 저장.
 DB 반영은 rails `places:set_thumbnails[thumbnail_map.json]`로 별도 수행.
 
 사용:
@@ -81,9 +81,9 @@ def main():
     args = parser.parse_args()
 
     if not configured():
-        raise SystemExit("R2 환경변수 미설정 — .env에 R2_* 값을 넣으세요.")
+        raise SystemExit("R2 환경변수 미설정. .env에 R2_* 값을 넣으세요.")
     if not check_connection():
-        raise SystemExit("R2 버킷 접근 실패 — 자격증명/버킷명을 확인하세요.")
+        raise SystemExit("R2 버킷 접근 실패. 자격증명/버킷명을 확인하세요.")
 
     if args.places_file:
         print(f"장소 목록 파일: {args.places_file}")
@@ -124,9 +124,9 @@ def main():
             json.dump(failed, f, ensure_ascii=False, indent=2)
 
     print(f"\n완료: 업로드 {len(mapping)}장 / 실패(만료 추정) {len(failed)}장")
-    print(f"  매핑 → {OUTPUT_FILE}")
+    print(f"  매핑 -> {OUTPUT_FILE}")
     if failed:
-        print("  실패 place_id → expired_places.json (재스크랩 대상: refresh_images.py)")
+        print("  실패 place_id -> expired_places.json (재스크랩 대상: refresh_images.py)")
     print("다음: (scola-api에서) bundle exec rails "
           f"'places:set_thumbnails[../navermap-scraper/{OUTPUT_FILE}]'")
 

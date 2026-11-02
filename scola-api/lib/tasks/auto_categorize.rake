@@ -44,7 +44,7 @@ namespace :places do
 
       place.update_columns(app_category: target) unless dry_run
       updated += 1
-      puts "  #{place.name}: #{existing.inspect} → #{target.inspect}" if dry_run
+      puts "  #{place.name}: #{existing.inspect} -> #{target.inspect}" if dry_run
     end
 
     puts "\n완료: #{updated}개 업데이트 (스킵 #{skipped}개)"

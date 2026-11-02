@@ -90,7 +90,7 @@ export default function JapanGuidePage() {
         <SectionInner style={{ position: 'relative', zIndex: 1 }}>
           <HeroKicker>Japan Sauna Culture</HeroKicker>
           <HeroTitle>
-            퇴근 후 술집 대신 사우나—<br />
+            퇴근 후 술집 대신 사우나,<br />
             <em>일본 사우나 붐</em>의 모든 것
           </HeroTitle>
           <HeroSub>
@@ -110,7 +110,7 @@ export default function JapanGuidePage() {
       <TotonoSection>
         <SectionInner>
           <SectionLabel>Core Concept</SectionLabel>
-          <SectionTitle>토토노우 (整う) — 일본 사우나 붐의 심장</SectionTitle>
+          <SectionTitle>토토노우 (整う): 일본 사우나 붐의 심장</SectionTitle>
           <TotonoCard>
             <TotonoHeader>
               <div>
@@ -129,19 +129,19 @@ export default function JapanGuidePage() {
                   <FlowLabel $color="#C62828">사우나</FlowLabel>
                   <FlowSub>8~12분</FlowSub>
                 </FlowStep>
-                <FlowArrow>→</FlowArrow>
+                <FlowArrow><RiArrowRightLine size={20} /></FlowArrow>
                 <FlowStep $accent="#1565C0">
                   <FlowIcon $color="#1565C0"><RiSnowflakeLine size={18} /></FlowIcon>
                   <FlowLabel $color="#1565C0">냉탕</FlowLabel>
                   <FlowSub>1~2분</FlowSub>
                 </FlowStep>
-                <FlowArrow>→</FlowArrow>
+                <FlowArrow><RiArrowRightLine size={20} /></FlowArrow>
                 <FlowStep $accent="#388E3C">
                   <FlowIcon $color="#388E3C"><RiLeafLine size={18} /></FlowIcon>
                   <FlowLabel $color="#388E3C">외기욕</FlowLabel>
                   <FlowSub>5~10분</FlowSub>
                 </FlowStep>
-                <FlowArrow>→</FlowArrow>
+                <FlowArrow><RiArrowRightLine size={20} /></FlowArrow>
                 <FlowStep $accent="#7B1FA2">
                   <FlowIcon $color="#7B1FA2"><RiSparkling2Line size={18} /></FlowIcon>
                   <FlowLabel $color="#7B1FA2">토토노우</FlowLabel>

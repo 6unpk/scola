@@ -468,7 +468,7 @@ export default function ReviewsSection({ placeId }: { placeId: number }) {
             </VisitedRow>
             <Textarea
               ref={bodyRef}
-              placeholder="한 줄 후기 (선택) — 별점·태그만 남겨도 좋아요"
+              placeholder="한 줄 후기 (선택), 별점·태그만 남겨도 좋아요"
               value={body}
               onChange={(e) => setBody(e.target.value)}
               maxLength={1000}

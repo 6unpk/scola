@@ -205,7 +205,7 @@ export const DesktopSort = styled.div`
 export const Grid = styled.div`
   display: grid;
   /* minmax(0,·): 1fr은 아이템 min-content 아래로 못 줄어들어, 긴 장소명(nowrap)이 있으면
-     좁은 화면에서 카드가 화면 밖으로 넘침 → 최소폭 0으로 해제 */
+     좁은 화면에서 카드가 화면 밖으로 넘침 -> 최소폭 0으로 해제 */
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
 

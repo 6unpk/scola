@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
-import { RiSteamLine } from '@remixicon/react';
+import { RiArrowRightLine, RiSteamLine } from '@remixicon/react';
 import { Section, SectionInner } from '@/components/home/SectionLayout';
 
 // ─── Styled Components ────────────────────────────────────────────────────────
@@ -70,6 +70,9 @@ const GuideDesc = styled.p`
 `;
 
 const GuideLink = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 14px;
   font-weight: 700;
   color: ${({ theme }) => theme.colors.primary};
@@ -107,7 +110,7 @@ export default function GuideBannerSection() {
               온탕·냉탕 순서부터 불한증막 활용법까지.<br />
               몸이 달라지는 사우나 루틴을 알려드립니다.
             </GuideDesc>
-            <GuideLink>자세히 보기 →</GuideLink>
+            <GuideLink>자세히 보기 <RiArrowRightLine size={14} /></GuideLink>
           </GuideLeft>
           <GuideRight>
             <GuideEmoji><RiSteamLine size={64} /></GuideEmoji>

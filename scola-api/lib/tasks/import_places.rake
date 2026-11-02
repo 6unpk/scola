@@ -71,6 +71,6 @@ namespace :places do
       puts "  오류 (#{item['place_id']}): #{e.message}"
     end
 
-    puts "완료 — 삽입: #{inserted}, 스킵: #{skipped}, 오류: #{failed}"
+    puts "완료: 삽입: #{inserted}, 스킵: #{skipped}, 오류: #{failed}"
   end
 end

@@ -78,7 +78,7 @@ const STEPS = [
 const COMPARE_ROWS = [
   { category: '습도', korea: '건조한 열기 위주', finland: '뢸뤼로 촉촉한 증기 유지' },
   { category: '복장', korea: '찜질복 착용', finland: '개인 면 수건을 깔고 나체' },
-  { category: '쿨다운', korea: '바로 냉탕 입수', finland: '자연풍 → 냉수욕 순서로 천천히' },
+  { category: '쿨다운', korea: '바로 냉탕 입수', finland: '자연풍 다음 냉수욕 순서로 천천히' },
   { category: '간식', korea: '식혜·구운 계란', finland: '탄산수·맥주·소시지 구이' },
   { category: '분위기', korea: '활기차고 사교적', finland: '정숙하고 명상적' },
 ];

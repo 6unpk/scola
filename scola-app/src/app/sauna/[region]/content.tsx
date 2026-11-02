@@ -105,7 +105,7 @@ export default function RegionContent(
     if (nav && chip) nav.scrollLeft = chip.offsetLeft - nav.clientWidth / 2 + chip.clientWidth / 2;
   }, [region.slug]);
 
-  // 카테고리별 개수 → 인트로 문장
+  // 카테고리별 개수 -> 인트로 문장
   const catCounts = places.reduce<Record<string, number>>((acc, p) => {
     (p.app_category ?? []).forEach((c) => { acc[c] = (acc[c] ?? 0) + 1; });
     return acc;

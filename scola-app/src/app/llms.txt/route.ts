@@ -2,7 +2,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.scola.kr';
 
 export const revalidate = 3600;
 
-const BASE = `# 스콜라 (Scola) — 전국 사우나·찜질방·스파 정보
+const BASE = `# 스콜라 (Scola) - 전국 사우나·찜질방·스파 정보
 
 > 대한민국 전국의 사우나, 찜질방, 목욕탕, 스파, 세신샵 3,000곳 이상을 위치·시설·요금·실제 이용 후기와 함께 찾는 사우나 디렉토리. 지역별로 큐레이션하고, 수천 개 네이버 방문자 리뷰를 AI로 요약해 내게 맞는 곳을 비교할 수 있습니다.
 
@@ -28,9 +28,9 @@ const BASE = `# 스콜라 (Scola) — 전국 사우나·찜질방·스파 정보
 - [제주 사우나·찜질방·스파 추천](https://scola.kr/sauna/jeju): 제주 여행 중 들르기 좋은 스파와 사우나, 찜질방.
 
 ## 사우나 가이드
-- [사우나 즐기는 법 — 완벽 가이드](https://scola.kr/guide): 사우나·찜질방 입욕 순서, 온도, 효능, 이용 에티켓 등 기본 가이드.
-- [일본식 사우나 즐기기 — 토토노우·사우너·사메시](https://scola.kr/guide/japan): 일본 사우나 문화(ととのう)와 즐기는 법.
-- [핀란드식 사우나 즐기기 — 뢰윌뤼·비흐타·아반토](https://scola.kr/guide/finland): 핀란드 전통 사우나 문화와 입욕법.
+- [사우나 즐기는 법 - 완벽 가이드](https://scola.kr/guide): 사우나·찜질방 입욕 순서, 온도, 효능, 이용 에티켓 등 기본 가이드.
+- [일본식 사우나 즐기기 - 토토노우·사우너·사메시](https://scola.kr/guide/japan): 일본 사우나 문화(ととのう)와 즐기는 법.
+- [핀란드식 사우나 즐기기 - 뢰윌뤼·비흐타·아반토](https://scola.kr/guide/finland): 핀란드 전통 사우나 문화와 입욕법.
 
 ## 주요 페이지
 - [전국 사우나 지도](https://scola.kr/map): 전국 사우나·찜질방 위치를 지도에서 탐색.

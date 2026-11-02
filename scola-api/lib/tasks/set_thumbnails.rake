@@ -26,6 +26,6 @@ namespace :places do
       end
     end
 
-    puts "완료 — thumbnail 갱신: #{ok}, 미매칭: #{miss}"
+    puts "완료: thumbnail 갱신: #{ok}, 미매칭: #{miss}"
   end
 end

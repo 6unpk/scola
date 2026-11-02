@@ -206,7 +206,7 @@ export const FlowStep = styled.div<{ $accent: string }>`
 
 export const FlowArrow = styled.div`
   flex-shrink: 0;
-  font-size: 20px;
+  display: flex;
   color: ${({ theme }) => theme.colors.gray300};
   padding: 0 6px;
 `;

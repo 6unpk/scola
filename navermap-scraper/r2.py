@@ -1,7 +1,7 @@
 """
 Cloudflare R2 이미지 업로더 (S3 호환).
 
-네이버 호스팅 이미지를 다운로드 → 리사이즈/최적화 → R2 업로드하고 공개 URL을 반환한다.
+네이버 호스팅 이미지를 다운로드 -> 리사이즈/최적화 -> R2 업로드하고 공개 URL을 반환한다.
 R2_* 환경변수(.env)로 설정. 미설정이면 configured()가 False.
 """
 
@@ -62,7 +62,7 @@ def optimize(data: bytes) -> bytes:
 
 
 def upload_place_image(naver_place_id: str, src_url: str, timeout: float = 20.0) -> str | None:
-    """src_url 다운로드 → 최적화 → R2 업로드. 성공 시 공개 URL, 실패 시 None."""
+    """src_url 다운로드 -> 최적화 -> R2 업로드. 성공 시 공개 URL, 실패 시 None."""
     if not (configured() and src_url):
         return None
     try:
@@ -84,7 +84,7 @@ def upload_place_image(naver_place_id: str, src_url: str, timeout: float = 20.0)
 
 
 def check_connection() -> bool:
-    """설정 검증용 — 버킷 접근 가능 여부."""
+    """설정 검증용: 버킷 접근 가능 여부."""
     if not configured():
         return False
     try:

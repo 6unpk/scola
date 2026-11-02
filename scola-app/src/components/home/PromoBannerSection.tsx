@@ -64,7 +64,7 @@ export default function PromoBannerSection() {
       <BannerInner>
         <BannerText>
           <BannerTitle>♨️ 내 주변 사우나 지금 바로 찾아보세요</BannerTitle>
-          <BannerSub>전국 사우나 & 찜질방 정보를 한눈에 — 위치, 시설, 가격까지</BannerSub>
+          <BannerSub>전국 사우나 & 찜질방 정보를 한눈에. 위치, 시설, 가격까지</BannerSub>
         </BannerText>
         <BannerBtn onClick={() => router.push('/search')}>지금 탐색하기</BannerBtn>
       </BannerInner>

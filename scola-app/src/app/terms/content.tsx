@@ -80,7 +80,7 @@ const List = styled.ul`
     margin-bottom: 4px;
 
     &::before {
-      content: '–';
+      content: '-';
       position: absolute;
       left: 0;
       color: ${({ theme }) => theme.colors.gray400};

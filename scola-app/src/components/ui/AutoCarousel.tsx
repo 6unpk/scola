@@ -37,8 +37,8 @@ const Group = styled.div`
 
 interface Props {
   children: React.ReactNode;
-  duration?: number;       // 전체 루프 시간(초) — 명시하면 그대로 사용
-  secPerItem?: number;     // 카드 1개당 이동 시간(초) — duration 미지정 시 사용
+  duration?: number;       // 전체 루프 시간(초). 명시하면 그대로 사용
+  secPerItem?: number;     // 카드 1개당 이동 시간(초). duration 미지정 시 사용
   mobileFactor?: number;   // 모바일에서 느리게 하는 배수
   pauseOnHover?: boolean;
 }

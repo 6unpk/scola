@@ -1,5 +1,5 @@
 module Admin
-  # 어드민 에디터(Toast UI)용 이미지 업로드 → R2. 세션(관리자) 인증 필요.
+  # 어드민 에디터(Toast UI)용 이미지 업로드 -> R2. 세션(관리자) 인증 필요.
   class UploadsController < ApplicationController
     before_action :authenticate_admin!
 

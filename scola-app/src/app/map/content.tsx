@@ -54,7 +54,7 @@ export default function MapContent({ recommended }: { recommended: PlaceMarker[]
     try { sessionStorage.setItem(FILTER_KEY, JSON.stringify({ category, query })); } catch {}
   }, [category, query]);
 
-  // 마커 전량 1회 로드 → 필터는 클라이언트에서 처리(즉각)
+  // 마커 전량 1회 로드 -> 필터는 클라이언트에서 처리(즉각)
   useEffect(() => {
     let active = true;
     api.get<{ data: PlaceMarker[] }>('/places/markers')
