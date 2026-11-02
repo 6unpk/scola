@@ -256,6 +256,15 @@ export const DropdownMenu = styled.div`
   transition: opacity 0.15s, transform 0.15s;
 `;
 
+export const DropdownGrid = styled.div<{ $grid: boolean }>`
+  ${({ $grid }) => $grid && `
+    display: grid;
+    grid-template-columns: repeat(3, 88px);
+    padding: 6px;
+    && > a { padding: 10px 12px; border-radius: 8px; border-top: none; }
+  `}
+`;
+
 export const DropdownItem = styled(Link)`
   display: flex;
   flex-direction: column;

@@ -9,6 +9,7 @@ import { Search, User, LogOut, TrendingUp, Menu, X, ChevronDown, ChevronRight } 
 import { useAuthStore } from '@/store/authStore';
 import { useIsApp } from '@/lib/useIsApp';
 import { SUGGESTION_POOL } from '@/data/home';
+import { REGIONS } from '@/data/regions';
 import { recordSearch, fetchPopularSearches, mergeSuggestions, shuffledPool } from '@/lib/search';
 import {
   Nav, TopBar, Logo, LogoImg,
@@ -16,7 +17,7 @@ import {
   NavSuggestionsBox, NavSuggestionsHeader, NavSuggestionItem,
   NavRight, NavBtn, NavBtnPrimary,
   MenuBar, MenuInner, MenuItem,
-  DropdownWrap, DropdownTrigger, DropdownMenu, DropdownItem, DropdownItemLabel, DropdownItemDesc,
+  DropdownWrap, DropdownTrigger, DropdownMenu, DropdownGrid, DropdownItem, DropdownItemLabel, DropdownItemDesc,
   HamburgerBtn, Overlay, Drawer,
   DrawerHeader, DrawerClose, DrawerSearch, DrawerSearchForm, DrawerSearchInput,
   DrawerNav, DrawerNavItem, DrawerNavGroup, DrawerNavGroupBtn,
@@ -35,6 +36,12 @@ const NAV_ITEMS = [
       { label: '찜질방', href: '/search?category=jjimjilbang', desc: '전국 찜질방 검색' },
       { label: '스파', href: '/search?category=spa', desc: '전국 스파 검색' },
     ],
+  },
+  {
+    label: '지역별 사우나',
+    href: '/sauna/seoul',
+    match: '/sauna',
+    children: REGIONS.map((r) => ({ label: r.name, href: `/sauna/${r.slug}` })),
   },
   { label: '지도', href: '/map' },
   { label: '매거진', href: '/posts' },
@@ -210,16 +217,18 @@ export default function Navbar() {
             {NAV_ITEMS.map((item) =>
               item.children ? (
                 <DropdownWrap key={item.href}>
-                  <DropdownTrigger href={item.href} $active={pathname.startsWith(item.href)}>
+                  <DropdownTrigger href={item.href} $active={pathname.startsWith(('match' in item && item.match) || item.href)}>
                     {item.label} ▾
                   </DropdownTrigger>
                   <DropdownMenu>
-                    {item.children.map((child) => (
-                      <DropdownItem key={child.href} href={child.href}>
-                        <DropdownItemLabel>{child.label}</DropdownItemLabel>
-                        {'desc' in child && <DropdownItemDesc>{child.desc}</DropdownItemDesc>}
-                      </DropdownItem>
-                    ))}
+                    <DropdownGrid $grid={!item.children.some((c) => 'desc' in c)}>
+                      {item.children.map((child) => (
+                        <DropdownItem key={child.href} href={child.href}>
+                          <DropdownItemLabel>{child.label}</DropdownItemLabel>
+                          {'desc' in child && <DropdownItemDesc>{child.desc}</DropdownItemDesc>}
+                        </DropdownItem>
+                      ))}
+                    </DropdownGrid>
                   </DropdownMenu>
                 </DropdownWrap>
               ) : (
@@ -274,7 +283,7 @@ export default function Navbar() {
                   item.children ? (
                     <DrawerNavGroup key={item.href}>
                       <DrawerNavGroupBtn
-                        $active={pathname.startsWith(item.href)}
+                        $active={pathname.startsWith(('match' in item && item.match) || item.href)}
                         $open={openGroups.includes(item.href)}
                         onClick={() => toggleGroup(item.href)}
                       >

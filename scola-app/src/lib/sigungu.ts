@@ -14,7 +14,7 @@ export function excludeWaterparks(places: Place[]): Place[] {
   });
 }
 
-const FULL_NAME_TO_SLUG: Record<string, string> = {
+export const FULL_NAME_TO_SLUG: Record<string, string> = {
   '서울특별시': 'seoul', '부산광역시': 'busan', '인천광역시': 'incheon', '대구광역시': 'daegu',
   '광주광역시': 'gwangju', '대전광역시': 'daejeon', '울산광역시': 'ulsan', '세종특별자치시': 'sejong',
   '경기도': 'gyeonggi', '강원특별자치도': 'gangwon', '충청북도': 'chungbuk', '충청남도': 'chungnam',

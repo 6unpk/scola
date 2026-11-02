@@ -10,12 +10,15 @@ import Select from '@/components/ui/Select';
 import api from '@/lib/api';
 import LazyImage from '@/components/ui/LazyImage';
 import type { Place, PlacesResponse } from '@/types/place';
+import Link from 'next/link';
+import { REGIONS as REGION_INFO } from '@/data/regions';
+import { FULL_NAME_TO_SLUG } from '@/lib/sigungu';
 import {
   PageWrap, SearchBar, SearchBarInner, SearchInput, ResultCount,
   Body, Sidebar, FilterHeader, FilterTitle, ResetBtn,
   FilterGroup, FilterGroupHeader, FilterGroupBody,
   ResultsArea, MobileToolbar, MobileFilterBtn,
-  ResultsHeader, ResultsTitle, DesktopSort,
+  ResultsHeader, ResultsTitle, DesktopSort, RegionShortcut,
   Grid, PlaceCard, CardThumb, CardBody, CardName, CardAddr,
   CardTags, CardTag, CardMeta, CardRating, CardHours,
   EmptyState, SkeletonCard, SkeletonThumb, SkeletonBody, SkeletonLine,
@@ -65,6 +68,8 @@ function SearchContent() {
 
   const [places, setPlaces] = useState<Place[]>([]);
   const [meta, setMeta] = useState({ total: 0, total_pages: 1 });
+  const trimmedQuery = query.trim();
+  const regionHit = REGION_INFO.find((r) => r.name === trimmedQuery || r.slug === FULL_NAME_TO_SLUG[trimmedQuery] || `${r.name}도` === trimmedQuery);
   const [loading, setLoading] = useState(true);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
@@ -233,6 +238,13 @@ function SearchContent() {
               <Select value={sort} onChange={setSort} options={sortOptions} />
             </DesktopSort>
           </ResultsHeader>
+
+          {regionHit && (
+            <RegionShortcut as={Link} href={`/sauna/${regionHit.slug}`}>
+              <strong>{regionHit.name} 사우나, 찜질방 추천</strong>
+              <span>지역별로 골라 둔 곳 보기</span>
+            </RegionShortcut>
+          )}
 
           <Grid>
             {loading ? (

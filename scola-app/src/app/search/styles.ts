@@ -369,3 +369,19 @@ export const PageBtn = styled.button<{ $active?: boolean }>`
   }
   &:disabled { opacity: 0.35; cursor: not-allowed; }
 `;
+
+export const RegionShortcut = styled.a`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  background: ${({ theme }) => theme.colors.dark};
+  border-radius: ${({ theme }) => theme.radius.lg};
+  text-decoration: none;
+  color: white;
+  strong { font-size: 15px; font-weight: 800; }
+  span { font-size: 13px; color: rgba(255,255,255,0.6); }
+  &:hover strong { color: ${({ theme }) => theme.colors.primary}; }
+`;

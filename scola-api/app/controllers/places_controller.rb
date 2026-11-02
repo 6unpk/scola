@@ -2,6 +2,19 @@ class PlacesController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :set_place, only: [:show, :update]
 
+  SEARCH_REGION_ALIASES = {
+    '강원' => ['강원특별자치도', '강원도'],
+    '전북' => ['전북특별자치도', '전라북도'],
+    '전라도' => ['전북특별자치도', '전라북도', '전라남도'],
+    '경상도' => ['경상북도', '경상남도'],
+    '충청도' => ['충청북도', '충청남도'],
+  }.freeze
+
+  SEARCH_CATEGORY_WORDS = {
+    '사우나' => 'sauna', '목욕탕' => 'bath', '찜질방' => 'jjimjilbang', '스파' => 'spa',
+    '세신' => 'seshin', '세신샵' => 'seshin', '호텔' => 'hotel', '워터파크' => 'waterpark',
+  }.freeze
+
   REGION_PREFIXES = {
     '서울' => '서울특별시',
     '부산' => '부산광역시',
@@ -29,18 +42,15 @@ class PlacesController < ApplicationController
     scope = Place.all
 
     # 키워드 검색
-    if params[:q].present?
-      q = "%#{params[:q]}%"
-      scope = scope.where("name ILIKE ? OR address ILIKE ? OR road_address ILIKE ?", q, q, q)
-    end
+    scope = keyword_scope(scope, params[:q]) if params[:q].present?
 
-    # 카테고리 필터 (다중 선택 — app_category 배열과 겹치면 매칭)
+    # 카테고리 필터 (다중 선택, app_category 배열과 겹치면 매칭)
     if params[:category].present?
       cats = Array(params[:category]).reject(&:blank?)
       scope = scope.where("app_category && ARRAY[?]::varchar[]", cats) if cats.any?
     end
 
-    # 지역 필터 (다중 선택) — 행정구역명 전체로 매핑 후 주소 앞부분 매칭, 선택 지역끼리는 OR
+    # 지역 필터 (다중 선택): 행정구역명 전체로 매핑 후 주소 앞부분 매칭, 선택 지역끼리는 OR
     if params[:region].present?
       regions = Array(params[:region]).reject(&:blank?)
       if regions.any?
@@ -55,7 +65,7 @@ class PlacesController < ApplicationController
       end
     end
 
-    # 2차 지역(시군구) 필터 — 값은 "시도 시군구" 전체 prefix
+    # 2차 지역(시군구) 필터: 값은 "시도 시군구" 전체 prefix
     if params[:subregion].present?
       subs = Array(params[:subregion]).reject(&:blank?)
       if subs.any?
@@ -81,14 +91,14 @@ class PlacesController < ApplicationController
     scope = scope.where("thumbnail IS NOT NULL AND thumbnail <> ''") if params[:has_image] == "true"
 
     # 정렬
-    # 회원 후기 평점은 베이지안 평균으로 반영 → 후기 표본이 적으면 기준값(PRIOR_MEAN)으로
+    # 회원 후기 평점은 베이지안 평균으로 반영 -> 후기 표본이 적으면 기준값(PRIOR_MEAN)으로
     # 수렴하므로, 후기 1~2개짜리 장소가 만점으로 상단을 독점하지 못하게 함.
     prior_mean   = 3.8   # 사전 평균(리뷰가 없을 때의 기준 평점)
     prior_weight = 20    # 사전 표본 수(이만큼 후기가 쌓여야 실제 평점이 절반 반영)
     bayes_rating = "((COALESCE(review_count, 0) * COALESCE(rating, #{prior_mean}) + #{prior_weight} * #{prior_mean}) / (COALESCE(review_count, 0) + #{prior_weight}))"
     # 평점 기여도(≈76~100)와 방문자 수 기여도(LOG, 최대 ≈150)를 비슷한 스케일로 맞춤
     base_score   = "(#{bayes_rating} * 20 + LOG(COALESCE(visitor_review_count, 0) + 1) * 20)"
-    # 인기순: 점수 기반이지만 ±50점 jitter → 상위 그룹 내에서 매번 다른 순서
+    # 인기순: 점수 기반이지만 ±50점 jitter -> 상위 그룹 내에서 매번 다른 순서
     popular_jitter  = Arel.sql("(#{base_score} + random() * 50) DESC")
     # 추천순: jitter 폭을 넓혀 품질 하한선을 유지하면서 훨씬 다양한 결과 노출
     recommend_score = Arel.sql("(#{base_score} + random() * 180) DESC")
@@ -140,7 +150,7 @@ class PlacesController < ApplicationController
     render json: { data: data }
   end
 
-  # GET /places/markers  — 지도용 경량 마커 목록 (좌표 있는 전량, 페이지네이션 없음)
+  # GET /places/markers  : 지도용 경량 마커 목록 (좌표 있는 전량, 페이지네이션 없음)
   def markers
     scope = Place.where.not(latitude: nil).where.not(longitude: nil)
 
@@ -189,7 +199,7 @@ class PlacesController < ApplicationController
     head :no_content
   end
 
-  # PATCH /places/:id  — 수동 데이터 보강용 (인증 필요)
+  # PATCH /places/:id  : 수동 데이터 보강용 (인증 필요)
   def update
     authenticate_user!
     if @place.update(place_params)
@@ -200,6 +210,46 @@ class PlacesController < ApplicationController
   end
 
   private
+
+  def keyword_scope(scope, raw)
+    tokens = raw.to_s.gsub(/[ㄱ-ㅎㅏ-ㅣ]+/, " ").split.uniq
+    return scope if tokens.empty?
+
+    combined = tokens.reduce(scope) { |sc, t| sc.where(token_condition(t)) }
+    return combined if tokens.size == 1 || combined.exists?
+
+    places = tokens.select { |t| location_token?(t) }
+    return places.reduce(scope) { |sc, t| sc.where(token_condition(t)) } if places.any?
+    scope.where(tokens.map { |t| token_condition(t) }.reduce(:or))
+  end
+
+  def location_token?(token)
+    return true if SEARCH_REGION_ALIASES.key?(token) || REGION_PREFIXES.key?(token)
+    return false if SEARCH_CATEGORY_WORDS.key?(token) || %w[24시 24시간].include?(token)
+    Place.where("COALESCE(road_address, address) ILIKE ?", "%#{Place.sanitize_sql_like(token)}%").exists?
+  end
+
+  def token_condition(token)
+    like = "%#{Place.sanitize_sql_like(token)}%"
+    text = Place.where("name ILIKE :q OR address ILIKE :q OR road_address ILIKE :q", q: like)
+
+    if token.length >= 3 && token.end_with?("역")
+      stem = "%#{Place.sanitize_sql_like(token.delete_suffix('역'))}%"
+      text = text.or(Place.where("name ILIKE :q OR address ILIKE :q OR road_address ILIKE :q", q: stem))
+    end
+
+    if (prefixes = SEARCH_REGION_ALIASES[token] || (REGION_PREFIXES[token] && [REGION_PREFIXES[token]]))
+      prefixes.each { |pre| text = text.or(Place.where("COALESCE(road_address, address) ILIKE ?", "#{pre}%")) }
+    end
+
+    if (cat = SEARCH_CATEGORY_WORDS[token])
+      text = text.or(Place.where("app_category && ARRAY[?]::varchar[]", [cat]))
+    end
+
+    text = text.or(Place.where(is_24hours: true)).or(Place.where("name ILIKE '%24%'")) if %w[24시 24시간].include?(token)
+
+    text.arel.constraints.reduce(:and)
+  end
 
   def set_place
     @place = Place.find(params[:id])
