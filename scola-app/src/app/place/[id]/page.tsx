@@ -5,6 +5,7 @@ import JsonLd from '@/components/seo/JsonLd';
 import { resolvePlaceLinks } from '@/lib/sigungu';
 import type { Place } from '@/types/place';
 import { categoryLabel } from '@/data/categories';
+import { MIN_INDEX_REVIEWS } from '@/lib/sitemap';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.scola.kr';
 
@@ -55,6 +56,9 @@ export async function generateMetadata(
     title,
     description,
     alternates: { canonical: `https://scola.kr/place/${id}` },
+    ...((place.visitor_review_count ?? 0) < MIN_INDEX_REVIEWS && {
+      robots: { index: true, follow: true, googleBot: { index: false, follow: true } },
+    }),
     openGraph: {
       siteName: '스콜라',
       title,
