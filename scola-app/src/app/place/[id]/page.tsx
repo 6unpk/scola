@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import PlaceDetailClient from './PlaceDetailClient';
 import JsonLd from '@/components/seo/JsonLd';
 import { resolvePlaceLinks } from '@/lib/sigungu';
@@ -7,11 +8,12 @@ import { categoryLabel } from '@/data/categories';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.scola.kr';
 
-async function fetchPlace(id: string): Promise<Place | null> {
+async function fetchPlace(id: string): Promise<Place | null | undefined> {
   try {
     const res = await fetch(`${API_BASE}/places/${id}`, {
       next: { revalidate: 3600 },
     });
+    if (res.status === 404) return undefined;
     if (!res.ok) return null;
     const data = await res.json();
     return data.data ?? null;
@@ -25,12 +27,18 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { id } = await params;
   const place = await fetchPlace(id);
+  if (place === undefined) notFound();
 
   if (!place) {
     return { title: '장소를 찾을 수 없습니다' };
   }
 
   const addr = place.road_address ?? place.address ?? '';
+  const links = await resolvePlaceLinks(addr);
+  const sigungu = addr.split(/\s+/)[1];
+  const area = [links?.region.name, sigungu && /[시군구]$/.test(sigungu) ? sigungu : null].filter(Boolean).join(' ');
+  const mainCategory = place.app_category?.[0] ? categoryLabel(place.app_category[0]) : '';
+  const title = [place.name, [area, mainCategory].filter(Boolean).join(' ')].filter(Boolean).join(' - ');
   const categories = (place.app_category ?? [])
     .map((c: string) => categoryLabel(c))
     .join(', ');
@@ -41,15 +49,15 @@ export async function generateMetadata(
   ].filter(Boolean).join(' | ').slice(0, 160) || `${place.name} 정보, 위치, 이용 후기를 확인하세요.`;
 
   // 크기는 이미지마다 달라 하드코딩하지 않음(잘못된 1200×630 선언 제거). R2 호스팅 최적화 이미지.
-  const images = place.thumbnail ? [{ url: place.thumbnail, alt: place.name }] : [];
+  const images = [{ url: place.thumbnail ?? 'https://scola.kr/og-image.png', alt: place.name }];
 
   return {
-    title: place.name,
+    title,
     description,
     alternates: { canonical: `https://scola.kr/place/${id}` },
     openGraph: {
       siteName: '스콜라',
-      title: place.name,
+      title,
       description,
       url: `https://scola.kr/place/${id}`,
       type: 'article',
@@ -57,9 +65,9 @@ export async function generateMetadata(
     },
     twitter: {
       card: 'summary_large_image',
-      title: place.name,
+      title,
       description,
-      images: place.thumbnail ? [place.thumbnail] : [],
+      images: [place.thumbnail ?? 'https://scola.kr/og-image.png'],
     },
   };
 }
@@ -86,6 +94,7 @@ export default async function PlaceDetailPage(
 ) {
   const { id } = await params;
   const place = await fetchPlace(id);
+  if (place === undefined) notFound();
   const regionLinks = place ? await resolvePlaceLinks(place.road_address ?? place.address) : null;
 
   return (

@@ -168,7 +168,7 @@ export default function MapContent({ recommended }: { recommended: PlaceMarker[]
                       setFocus((f) => ({ place: p, seq: (f?.seq ?? 0) + 1 }));
                     }}
                   >
-                    <img src={p.thumbnail ?? '/place-placeholder.svg'} alt="" loading="lazy" />
+                    <img src={p.thumbnail ?? '/place-placeholder.svg'} alt={p.name} loading="lazy" />
                     <RecoText>
                       <RecoName>{p.name}</RecoName>
                       <RecoSub>{recoSub(p)}</RecoSub>

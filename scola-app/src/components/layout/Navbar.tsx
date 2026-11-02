@@ -38,7 +38,6 @@ const NAV_ITEMS = [
   },
   { label: '지도', href: '/map' },
   { label: '매거진', href: '/posts' },
-  { label: '후기', href: '/reviews' },
   {
     label: '사우나 즐기는 법',
     href: '/guide',
