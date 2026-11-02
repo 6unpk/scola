@@ -4,16 +4,16 @@ import { RiArrowRightLine, RiCheckLine } from '@remixicon/react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import {
-  PageWrap, SectionInner, SectionLabel, Hero, HeroEyebrow, HeroTitle, HeroSubTitle,
+  PageWrap, SectionInner, Hero, HeroTitle, HeroSubTitle,
   HeroDesc, HeroStats, HeroStat, HeroStatNum, HeroStatLabel,
   IntroSection, IntroGrid, IntroLeft, IntroTitle, IntroDesc, IntroRight,
   IntroBullet, BulletText, BulletTitle, BulletDesc,
   RoutineSection, RoutineTitle, RoutineSub, RoutineFlow, RoutineStep,
-  RoutineStepImage, RoutineStepBody, RoutineStepMeta, RoutineStepName, RoutineStepDesc,
+  RoutineStepImage, RoutineStepBody, RoutineStepName, RoutineStepDesc,
   RoutineResult, RoutineRepeat, RoutineRepeatText, RepeatBadge,
   StyleSection, StyleTitle, StyleGrid, StyleCard, StyleCardImage,
-  StyleCardMeta, StyleCardTitle, StyleCardBody, StyleCardDesc, StyleCardLink,
-  TipsSection, TipsTitle, TipsGrid, TipCard, TipTitle, TipDesc, TipPoint,
+  StyleCardTitle, StyleCardBody, StyleCardDesc, StyleCardLink,
+  TipsSection, TipsTitle, TipsGrid, TipCard, TipTitle, TipDesc,
   EtiquetteSection, EtiquetteTitle, EtiquetteList, EtiquetteItem, EtiquetteNum,
   EtiquetteContent, EtiquetteItemTitle, EtiquetteItemDesc,
   QuoteSection, QuoteText, QuoteSub, CtaBtn,
@@ -31,17 +31,14 @@ const TIPS = [
   {
     title: '사우나 모자 챙기기',
     desc: '양머리 대신 전용 사우나 모자를 챙기세요. 머리와 두피를 열기로부터 보호해 더 오래, 더 깊게 즐길 수 있습니다.',
-    point: '핀란드·일본 사우나의 필수 아이템',
   },
   {
     title: '오로포로 전해질 충전',
     desc: '일본 사우나 마니아들의 국민 음료. 오로나민C와 포카리스웨트를 1:1로 섞으면 비타민과 전해질을 동시에 보충할 수 있습니다.',
-    point: '사우나 후 최고의 회복 음료',
   },
   {
     title: '야외 테라스 or 선풍기 활용',
     desc: '핀란드 호수나 일본 외기욕장이 없어도 괜찮습니다. 사우나 테라스나 선풍기 앞, 젖은 몸에 닿는 바람 한 점이 당신을 핀란드 숲속으로 데려다줍니다.',
-    point: '외기욕의 한국식 버전',
   },
 ];
 
@@ -63,7 +60,6 @@ export default function GuidePage() {
       {/* ── 히어로 ── */}
       <Hero>
         <SectionInner style={{ position: 'relative', zIndex: 1 }}>
-          <HeroEyebrow>Scola's Sauna Guide</HeroEyebrow>
           <HeroTitle>스콜라가 전해주는 사우나 가이드</HeroTitle>
           <HeroSubTitle>핀란드식 힐링과 일본식 쾌감, 그 사이에서 당신만의 루틴을 찾아보세요.</HeroSubTitle>
           <HeroDesc>
@@ -91,7 +87,6 @@ export default function GuidePage() {
         <SectionInner>
           <IntroGrid>
             <IntroLeft>
-              <SectionLabel>Why Sauna</SectionLabel>
               <IntroTitle>
                 우리가 알던 사우나와는<br />
                 <em>색다른 경험</em>
@@ -132,16 +127,14 @@ export default function GuidePage() {
       {/* ── 온냉 반복 루틴 ── */}
       <RoutineSection>
         <SectionInner>
-          <SectionLabel>The Routine</SectionLabel>
           <RoutineTitle>황금 루틴: 사우나, 냉탕, 외기욕</RoutineTitle>
           <RoutineSub>이 세 단계의 반복이 몸과 마음을 정돈시키는 핵심입니다. <br /> 복잡한 기술 없이, 순서 하나만 지켜보세요.</RoutineSub>
           <RoutineFlow>
-            {ROUTINE_STEPS.map((step, i) => (
+            {ROUTINE_STEPS.map((step) => (
               <RoutineStep key={step.name}>
                 <RoutineStepImage src={step.image} alt={step.name} loading="lazy" />
                 <RoutineStepBody>
-                  <RoutineStepMeta>STEP {i + 1} · {step.time}</RoutineStepMeta>
-                  <RoutineStepName>{step.name}</RoutineStepName>
+                  <RoutineStepName>{step.name} ({step.time})</RoutineStepName>
                   <RoutineStepDesc>{step.desc}</RoutineStepDesc>
                 </RoutineStepBody>
               </RoutineStep>
@@ -162,13 +155,11 @@ export default function GuidePage() {
       {/* ── 두 가지 스타일 ── */}
       <StyleSection>
         <SectionInner>
-          <SectionLabel>Deep Dive</SectionLabel>
           <StyleTitle>두 가지 사우나 철학, 더 깊이 알아보기</StyleTitle>
           <StyleGrid>
             <StyleCard href="/guide/finland">
               <StyleCardImage src="/guide/style-finland.webp" alt="핀란드 호숫가 사우나" loading="lazy" />
               <StyleCardBody>
-                <StyleCardMeta>FINLAND · 뢸뤼 · 비흐타 · 아반토</StyleCardMeta>
                 <StyleCardTitle>핀란드식 사우나 즐기기</StyleCardTitle>
                 <StyleCardDesc>
                   핀란드인들에게 사우나는 성당과도 같은 신성한 공간입니다.
@@ -184,7 +175,6 @@ export default function GuidePage() {
             <StyleCard href="/guide/japan">
               <StyleCardImage src="/guide/style-japan.webp" alt="도쿄 옥상 사우나 외기욕" loading="lazy" />
               <StyleCardBody>
-                <StyleCardMeta>JAPAN · 토토노우 · 사우너 · 사메시</StyleCardMeta>
                 <StyleCardTitle>일본식 사우나 즐기기</StyleCardTitle>
                 <StyleCardDesc>
                   일본 Z세대가 퇴근 후 술집 대신 사우나로 향하는 이유.
@@ -203,14 +193,12 @@ export default function GuidePage() {
       {/* ── 한국형 꿀조합 ── */}
       <TipsSection>
         <SectionInner>
-          <SectionLabel style={{ color: 'rgba(255,255,255,0.4)' }}>Korean Tips</SectionLabel>
           <TipsTitle>사우너를 위한 추천</TipsTitle>
           <TipsGrid>
             {TIPS.map((tip) => (
               <TipCard key={tip.title}>
                 <TipTitle>{tip.title}</TipTitle>
                 <TipDesc>{tip.desc}</TipDesc>
-                <TipPoint>{tip.point}</TipPoint>
               </TipCard>
             ))}
           </TipsGrid>
@@ -220,7 +208,6 @@ export default function GuidePage() {
       {/* ── 에티켓 ── */}
       <EtiquetteSection>
         <SectionInner>
-          <SectionLabel>Etiquette</SectionLabel>
           <EtiquetteTitle>알아두면 좋은 사우나 에티켓</EtiquetteTitle>
           <EtiquetteList>
             {ETIQUETTE.map((e, i) => (

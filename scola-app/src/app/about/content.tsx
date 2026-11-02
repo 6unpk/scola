@@ -7,15 +7,48 @@ import { motion, animate, useInView, useReducedMotion } from 'motion/react';
 import { RiArrowRightLine } from '@remixicon/react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { cardBase, cardHover } from '@/components/ui/Card';
+import { cardBase, cardHover, cardThumbDivider, tagBase } from '@/components/ui/Card';
+import type { Place } from '@/types/place';
 import {
   PageWrap, SectionInner, HeroTitle,
-  IntroSection, IntroTitle, IntroDesc, QuoteSection, QuoteText, QuoteSub, CtaBtn,
+  IntroSection, IntroTitle, IntroDesc, CtaBtn,
 } from '../guide/styles';
 
-const TextInner = styled.div`
-  max-width: 720px;
+const AboutWrap = styled(PageWrap)`
+  word-break: keep-all;
+`;
+
+const Story = styled.div<{ $reverse?: boolean }>`
+  max-width: 1000px;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+  > figure { order: ${({ $reverse }) => ($reverse ? 1 : 0)}; }
+  h2 { font-size: clamp(26px, 3.2vw, 34px); }
+  @media (max-width: 860px) {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    > figure { order: 0; }
+  }
+`;
+
+const Figure = styled.figure`
+  margin: 0;
+  img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border: 2px solid ${({ theme }) => theme.colors.dark};
+    border-radius: ${({ theme }) => theme.radius.lg};
+  }
+  figcaption {
+    margin-top: 10px;
+    font-size: 12px;
+    color: ${({ theme }) => theme.colors.gray500};
+  }
 `;
 
 const GraySection = styled(IntroSection)`
@@ -51,15 +84,8 @@ const DarkTitle = styled.h2`
   font-size: clamp(28px, 4.5vw, 42px);
   font-weight: 900;
   line-height: 1.3;
-  margin-bottom: 20px;
-  em { font-style: normal; color: ${({ theme }) => theme.colors.primary}; }
-`;
-
-const DarkDesc = styled.p`
-  font-size: 17px;
-  line-height: 1.85;
-  color: rgba(255,255,255,0.6);
   margin-bottom: 40px;
+  em { font-style: normal; color: ${({ theme }) => theme.colors.primary}; }
 `;
 
 const DoGrid = styled.div`
@@ -73,15 +99,20 @@ const DoCard = styled(Link)`
   ${cardBase}
   ${cardHover}
   display: block;
-  padding: 24px;
   text-decoration: none;
 `;
 
-const DoVerb = styled.p`
-  font-size: 13px;
-  font-weight: 800;
-  color: ${({ theme }) => theme.colors.primary};
-  margin-bottom: 8px;
+const DoShot = styled.img`
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top;
+  ${cardThumbDivider}
+`;
+
+const DoBody = styled.div`
+  padding: 20px 24px 24px;
 `;
 
 const DoTitle = styled.p`
@@ -111,8 +142,120 @@ const BigNumLabel = styled.p`
   color: ${({ theme }) => theme.colors.gray500};
 `;
 
+const ReviewGrid = styled.div`
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: start;
+  @media (max-width: 860px) { grid-template-columns: 1fr; gap: 40px; }
+`;
+
+const Sample = styled(Link)`
+  ${cardBase}
+  ${cardHover}
+  display: block;
+  text-decoration: none;
+`;
+
+const SampleThumb = styled.img`
+  display: block;
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  ${cardThumbDivider}
+`;
+
+const SampleBody = styled.div`
+  padding: 20px 24px 24px;
+`;
+
+const SampleName = styled.p`
+  font-size: 18px;
+  font-weight: 900;
+  color: ${({ theme }) => theme.colors.dark};
+`;
+
+const SampleMeta = styled.p`
+  font-size: 13px;
+  color: ${({ theme }) => theme.colors.gray500};
+  margin: 4px 0 16px;
+`;
+
+const Sentiment = styled.div`
+  display: flex;
+  height: 8px;
+  border-radius: ${({ theme }) => theme.radius.full};
+  overflow: hidden;
+  background: ${({ theme }) => theme.colors.gray100};
+  margin-bottom: 6px;
+`;
+
+const SentimentBar = styled(motion.div)<{ $color: string }>`
+  height: 100%;
+  background: ${({ $color }) => $color};
+`;
+
+const SentimentLegend = styled.p`
+  font-size: 12px;
+  color: ${({ theme }) => theme.colors.gray500};
+  margin-bottom: 18px;
+`;
+
+const ListTitle = styled.p`
+  font-size: 13px;
+  font-weight: 800;
+  color: ${({ theme }) => theme.colors.dark};
+  margin: 14px 0 8px;
+`;
+
+const Tags = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+`;
+
+const Tag = styled.span<{ $muted?: boolean }>`
+  ${tagBase}
+  font-size: 12px;
+  ${({ $muted, theme }) => $muted && `background: ${theme.colors.gray50}; border-color: ${theme.colors.gray300}; color: ${theme.colors.gray600};`}
+`;
+
+const CtaSection = styled.section`
+  position: relative;
+  overflow: hidden;
+  padding: 110px 20px;
+  text-align: center;
+  background: ${({ theme }) => theme.colors.dark} url('/guide/hero.webp') center 70% / cover no-repeat;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(13,13,13,0.7) 0%, rgba(13,13,13,0.85) 100%);
+  }
+`;
+
+const CtaTitle = styled.h2`
+  position: relative;
+  font-size: clamp(26px, 4.5vw, 40px);
+  font-weight: 900;
+  color: white;
+  margin-bottom: 14px;
+  em { font-style: normal; color: ${({ theme }) => theme.colors.primary}; }
+`;
+
+const CtaSub = styled.p`
+  position: relative;
+  font-size: 16px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 40px;
+`;
+
 const CtaRow = styled.div`
   display: flex;
+  position: relative;
   justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
@@ -123,11 +266,11 @@ const GhostBtn = styled(Link)`
   align-items: center;
   gap: 8px;
   padding: 16px 32px;
-  border: 2px solid ${({ theme }) => theme.colors.dark};
+  border: 2px solid rgba(255,255,255,0.6);
   border-radius: ${({ theme }) => theme.radius.full};
   font-size: 16px;
   font-weight: 800;
-  color: ${({ theme }) => theme.colors.dark};
+  color: white;
   text-decoration: none;
   &:hover { border-color: ${({ theme }) => theme.colors.primary}; color: ${({ theme }) => theme.colors.primary}; }
 `;
@@ -135,7 +278,7 @@ const GhostBtn = styled(Link)`
 const SmallRow = styled.div`
   max-width: 720px;
   margin: 0 auto;
-  padding: 0 20px 80px;
+  padding: 64px 20px 80px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
@@ -244,21 +387,21 @@ function CountUp({ to }: { to: number }) {
 }
 
 const WORDS = [
-  { text: 'σχολή', gloss: '그리스어 · 쉼' },
-  { text: 'schola', gloss: '라틴어 · 머무는 자리' },
+  { text: 'σχολή', gloss: '그리스어 / 쉼' },
+  { text: 'schola', gloss: '라틴어 / 머무는 자리' },
   { text: '스콜라', gloss: '지금, 여기' },
 ];
 
 const DOES = [
-  { verb: '찾기', title: '지도와 지역별 목록', desc: '내 주변, 또는 가려는 동네의 사우나·찜질방을 조건별로 찾습니다.', href: '/map' },
-  { verb: '배우기', title: '사우나 가이드', desc: '온탕·냉탕·휴식 순서와 핀란드식, 일본식 사우나 문화를 정리했습니다.', href: '/guide' },
-  { verb: '읽기', title: '스콜라 매거진', desc: '지역별 추천과 사우나에 얽힌 역사, 건강 이야기를 씁니다.', href: '/posts' },
+  { title: '지도와 지역별 목록', desc: '내 주변, 또는 가려는 동네의 사우나, 찜질방을 조건별로 찾습니다.', href: '/map', image: '/about/map.webp' },
+  { title: '사우나 가이드', desc: '온탕, 냉탕, 휴식 순서와 핀란드식, 일본식 사우나 문화를 정리했습니다.', href: '/guide', image: '/about/guide.webp' },
+  { title: '스콜라 매거진', desc: '지역별 추천과 사우나에 얽힌 역사, 건강 이야기를 씁니다.', href: '/posts', image: '/about/magazine.webp' },
 ];
 
-export default function AboutPage({ placeCount }: { placeCount: number | null }) {
+export default function AboutPage({ placeCount, sample }: { placeCount: number | null; sample: Place | null }) {
   const reduce = useReducedMotion();
   return (
-    <PageWrap>
+    <AboutWrap>
       <Navbar />
 
       <AboutHero>
@@ -302,7 +445,12 @@ export default function AboutPage({ placeCount }: { placeCount: number | null })
       </AboutHero>
 
       <IntroSection>
-        <TextInner><Reveal>
+        <Story>
+          <Figure>
+            <img src="/about/athens.webp" alt="라파엘로의 아테네 학당" loading="lazy" />
+            <figcaption>라파엘로, 「아테네 학당」, 1509-1511</figcaption>
+          </Figure>
+          <Reveal>
           <IntroTitle>쉬는 시간이 <em>배움</em>이 됐다</IntroTitle>
           <IntroDesc>
             &apos;스콜라(schola)&apos;의 어원인 그리스어 스콜레(σχολή)는 원래 &apos;여가, 쉼&apos;을 뜻했다.
@@ -313,11 +461,17 @@ export default function AboutPage({ placeCount }: { placeCount: number | null })
             플라톤의 아카데메이아와 아리스토텔레스의 뤼케이온도 처음에는 학교가 아니었다.
             몸을 단련하고 씻던 체육장, 김나지온이었다. 땀을 흘리고 쉬던 자리에서 철학이 시작된 셈이다.
           </IntroDesc>
-        </Reveal></TextInner>
+        </Reveal>
+        </Story>
       </IntroSection>
 
       <GraySection>
-        <TextInner><Reveal>
+        <Story $reverse>
+          <Figure>
+            <img src="/about/caracalla.webp" alt="알마타데마의 카라칼라 욕장" loading="lazy" />
+            <figcaption>로렌스 알마타데마, 「카라칼라 욕장」, 1899</figcaption>
+          </Figure>
+          <Reveal>
           <IntroTitle>목욕탕 한가운데의 <em>머무는 자리</em></IntroTitle>
           <IntroDesc>
             로마의 대형 공중목욕탕 테르마이에는 탕만 있지 않았다. 도서관과 정원, 사람들이 둘러앉아 이야기하는 공간이 함께 있었다.
@@ -331,30 +485,37 @@ export default function AboutPage({ placeCount }: { placeCount: number | null })
           <IntroDesc>
             씻는 곳이면서 기다리고, 머물고, 이야기하는 곳. 2천 년 전 목욕탕에도 그런 자리가 있었다.
           </IntroDesc>
-        </Reveal></TextInner>
+        </Reveal>
+        </Story>
       </GraySection>
 
       <IntroSection>
-        <TextInner><Reveal>
+        <Story>
+          <Figure>
+            <img src="/about/kiln.webp" alt="찜질방 불가마" loading="lazy" />
+          </Figure>
+          <Reveal>
           <IntroTitle>그 자리는 지금도 <em>있습니다</em></IntroTitle>
           <IntroDesc>
             평상에 누워 식혜를 마시고, 맥반석 계란을 까먹고, 수면실에서 한숨 자고 나옵니다.
             세신사가 번호를 부를 때까지 탕 가장자리에 앉아 기다립니다.
             로마 사람들이 스콜라에서 보냈던 시간은 오늘 우리 동네 목욕탕과 찜질방에서도 그대로 흘러갑니다.
           </IntroDesc>
-        </Reveal></TextInner>
+        </Reveal>
+        </Story>
       </IntroSection>
 
       <DarkSection>
         <SectionInner>
           <DarkTitle>스콜라는 당신이 <em>머물 자리</em>를<br />찾아주는 곳입니다</DarkTitle>
-          <DarkDesc>스콜라가 하는 일은 세 가지입니다.</DarkDesc>
           <DoGrid>
             {DOES.map((d) => (
               <DoCard key={d.href} href={d.href}>
-                <DoVerb>{d.verb}</DoVerb>
-                <DoTitle>{d.title}</DoTitle>
-                <DoDesc>{d.desc}</DoDesc>
+                <DoShot src={d.image} alt={`${d.title} 화면`} loading="lazy" />
+                <DoBody>
+                  <DoTitle>{d.title}</DoTitle>
+                  <DoDesc>{d.desc}</DoDesc>
+                </DoBody>
               </DoCard>
             ))}
           </DoGrid>
@@ -362,44 +523,91 @@ export default function AboutPage({ placeCount }: { placeCount: number | null })
       </DarkSection>
 
       <IntroSection>
-        <TextInner><Reveal>
-          <IntroTitle>리뷰를 모아 <em>한눈에</em></IntroTitle>
-          <IntroDesc>
-            장소마다 방문자 리뷰를 모아 좋은 점과 아쉬운 점, 분위기를 요약합니다.
-            요금과 영업시간, 탕 종류와 시설도 한 페이지에서 비교할 수 있게 정리합니다.
-          </IntroDesc>
-          {placeCount && (
-            <>
-              <CountUp to={placeCount} />
-              <BigNumLabel>스콜라에 등록된 전국 사우나·찜질방·목욕탕</BigNumLabel>
-            </>
+        <ReviewGrid>
+          <Reveal>
+            <IntroTitle>리뷰를 모아 <em>한눈에</em></IntroTitle>
+            <IntroDesc>
+              장소마다 방문자 리뷰를 모아 좋은 점과 아쉬운 점, 분위기를 요약합니다.
+              요금과 영업시간, 탕 종류와 시설도 한 페이지에서 비교할 수 있게 정리합니다.
+            </IntroDesc>
+            {placeCount && (
+              <>
+                <CountUp to={placeCount} />
+                <BigNumLabel>스콜라에 등록된 전국 사우나, 찜질방, 목욕탕</BigNumLabel>
+              </>
+            )}
+          </Reveal>
+          {sample?.review_summary && (
+            <Reveal>
+              <Sample href={`/place/${sample.id}`}>
+                {sample.thumbnail && <SampleThumb src={sample.thumbnail} alt={sample.name} loading="lazy" />}
+                <SampleBody>
+                  <SampleName>{sample.name}</SampleName>
+                  <SampleMeta>
+                    {sample.place_profile?.summary ?? sample.road_address}
+                    {sample.visitor_review_count ? `, 방문자 리뷰 ${sample.visitor_review_count.toLocaleString()}건` : ''}
+                  </SampleMeta>
+                  {sample.review_summary.sentiment_breakdown && (
+                    <>
+                      <Sentiment>
+                        {([
+                          ['positive', '#2E7D32'],
+                          ['neutral', '#BDBDBD'],
+                          ['negative', '#A62121'],
+                        ] as const).map(([k, color], i) => (
+                          <SentimentBar
+                            key={k}
+                            $color={color}
+                            initial={{ width: 0 }}
+                            whileInView={{ width: `${sample.review_summary!.sentiment_breakdown![k]}%` }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8, delay: 0.2 + i * 0.15, ease: 'easeOut' }}
+                          />
+                        ))}
+                      </Sentiment>
+                      <SentimentLegend>
+                        긍정 {sample.review_summary.sentiment_breakdown.positive}%, 보통 {sample.review_summary.sentiment_breakdown.neutral}%, 부정 {sample.review_summary.sentiment_breakdown.negative}%
+                      </SentimentLegend>
+                    </>
+                  )}
+                  <ListTitle>좋은 점</ListTitle>
+                  <Tags>
+                    {sample.review_summary.pros.slice(0, 3).map((t) => <Tag key={t}>{t}</Tag>)}
+                  </Tags>
+                  <ListTitle>아쉬운 점</ListTitle>
+                  <Tags>
+                    {sample.review_summary.cons.slice(0, 2).map((t) => <Tag key={t} $muted>{t}</Tag>)}
+                  </Tags>
+                </SampleBody>
+              </Sample>
+            </Reveal>
           )}
-        </Reveal></TextInner>
+        </ReviewGrid>
       </IntroSection>
 
-      <QuoteSection>
-        <SectionInner>
-          <QuoteText>오늘 <em>머물 자리</em>를 찾아보세요</QuoteText>
-          <QuoteSub>가까운 사우나에서, 잠깐이라도 쉬어 가세요.</QuoteSub>
+      <CtaSection>
+        <Reveal>
+          <CtaTitle>오늘 <em>머물 자리</em>를 찾아보세요</CtaTitle>
+          <CtaSub>가까운 사우나에서, 잠깐이라도 쉬어 가세요.</CtaSub>
           <CtaRow>
             <CtaBtn href="/map">내 주변 사우나 찾기 <RiArrowRightLine size={18} /></CtaBtn>
             <GhostBtn href="/guide">사우나 가이드 보기</GhostBtn>
           </CtaRow>
-        </SectionInner>
-      </QuoteSection>
+        </Reveal>
+      </CtaSection>
 
       <SmallRow>
         <SmallCard href="https://www.instagram.com/scolakr" target="_blank" rel="noopener noreferrer">
-          <SmallTitle>장소 정보 수정·제보</SmallTitle>
+          <SmallTitle>장소 정보 수정/제보</SmallTitle>
           <SmallDesc>정보가 틀렸거나 새로 생긴 곳이 있다면 인스타그램 DM으로 알려주세요.</SmallDesc>
         </SmallCard>
         <SmallCard href="/b2b-event">
           <SmallTitle>제휴 문의</SmallTitle>
-          <SmallDesc>사우나·찜질방 운영자이신가요? 제휴 신청서를 남겨주세요.</SmallDesc>
+          <SmallDesc>사우나, 찜질방 운영자이신가요? 제휴 신청서를 남겨주세요.</SmallDesc>
         </SmallCard>
       </SmallRow>
 
       <Footer />
-    </PageWrap>
+    </AboutWrap>
   );
 }

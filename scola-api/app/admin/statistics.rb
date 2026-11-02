@@ -78,7 +78,7 @@ ActiveAdmin.register_page "Statistics" do
       end
 
       column do
-        panel "아웃바운드 리드 · 이번 달 상위 장소" do
+        panel "아웃바운드 리드 / 이번 달 상위 장소" do
           if top_ids.any?
             table_for top_ids do
               column("장소") { |pid| link_to(places_by_id[pid]&.name || "##{pid}", admin_place_path(pid)) }

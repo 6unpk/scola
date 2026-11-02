@@ -79,7 +79,7 @@ const COMPARE_ROWS = [
   { category: '습도', korea: '건조한 열기 위주', finland: '뢸뤼로 촉촉한 증기 유지' },
   { category: '복장', korea: '찜질복 착용', finland: '개인 면 수건을 깔고 나체' },
   { category: '쿨다운', korea: '바로 냉탕 입수', finland: '자연풍 다음 냉수욕 순서로 천천히' },
-  { category: '간식', korea: '식혜·구운 계란', finland: '탄산수·맥주·소시지 구이' },
+  { category: '간식', korea: '식혜, 구운 계란', finland: '탄산수, 맥주, 소시지 구이' },
   { category: '분위기', korea: '활기차고 사교적', finland: '정숙하고 명상적' },
 ];
 
@@ -203,7 +203,7 @@ export default function FinlandGuidePage() {
             <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', lineHeight: 1.75 }}>
               <span style={{ fontWeight: 800, color: '#A62121', display: 'inline-flex', alignItems: 'center', gap: 5 }}><RiInformationLine size={14} /> 한국의 핀란드 사우나 스팟</span>
               {' '}최근 한국에도 숲속 오두막 형태나 강을 바라보며 뢸뤼를 즐길 수 있는 사우나가 늘고 있습니다.
-              가평·춘천의 프라이빗 사우나 펜션이나 강원도의 야외 사우나 시설을 이용하면
+              가평, 춘천의 프라이빗 사우나 펜션이나 강원도의 야외 사우나 시설을 이용하면
               아반토 대신 눈밭을 뒹구는 경험도 가능합니다.
             </p>
           </div>

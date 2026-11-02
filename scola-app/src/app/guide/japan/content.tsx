@@ -119,7 +119,7 @@ export default function JapanGuidePage() {
               </div>
               <TotonoHeaderRight>
                 <TotonoTagline>정신이 정돈되고, 몸이 붕 뜨는 황홀한 쾌감</TotonoTagline>
-                <TotonoSubTag>2021 일본 신어·유행어 대상 후보 선정</TotonoSubTag>
+                <TotonoSubTag>2021 일본 신어, 유행어 대상 후보 선정</TotonoSubTag>
               </TotonoHeaderRight>
             </TotonoHeader>
             <TotonoBody>

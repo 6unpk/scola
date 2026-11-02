@@ -136,7 +136,7 @@ export default function HomeScreen() {
         <Section title="지역별 보기">
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
             {REGIONS.map((r) => (
-              <Pressable key={r.slug} style={styles.chip} onPress={() => openWeb(`/sauna/${r.slug}`, `${r.name} 사우나·찜질방`)}>
+              <Pressable key={r.slug} style={styles.chip} onPress={() => openWeb(`/sauna/${r.slug}`, `${r.name} 사우나, 찜질방`)}>
                 <Text style={styles.chipText}>{r.name}</Text>
               </Pressable>
             ))}
@@ -147,7 +147,7 @@ export default function HomeScreen() {
           <View style={{ flex: 1 }}>
             <View style={styles.badge}><Text style={styles.badgeText}>가이드</Text></View>
             <Text style={styles.guideTitle}>사우나, 제대로 즐기는 법</Text>
-            <Text style={styles.guideDesc}>온탕·냉탕 순서부터 불한증막 활용법까지</Text>
+            <Text style={styles.guideDesc}>온탕, 냉탕 순서부터 불한증막 활용법까지</Text>
           </View>
           <Ionicons name="chevron-forward" size={20} color={colors.white} />
         </Pressable>

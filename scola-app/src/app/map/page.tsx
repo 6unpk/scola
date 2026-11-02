@@ -27,9 +27,9 @@ async function fetchRecommended(): Promise<PlaceMarker[]> {
   }
 }
 
-const title = '전국 사우나·찜질방 지도';
+const title = '전국 사우나, 찜질방 지도';
 const description =
-  '전국 사우나, 찜질방, 스파, 불한증막, 온천을 지도에서 한눈에. 지역별로 내 주변 가까운 곳을 찾고 위치·후기까지 확인하세요.';
+  '전국 사우나, 찜질방, 스파, 불한증막, 온천을 지도에서 한눈에. 지역별로 내 주변 가까운 곳을 찾고 위치, 후기까지 확인하세요.';
 
 export const metadata: Metadata = {
   title,
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     description,
     url: 'https://scola.kr/map',
     type: 'website',
-    images: [{ url: 'https://scola.kr/og-image.png', width: 1200, height: 630, alt: '전국 사우나·찜질방 지도' }],
+    images: [{ url: 'https://scola.kr/og-image.png', width: 1200, height: 630, alt: '전국 사우나, 찜질방 지도' }],
   },
   twitter: { card: 'summary_large_image', title: `${title} | 스콜라`, description, images: ['https://scola.kr/og-image.png'] },
 };

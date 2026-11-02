@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     description: '전국 사우나, 찜질방, 스파를 한 곳에서 찾아보세요.',
     url: 'https://scola.kr',
     type: 'website',
-    images: [{ url: 'https://scola.kr/og-image.png', width: 1200, height: 630, alt: '스콜라 - 전국 사우나·찜질방·스파' }],
+    images: [{ url: 'https://scola.kr/og-image.png', width: 1200, height: 630, alt: '스콜라 - 전국 사우나, 찜질방, 스파' }],
   },
   twitter: {
     card: 'summary_large_image',

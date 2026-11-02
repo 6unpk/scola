@@ -44,8 +44,8 @@ const NAV_ITEMS = [
     href: '/guide',
     children: [
       { label: '사우나 즐기기', href: '/guide', desc: '색다른 사우나 철학' },
-      { label: '핀란드식 사우나 즐기기', href: '/guide/finland', desc: '뢸뤼·비흐타·아반토의 세계' },
-      { label: '일본식 사우나 즐기기', href: '/guide/japan', desc: '토토노우·사우너·사메시 문화' },
+      { label: '핀란드식 사우나 즐기기', href: '/guide/finland', desc: '뢸뤼, 비흐타, 아반토의 세계' },
+      { label: '일본식 사우나 즐기기', href: '/guide/japan', desc: '토토노우, 사우너, 사메시 문화' },
     ],
   },
   { label: '스콜라에 대해', href: '/about' },

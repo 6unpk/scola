@@ -17,9 +17,9 @@ async function fetchFirstPage(): Promise<PostsResponse | null> {
   }
 }
 
-const title = '스콜라 매거진 - 사우나·찜질방 이야기';
+const title = '스콜라 매거진 - 사우나, 찜질방 이야기';
 const description =
-  '사우나 문화, 건강 & 웰빙, 여행과 지역 이야기를 담은 스콜라 매거진. 사우나·찜질방·온천을 제대로 즐기는 법을 읽어보세요.';
+  '사우나 문화, 건강 & 웰빙, 여행과 지역 이야기를 담은 스콜라 매거진. 사우나, 찜질방, 온천을 제대로 즐기는 법을 읽어보세요.';
 
 export const metadata: Metadata = {
   title,

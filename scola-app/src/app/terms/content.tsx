@@ -105,14 +105,14 @@ export default function TermsPage() {
           <SectionTitle>제1조 (목적)</SectionTitle>
           <Text>
             본 약관은 아온미디어(이하 &quot;회사&quot;)가 제공하는 스콜라(Scola) 서비스(이하 &quot;서비스&quot;)의
-            이용 조건 및 절차, 회사와 이용자 간의 권리·의무 및 책임 사항을 규정함을 목적으로 합니다.
+            이용 조건 및 절차, 회사와 이용자 간의 권리, 의무 및 책임 사항을 규정함을 목적으로 합니다.
           </Text>
         </Section>
 
         <Section>
           <SectionTitle>제2조 (정의)</SectionTitle>
           <List>
-            <li>&quot;서비스&quot;란 회사가 운영하는 사우나·찜질방·스파 정보 검색 및 후기 플랫폼 스콜라(scola.kr)를 의미합니다.</li>
+            <li>&quot;서비스&quot;란 회사가 운영하는 사우나, 찜질방, 스파 정보 검색 및 후기 플랫폼 스콜라(scola.kr)를 의미합니다.</li>
             <li>&quot;이용자&quot;란 본 약관에 따라 서비스를 이용하는 회원 및 비회원을 말합니다.</li>
             <li>&quot;회원&quot;이란 서비스에 가입하여 회원 아이디를 부여받은 자를 말합니다.</li>
             <li>&quot;콘텐츠&quot;란 이용자가 서비스 내에 게시한 후기, 평점 등의 정보를 말합니다.</li>
@@ -147,7 +147,7 @@ export default function TermsPage() {
           <Text>회원은 다음 행위를 해서는 안 됩니다.</Text>
           <List>
             <li>타인의 개인정보 도용 또는 허위 정보 등록</li>
-            <li>서비스 내 허위 후기 또는 비방·명예훼손 콘텐츠 게시</li>
+            <li>서비스 내 허위 후기 또는 비방, 명예훼손 콘텐츠 게시</li>
             <li>서비스의 정상적인 운영을 방해하는 행위</li>
             <li>회사의 사전 승낙 없이 서비스를 이용한 영리 행위</li>
             <li>기타 관련 법령 및 본 약관에 위반되는 행위</li>
@@ -158,7 +158,7 @@ export default function TermsPage() {
           <SectionTitle>제6조 (서비스의 제공 및 변경)</SectionTitle>
           <Text>
             회사는 서비스를 연중무휴 24시간 제공함을 원칙으로 합니다.
-            단, 시스템 점검·고장·통신 장애 등의 사유가 있는 경우 서비스 제공을 일시 중단할 수 있으며,
+            단, 시스템 점검, 고장, 통신 장애 등의 사유가 있는 경우 서비스 제공을 일시 중단할 수 있으며,
             이 경우 사전에 공지합니다. 부득이한 사정이 있는 경우 사후 공지할 수 있습니다.
           </Text>
         </Section>
@@ -185,7 +185,7 @@ export default function TermsPage() {
           <SectionTitle>제8조 (서비스 이용 제한)</SectionTitle>
           <Text>
             회사는 회원이 본 약관의 의무를 위반하거나 서비스의 정상적인 운영을 방해한 경우,
-            경고·일시 중지·영구 이용 정지 등의 조치를 취할 수 있습니다.
+            경고, 일시 중지, 영구 이용 정지 등의 조치를 취할 수 있습니다.
           </Text>
         </Section>
 

@@ -21,14 +21,14 @@ const FILTER_KEY = 'scola:map:filters';
 function recoSub(p: PlaceMarker) {
   const cat = CATEGORY_META.find((c) => p.app_category?.includes(c.value))?.label;
   const town = p.road_address?.split(' ').slice(0, 2).join(' ');
-  return [cat, town].filter(Boolean).join(' · ');
+  return [cat, town].filter(Boolean).join(', ');
 }
 
 export default function MapContent({ recommended }: { recommended: PlaceMarker[] }) {
   const [focus, setFocus] = useState<{ place: PlaceMarker; seq: number } | null>(null);
   const [visible, setVisible] = useState<PlaceMarker[]>([]);
   const strip = visible.length > 0 ? visible : recommended;
-  const stripTitle = visible.length > 0 ? '지금 보는 지역의 추천' : '스콜라 추천 사우나·찜질방';
+  const stripTitle = visible.length > 0 ? '지금 보는 지역의 추천' : '스콜라 추천 사우나, 찜질방';
   const { ready, error, hasKey } = useNaverMaps();
 
   const [markers, setMarkers] = useState<PlaceMarker[]>([]);
@@ -80,9 +80,9 @@ export default function MapContent({ recommended }: { recommended: PlaceMarker[]
       <Navbar />
       <MapBody>
         <ControlPanel>
-          <PanelTitle>전국 사우나·찜질방 지도</PanelTitle>
+          <PanelTitle>전국 사우나, 찜질방 지도</PanelTitle>
           <PanelIntro>
-            전국 3,000여 곳의 사우나·찜질방·목욕탕·온천을 지도에서 찾아보세요. 지역을 고르면 시군구별 추천 목록으로 이동합니다.
+            전국 3,000여 곳의 사우나, 찜질방, 목욕탕, 온천을 지도에서 찾아보세요. 지역을 고르면 시군구별 추천 목록으로 이동합니다.
           </PanelIntro>
 
           <PanelTop>

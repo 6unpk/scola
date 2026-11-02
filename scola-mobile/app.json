@@ -10,7 +10,7 @@
       "supportsTablet": false,
       "bundleIdentifier": "kr.scola.app",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "내 주변 사우나·찜질방을 지도에서 보여주기 위해 위치를 사용합니다."
+        "NSLocationWhenInUseUsageDescription": "내 주변 사우나, 찜질방을 지도에서 보여주기 위해 위치를 사용합니다."
       }
     },
     "android": {
@@ -35,7 +35,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "내 주변 사우나·찜질방을 지도에서 보여주기 위해 위치를 사용합니다."
+          "locationWhenInUsePermission": "내 주변 사우나, 찜질방을 지도에서 보여주기 위해 위치를 사용합니다."
         }
       ]
     ]

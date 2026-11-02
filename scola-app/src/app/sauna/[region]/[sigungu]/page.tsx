@@ -54,10 +54,10 @@ export async function generateMetadata(
   const places = await fetchPlaces(r.sub.value);
   const name = r.sub.label;
   const names = topPlaceNames(places);
-  const title = seoTitle(`${name} 사우나·찜질방·목욕탕 추천`, places.length, names);
+  const title = seoTitle(`${name} 사우나, 찜질방, 목욕탕 추천`, places.length, names);
   const description = places.length > 0
-    ? `${r.info.name} ${name} 사우나·찜질방·목욕탕 ${places.length.toLocaleString()}곳. ${names.join(', ')}처럼 방문자 평이 좋은 곳부터 24시간·세신·불가마 조건과 요금, 실제 이용 후기를 비교하세요.`
-    : `${r.info.name} ${name}의 사우나·찜질방·목욕탕을 스콜라에서 확인하세요.`;
+    ? `${r.info.name} ${name} 사우나, 찜질방, 목욕탕 ${places.length.toLocaleString()}곳. ${names.join(', ')}처럼 방문자 평이 좋은 곳부터 24시간, 세신, 불가마 조건과 요금, 실제 이용 후기를 비교하세요.`
+    : `${r.info.name} ${name}의 사우나, 찜질방, 목욕탕을 스콜라에서 확인하세요.`;
   const url = `https://scola.kr/sauna/${region}/${sigungu}`;
   const images = [{ url: pickOgImage(places), width: 1200, height: 630, alt: `${name} 사우나` }];
 
@@ -91,7 +91,7 @@ export default async function SigunguPage(
   const itemListJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: `${name} 사우나·찜질방·목욕탕`,
+    name: `${name} 사우나, 찜질방, 목욕탕`,
     numberOfItems: places.length,
     itemListElement: places.slice(0, 25).map((p, i) => ({
       '@type': 'ListItem', position: i + 1, url: `https://scola.kr/place/${p.id}`, name: p.name,

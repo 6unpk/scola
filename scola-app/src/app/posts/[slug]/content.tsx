@@ -189,7 +189,7 @@ export default function PostContent({ post }: { post: Post }) {
           </RecoSection>
         )}
         <CtaBtn onClick={() => router.push('/map')}>
-          <MapPin size={18} /> 내 주변 사우나·찜질방 찾기
+          <MapPin size={18} /> 내 주변 사우나, 찜질방 찾기
         </CtaBtn>
       </ArticleWrap>
 

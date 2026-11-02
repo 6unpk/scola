@@ -12,7 +12,7 @@ const bagelFatOne = Bagel_Fat_One({
   display: 'swap',
 });
 
-// 실제 사용 웨이트만 (400/600/700). 300·500 제거.
+// 실제 사용 웨이트만 (400/600/700). 300, 500 제거.
 const ibmPlexSansKR = IBM_Plex_Sans_KR({
   weight: ['400', '600', '700'],
   subsets: ['latin'],

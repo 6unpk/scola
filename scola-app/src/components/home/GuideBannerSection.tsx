@@ -107,7 +107,7 @@ export default function GuideBannerSection() {
             <GuideBadge>가이드</GuideBadge>
             <GuideTitle>사우나, 제대로 즐기는 법</GuideTitle>
             <GuideDesc>
-              온탕·냉탕 순서부터 불한증막 활용법까지.<br />
+              온탕, 냉탕 순서부터 불한증막 활용법까지.<br />
               몸이 달라지는 사우나 루틴을 알려드립니다.
             </GuideDesc>
             <GuideLink>자세히 보기 <RiArrowRightLine size={14} /></GuideLink>

@@ -25,5 +25,5 @@ export function pickOgImage(places: Place[]) {
 
 export function seoTitle(base: string, count: number, names: string[]) {
   if (count === 0 || names.length === 0) return base;
-  return `${base} ${count.toLocaleString()}곳 (${names.join('·')})`;
+  return `${base} ${count.toLocaleString()}곳 (${names.join(', ')})`;
 }

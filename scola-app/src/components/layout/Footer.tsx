@@ -163,7 +163,7 @@ export default function Footer() {
             <LogoImg src={logoSrc} alt="Scola" width={160} height={50} />
           </Link>
           <BrandDesc>
-            전국 사우나 · 찜질방 · 스파 정보를<br />한눈에 탐색하세요.
+            전국 사우나, 찜질방, 스파 정보를<br />한눈에 탐색하세요.
           </BrandDesc>
           <SocialLink href="https://www.instagram.com/scolakr" target="_blank" rel="noopener noreferrer" aria-label="스콜라 인스타그램">
             <RiInstagramLine size={16} /> @scolakr

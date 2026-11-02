@@ -124,13 +124,13 @@ export default function RegionContent(
       <Hero>
         {heroImg && (
           <HeroBg>
-            <LazyImage src={heroImg} alt={`${region.name} 사우나·찜질방`} fallback="/place-placeholder.svg" />
+            <LazyImage src={heroImg} alt={`${region.name} 사우나, 찜질방`} fallback="/place-placeholder.svg" />
           </HeroBg>
         )}
         <HeroOverlay />
         <HeroInner>
-          <Kicker>전국 사우나 지도 · {region.name}</Kicker>
-          <H1>{region.name} 사우나·찜질방·스파 추천</H1>
+          <Kicker>전국 사우나 지도 / {region.name}</Kicker>
+          <H1>{region.name} 사우나, 찜질방, 스파 추천</H1>
           <Blurb>{region.blurb}</Blurb>
           {count > 0 && (
             <Count>{region.name} 지역 <strong>{count.toLocaleString()}곳</strong> 수록</Count>
@@ -155,12 +155,12 @@ export default function RegionContent(
         {count > 0 && (
           <Intro>
             <IntroP>
-              <strong>{region.name}의 사우나·찜질방·스파</strong>를 한곳에 모았습니다. {region.blurb}{' '}
+              <strong>{region.name}의 사우나, 찜질방, 스파</strong>를 한곳에 모았습니다. {region.blurb}{' '}
               스콜라에 등록된 {region.name} 지역 {count.toLocaleString()}곳을 평점과 방문자 리뷰가 좋은 순으로 정리했어요.
             </IntroP>
             <IntroP>
               {catSummary && <>현재 {catSummary} 등이 있으며, </>}
-              24시간 운영, 세신·마사지, 수면실, 식당 같은 시설 조건으로 좁혀보고 각 장소의 요금과 실제 이용 후기를 비교해{' '}
+              24시간 운영, 세신, 마사지, 수면실, 식당 같은 시설 조건으로 좁혀보고 각 장소의 요금과 실제 이용 후기를 비교해{' '}
               {region.name}에서 가장 잘 맞는 사우나를 찾아보세요. 위치는 <Link href="/map" style={{ color: '#A62121', fontWeight: 700 }}>지도</Link>에서도 한눈에 확인할 수 있습니다.
             </IntroP>
           </Intro>

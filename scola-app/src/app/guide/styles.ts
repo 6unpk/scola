@@ -16,15 +16,6 @@ export const SectionInner = styled.div`
   margin: 0 auto;
 `;
 
-export const SectionLabel = styled.p`
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.colors.primary};
-  margin-bottom: 10px;
-`;
-
 // ─── 히어로 ───────────────────────────────────────────────────────────────────
 
 export const Hero = styled.section`
@@ -43,16 +34,6 @@ export const Hero = styled.section`
       radial-gradient(ellipse at 30% 50%, rgba(166,33,33,0.25) 0%, transparent 60%);
     pointer-events: none;
   }
-`;
-
-export const HeroEyebrow = styled.p`
-  display: inline-block;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.colors.primary};
-  margin-bottom: 20px;
 `;
 
 export const HeroTitle = styled.h1`
@@ -230,14 +211,6 @@ export const RoutineStepBody = styled.div`
   padding: 18px 20px 22px;
 `;
 
-export const RoutineStepMeta = styled.p`
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  color: ${({ theme }) => theme.colors.primary};
-  margin-bottom: 6px;
-`;
-
 export const RoutineStepName = styled.p`
   font-size: 19px;
   font-weight: 900;
@@ -340,14 +313,6 @@ export const StyleCardBody = styled.div`
   flex-direction: column;
 `;
 
-export const StyleCardMeta = styled.p`
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  color: ${({ theme }) => theme.colors.primary};
-  margin-bottom: 6px;
-`;
-
 export const StyleCardTitle = styled.h3`
   font-size: 19px;
   font-weight: 900;
@@ -408,17 +373,6 @@ export const TipCard = styled.div`
 
 export const TipTitle = styled.h3`font-size: 15px; font-weight: 800; color: white; margin-bottom: 8px;`;
 export const TipDesc = styled.p`font-size: 13px; line-height: 1.75; color: rgba(255,255,255,0.55);`;
-export const TipPoint = styled.p`
-  margin-top: 12px;
-  font-size: 12px;
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors.primary};
-  padding: 6px 12px;
-  background: rgba(166,33,33,0.15);
-  border-radius: ${({ theme }) => theme.radius.full};
-  display: inline-block;
-`;
-
 // ─── 에티켓 ───────────────────────────────────────────────────────────────────
 
 export const EtiquetteSection = styled.section`

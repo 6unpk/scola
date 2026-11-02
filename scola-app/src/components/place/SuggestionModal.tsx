@@ -251,7 +251,7 @@ export default function SuggestionModal({ place, open, onClose }: Props) {
               ))}
             </Grid>
 
-            <GroupTitle>영업 · 이용</GroupTitle>
+            <GroupTitle>영업/이용</GroupTitle>
             <Grid>
               {TEXT_FIELDS.slice(3).map(({ key, label, placeholder }) => (
                 <FieldGroup key={key}>
@@ -268,7 +268,7 @@ export default function SuggestionModal({ place, open, onClose }: Props) {
               ))}
             </CheckGrid>
 
-            <GroupTitle>탕 · 시설 (쉼표로 구분)</GroupTitle>
+            <GroupTitle>탕/시설 (쉼표로 구분)</GroupTitle>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {ARRAY_FIELDS.map(({ key, label, placeholder }) => (
                 <FieldGroup key={key}>

@@ -42,12 +42,12 @@ export async function generateMetadata(
   const names = topPlaceNames(places);
   const topSubs = [...subs].sort((a, b) => b.count - a.count).slice(0, 3).map((s) => s.label);
 
-  const title = seoTitle(`${info.name} 사우나·찜질방 추천`, count, names);
+  const title = seoTitle(`${info.name} 사우나, 찜질방 추천`, count, names);
   const description = count > 0
-    ? `${topSubs.length ? `${topSubs.join('·')} 등 ` : ''}${info.name} 사우나·찜질방·목욕탕 ${count.toLocaleString()}곳. ${names.join(', ')}처럼 방문자 평이 좋은 곳부터 24시간·불가마·온천 조건과 요금, 실제 이용 후기를 비교하세요.`
-    : `${info.name} 지역의 사우나, 찜질방, 스파, 불한증막, 세신샵을 위치·시설·이용 후기와 함께 스콜라에서 확인하세요.`;
+    ? `${topSubs.length ? `${topSubs.join(', ')} 등 ` : ''}${info.name} 사우나, 찜질방, 목욕탕 ${count.toLocaleString()}곳. ${names.join(', ')}처럼 방문자 평이 좋은 곳부터 24시간, 불가마, 온천 조건과 요금, 실제 이용 후기를 비교하세요.`
+    : `${info.name} 지역의 사우나, 찜질방, 스파, 불한증막, 세신샵을 위치, 시설, 이용 후기와 함께 스콜라에서 확인하세요.`;
   const url = `https://scola.kr/sauna/${region}`;
-  const images = [{ url: pickOgImage(places), width: 1200, height: 630, alt: `${info.name} 사우나·찜질방` }];
+  const images = [{ url: pickOgImage(places), width: 1200, height: 630, alt: `${info.name} 사우나, 찜질방` }];
 
   return {
     title,
@@ -76,7 +76,7 @@ export default async function RegionPage(
   const itemListJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: `${info.name} 사우나·찜질방·스파`,
+    name: `${info.name} 사우나, 찜질방, 스파`,
     numberOfItems: places.length,
     itemListElement: places.slice(0, 25).map((p, i) => ({
       '@type': 'ListItem',

@@ -256,7 +256,7 @@ export default function PlaceDetailClient({ place, regionLinks }: Props) {
                   {(profile!.tips?.length ?? 0) > 0 && (
                     <ProfileMetaRow>
                       <ProfileMetaLabel>꿀팁</ProfileMetaLabel>
-                      <ProfileMetaValue>{profile!.tips.join(' · ')}</ProfileMetaValue>
+                      <ProfileMetaValue>{profile!.tips.join(', ')}</ProfileMetaValue>
                     </ProfileMetaRow>
                   )}
                   {profile!.caution && (
@@ -274,7 +274,7 @@ export default function PlaceDetailClient({ place, regionLinks }: Props) {
             <Card>
               <SectionTitle><RiTempHotLine size={14} /> 사우나 정보</SectionTitle>
               <EmptyInfo>
-                <p>아직 등록된 상세 정보가 없어요.<br />다녀오셨다면 온도·탕 종류 등을 알려주세요!</p>
+                <p>아직 등록된 상세 정보가 없어요.<br />다녀오셨다면 온도, 탕 종류 등을 알려주세요!</p>
                 <EmptyBtn onClick={() => setSuggestOpen(true)}><RiPencilLine size={14} /> 정보 알려주기</EmptyBtn>
               </EmptyInfo>
             </Card>
@@ -436,7 +436,7 @@ export default function PlaceDetailClient({ place, regionLinks }: Props) {
               <RiMapPin2Line size={13} /> 네이버 지도에서 보기
             </NaverBtn>
             <InfoSuggestCta onClick={() => setSuggestOpen(true)}>
-              <RiPencilLine size={13} /> 정보 수정·제보하기
+              <RiPencilLine size={13} /> 정보 수정/제보하기
             </InfoSuggestCta>
             <ShareButton id={place.id} name={place.name} />
           </Card>
@@ -445,11 +445,11 @@ export default function PlaceDetailClient({ place, regionLinks }: Props) {
             <Card>
               <SectionTitle><RiMapPin2Line size={14} /> 이 지역 더 보기</SectionTitle>
               <RegionMoreLink href={`/sauna/${regionLinks.region.slug}`}>
-                <span>{regionLinks.region.name} 사우나·찜질방</span><span>›</span>
+                <span>{regionLinks.region.name} 사우나, 찜질방</span><span>›</span>
               </RegionMoreLink>
               {regionLinks.sigungu && (
                 <RegionMoreLink href={`/sauna/${regionLinks.region.slug}/${regionLinks.sigungu.slug}`}>
-                  <span>{regionLinks.sigungu.label} 사우나·목욕탕</span><span>›</span>
+                  <span>{regionLinks.sigungu.label} 사우나, 목욕탕</span><span>›</span>
                 </RegionMoreLink>
               )}
             </Card>

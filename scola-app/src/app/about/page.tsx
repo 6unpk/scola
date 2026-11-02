@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import AboutPage from './content';
 import JsonLd from '@/components/seo/JsonLd';
+import type { Place } from '@/types/place';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.scola.kr';
 
@@ -46,12 +47,23 @@ async function fetchPlaceCount(): Promise<number | null> {
   }
 }
 
+async function fetchSamplePlace(): Promise<Place | null> {
+  try {
+    const res = await fetch(`${API_BASE}/places/1904`, { next: { revalidate: 86400 } });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.data ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export default async function Page() {
-  const placeCount = await fetchPlaceCount();
+  const [placeCount, sample] = await Promise.all([fetchPlaceCount(), fetchSamplePlace()]);
   return (
     <>
       <JsonLd data={aboutJsonLd} />
-      <AboutPage placeCount={placeCount} />
+      <AboutPage placeCount={placeCount} sample={sample} />
     </>
   );
 }
