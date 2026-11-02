@@ -26,10 +26,11 @@ const websiteJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: '스콜라',
+  alternateName: ['Scola', 'scola.kr'],
   url: 'https://scola.kr',
   description: '전국 사우나, 찜질방, 스파 정보 플랫폼',
   inLanguage: 'ko',
-  publisher: { '@type': 'Organization', name: '아온미디어', url: 'https://scola.kr' },
+  publisher: { '@id': 'https://scola.kr/#organization' },
   potentialAction: {
     '@type': 'SearchAction',
     target: { '@type': 'EntryPoint', urlTemplate: 'https://scola.kr/search?q={search_term_string}' },
@@ -37,10 +38,22 @@ const websiteJsonLd = {
   },
 };
 
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': 'https://scola.kr/#organization',
+  name: '스콜라',
+  alternateName: 'Scola',
+  url: 'https://scola.kr',
+  logo: 'https://scola.kr/web-app-manifest-512x512.png',
+  sameAs: ['https://www.instagram.com/scolakr'],
+};
+
 export default function Page() {
   return (
     <>
       <JsonLd data={websiteJsonLd} />
+      <JsonLd data={organizationJsonLd} />
       <HomePage />
     </>
   );

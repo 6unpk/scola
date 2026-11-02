@@ -4,7 +4,8 @@ import { REGIONS, regionBySlug } from '@/data/regions';
 import { fetchSubregions, sigunguSlug, MIN_SUBREGION_PLACES, excludeWaterparks } from '@/lib/sigungu';
 import RegionContent from './content';
 import JsonLd from '@/components/seo/JsonLd';
-import { topPlaceNames, pickOgImage, seoTitle } from '@/lib/regionSeo';
+import { topPlaceNames, pickOgImage, seoTitle, areaDescription } from '@/lib/regionSeo';
+import regionDescriptions from '@/data/regionDescriptions.json';
 import type { Place } from '@/types/place';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.scola.kr';
@@ -37,15 +38,14 @@ export async function generateMetadata(
   const info = regionBySlug(region);
   if (!info) return { title: '지역을 찾을 수 없습니다' };
 
-  const [places, subs] = await Promise.all([fetchRegionPlaces(info.name), fetchSubregions(info.name)]);
+  const places = await fetchRegionPlaces(info.name);
   const count = places.length;
   const names = topPlaceNames(places);
-  const topSubs = [...subs].sort((a, b) => b.count - a.count).slice(0, 3).map((s) => s.label);
 
   const title = seoTitle(`${info.name} 사우나, 찜질방 추천`, count, names);
   const description = count > 0
-    ? `${topSubs.length ? `${topSubs.join(', ')} 등 ` : ''}${info.name} 사우나, 찜질방, 목욕탕 ${count.toLocaleString()}곳. ${names.join(', ')}처럼 방문자 평이 좋은 곳부터 24시간, 불가마, 온천 조건과 요금, 실제 이용 후기를 비교하세요.`
-    : `${info.name} 지역의 사우나, 찜질방, 스파, 불한증막, 세신샵을 위치, 시설, 이용 후기와 함께 스콜라에서 확인하세요.`;
+    ? (regionDescriptions as Record<string, string>)[region] ?? areaDescription(info.name, places, 'sigungu')
+    : `${info.name} 사우나, 찜질방 목록.`;
   const url = `https://scola.kr/sauna/${region}`;
   const images = [{ url: pickOgImage(places), width: 1200, height: 630, alt: `${info.name} 사우나, 찜질방` }];
 

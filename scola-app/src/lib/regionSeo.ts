@@ -27,3 +27,24 @@ export function seoTitle(base: string, count: number, names: string[]) {
   if (count === 0 || names.length === 0) return base;
   return `${base} ${count.toLocaleString()}곳 (${names.join(', ')})`;
 }
+
+function locality(p: Place, level: 'sigungu' | 'dong') {
+  const road = (p.road_address ?? '').split(/\s+/);
+  const jibun = (p.address ?? '').split(/\s+/);
+  if (level === 'sigungu') return road[1] || jibun[1] || '';
+  return jibun.slice(2).find((t) => /(동|읍|면|가)$/.test(t)) ?? '';
+}
+
+export function areaDescription(area: string, places: Place[], level: 'sigungu' | 'dong') {
+  const top = [...places.filter(isCore)]
+    .sort((a, b) => (b.visitor_review_count ?? 0) - (a.visitor_review_count ?? 0))
+    .slice(0, 3)
+    .map((p) => {
+      const loc = locality(p, level);
+      return loc ? `${p.name.trim()}(${loc})` : p.name.trim();
+    });
+  return [
+    `${area} 사우나, 찜질방 ${places.length.toLocaleString()}곳.`,
+    top.length ? `리뷰가 많은 곳은 ${top.join(', ')}입니다.` : '',
+  ].filter(Boolean).join(' ');
+}

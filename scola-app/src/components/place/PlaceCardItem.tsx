@@ -1,7 +1,7 @@
 'use client';
 
 import styled from 'styled-components';
-import { Star, MapPin, Clock, Eye } from 'lucide-react';
+import { Star, MapPin, Clock } from 'lucide-react';
 import LazyImage from '@/components/ui/LazyImage';
 import type { Place } from '@/types/place';
 import { cardBase, cardHover, cardThumbDivider, tagBase } from '@/components/ui/Card';
@@ -78,15 +78,6 @@ export const PlaceRating = styled.div`
   color: ${({ theme }) => theme.colors.dark};
 `;
 
-export const PlaceViews = styled.span`
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 11px;
-  color: ${({ theme }) => theme.colors.gray400};
-  flex-shrink: 0;
-`;
-
 export const PlaceHours = styled.div`
   display: flex;
   align-items: center;
@@ -160,7 +151,6 @@ export default function PlaceCardItem({ place, onClick }: Props) {
               리뷰 {(place.visitor_review_count ?? 0).toLocaleString()}개
             </span>
           </PlaceRating>
-          <PlaceViews><Eye size={12} />{(place.views ?? 0).toLocaleString()}</PlaceViews>
         </PlaceMeta>
         {(place.open_hours ?? place.business_hours) && (
           <PlaceHours>

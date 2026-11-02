@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
-import { Calendar, User, ChevronRight, Eye } from 'lucide-react';
+import { Calendar, User, ChevronRight } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import api from '@/lib/api';
@@ -153,7 +153,6 @@ export default function PostsListContent(
                   <CardMeta>
                     <MetaItem><User size={11} />{post.author_name}</MetaItem>
                     <MetaItem><Calendar size={11} />{formatDate(post.published_at)}</MetaItem>
-                    {/* <MetaItem><Eye size={11} />{(post.views ?? 0).toLocaleString()}</MetaItem> */}
                     <ReadMore>읽기 <ChevronRight size={12} /></ReadMore>
                   </CardMeta>
                 </CardBody>

@@ -62,7 +62,7 @@ export async function generateMetadata(
       type: 'article',
       publishedTime: post.published_at ?? undefined,
       authors: post.author_name ? [post.author_name] : undefined,
-      images: post.thumbnail ? [{ url: post.thumbnail, alt: post.title }] : [],
+      images: postImages(post).slice(0, 5).map((url) => ({ url, alt: post.title })),
     },
     twitter: {
       card: 'summary_large_image',
@@ -73,6 +73,11 @@ export async function generateMetadata(
   };
 }
 
+function postImages(post: Post): string[] {
+  const inBody = [...(post.body ?? '').matchAll(/!\[[^\]]*\]\((https?:[^)\s]+)/g)].map((m) => m[1]);
+  return [...new Set([post.thumbnail, ...inBody].filter((u): u is string => !!u))];
+}
+
 function buildArticleJsonLd(post: Post, slug: string) {
   const url = `https://scola.kr/posts/${slug}`;
   return {
@@ -80,7 +85,7 @@ function buildArticleJsonLd(post: Post, slug: string) {
     '@type': 'BlogPosting',
     headline: post.title,
     description: post.meta_description || post.excerpt || undefined,
-    image: post.thumbnail || undefined,
+    image: postImages(post).length ? postImages(post) : undefined,
     datePublished: post.published_at || post.created_at,
     dateModified: post.updated_at || post.published_at || post.created_at,
     author: { '@type': 'Person', name: post.author_name },
