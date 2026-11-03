@@ -34,6 +34,7 @@ class AdminSecurityTest < ActionDispatch::IntegrationTest
 
   test "admin can open admin" do
     admin_login(@admin)
+    assert_redirected_to "/admin"
     get "/admin"
     assert_response :success
   end
