@@ -30,6 +30,12 @@ class AdminSecurityTest < ActionDispatch::IntegrationTest
     assert_redirected_to "/admin_auth/sign_in"
     get "/admin_auth/sign_in"
     assert_response :success
+    assert_includes response.body, "관리자 권한이 없는 계정입니다."
+  end
+
+  test "wrong password shows an error" do
+    post "/admin_auth/sign_in", params: { admin_user_user: { email: @admin.email, password: "wrong-password" } }
+    assert_includes response.body, 'role="alert"'
   end
 
   test "admin can open admin" do

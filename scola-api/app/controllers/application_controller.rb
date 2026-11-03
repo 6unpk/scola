@@ -26,7 +26,10 @@ class ApplicationController < ActionController::Base
   def authenticate_admin!
     return if current_admin_user_user&.admin?
 
-    sign_out(:admin_user_user) if current_admin_user_user
+    if current_admin_user_user
+      sign_out(:admin_user_user)
+      flash[:alert] = '관리자 권한이 없는 계정입니다.'
+    end
     redirect_to new_admin_user_user_session_path
   end
 end
