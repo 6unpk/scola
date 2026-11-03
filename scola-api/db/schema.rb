@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_10_07_000000) do
+ActiveRecord::Schema[7.2].define(version: 2026_11_03_000002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -143,6 +143,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_10_07_000000) do
     t.jsonb "place_profile", default: {}
     t.jsonb "review_summary", default: {}
     t.integer "views", default: 0, null: false
+    t.datetime "stats_refreshed_at"
     t.index ["app_category"], name: "index_places_on_app_category"
     t.index ["latitude", "longitude"], name: "index_places_on_latitude_and_longitude"
     t.index ["naver_place_id"], name: "index_places_on_naver_place_id", unique: true
@@ -166,6 +167,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_10_07_000000) do
     t.string "keywords"
     t.integer "views", default: 0, null: false
     t.integer "likes", default: 0, null: false
+    t.integer "shares", default: 0, null: false
     t.index ["published"], name: "index_posts_on_published"
     t.index ["published_at"], name: "index_posts_on_published_at"
     t.index ["slug"], name: "index_posts_on_slug", unique: true
@@ -183,6 +185,15 @@ ActiveRecord::Schema[7.2].define(version: 2026_10_07_000000) do
     t.string "tags", default: [], array: true
     t.index ["place_id"], name: "index_reviews_on_place_id"
     t.index ["user_id"], name: "index_reviews_on_user_id"
+  end
+
+  create_table "search_dailies", force: :cascade do |t|
+    t.string "term", null: false
+    t.date "date", null: false
+    t.integer "count", default: 0, null: false
+    t.integer "zero_count", default: 0, null: false
+    t.index ["date"], name: "index_search_dailies_on_date"
+    t.index ["term", "date"], name: "index_search_dailies_on_term_and_date", unique: true
   end
 
   create_table "search_queries", force: :cascade do |t|
@@ -222,6 +233,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_10_07_000000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
+    t.boolean "admin", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

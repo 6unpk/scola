@@ -8,4 +8,12 @@ class User < ApplicationRecord
   has_many :students, dependent: :destroy
   has_many :lessons, dependent: :destroy
   has_many :reviews, dependent: :destroy
+
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[admin created_at email id name]
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    []
+  end
 end

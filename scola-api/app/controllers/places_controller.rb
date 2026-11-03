@@ -1,5 +1,7 @@
 class PlacesController < ApplicationController
   skip_before_action :verify_authenticity_token
+  before_action :require_admin_user, only: :update
+  SEARCH_FILTER_PARAMS = %i[category region subregion is_24hours has_restaurant has_sleep_room has_massage has_gym kids_facility].freeze
   before_action :set_place, only: [:show, :update]
 
   SEARCH_REGION_ALIASES = {
@@ -117,6 +119,7 @@ class PlacesController < ApplicationController
     per   = (params[:per] || 20).to_i.clamp(1, 100)
     page  = (params[:page] || 1).to_i.clamp(1, Float::INFINITY)
     places = scope.limit(per).offset((page - 1) * per)
+    record_search(total) if page == 1 && params[:q].present? && SEARCH_FILTER_PARAMS.none? { |key| params[key].present? }
 
     render json: {
       status: { code: 200 },
@@ -201,7 +204,6 @@ class PlacesController < ApplicationController
 
   # PATCH /places/:id  : 수동 데이터 보강용 (인증 필요)
   def update
-    authenticate_user!
     if @place.update(place_params)
       render json: { status: { code: 200 }, data: @place }
     else
@@ -249,6 +251,16 @@ class PlacesController < ApplicationController
     text = text.or(Place.where(is_24hours: true)).or(Place.where("name ILIKE '%24%'")) if %w[24시 24시간].include?(token)
 
     text.arel.constraints.reduce(:and)
+  end
+
+  def require_admin_user
+    return if current_user&.admin?
+
+    render json: { status: { code: 401, message: '관리자 권한이 필요합니다.' } }, status: :unauthorized
+  end
+
+  def record_search(total)
+    SearchDaily.record(params[:q], zero: total.zero?)
   end
 
   def set_place

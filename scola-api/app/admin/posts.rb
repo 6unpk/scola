@@ -3,16 +3,29 @@ ActiveAdmin.register Post do
                 :category, :author_name, :published, :published_at,
                 :meta_title, :meta_description, :keywords
 
-  menu label: '게시글', priority: 2
+  menu label: '게시글', priority: 6
+
+  scope :all, default: true
+  scope('CTR 낮은 글', show_count: false) { |posts| posts.where(slug: SearchConsole.low_ctr_post_slugs) }
 
   index do
+    ga_views = GoogleAnalytics.views_by_post(AdminMetrics::DEFAULT_PERIOD)
+    gsc = SearchConsole.by_post(AdminMetrics::DEFAULT_PERIOD)
     selectable_column
     id_column
     column :title
     column(:카테고리) { |p| p.category }
-    column :author_name
     column :published
-    column :published_at
+    column(:발행일, sortable: :published_at) { |p| p.published_at&.strftime('%Y-%m-%d') }
+    column(:경과일) { |p| p.published_at ? (Time.zone.today - p.published_at.to_date).to_i : '-' }
+    column(:누적조회, sortable: :views) { |p| number_with_delimiter(p.views) }
+    column(:좋아요, sortable: :likes) { |p| p.likes }
+    column(:공유, sortable: :shares) { |p| p.shares }
+    column('28일 조회') { |p| ga_views[p.slug] || '-' }
+    column('검색 클릭') { |p| gsc[p.slug]&.fetch('clicks')&.to_i || '-' }
+    column('노출') { |p| gsc[p.slug] ? number_with_delimiter(gsc[p.slug]['impressions'].to_i) : '-' }
+    column('CTR') { |p| gsc[p.slug] ? admin_percent(gsc[p.slug]['ctr']) : '-' }
+    column('순위') { |p| gsc[p.slug] ? gsc[p.slug]['position'].round(1) : '-' }
     actions
   end
 

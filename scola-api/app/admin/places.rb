@@ -1,4 +1,6 @@
 ActiveAdmin.register Place do
+  menu label: '장소', priority: 9
+
   permit_params :naver_place_id,
                 :name, :road_address, :naver_category,
                 :address, :phone, :homepage, :business_hours, :description,
@@ -24,15 +26,18 @@ ActiveAdmin.register Place do
     column :gender_type
     column :sauna_type
     column :is_24hours
-    column(:리뷰) { |p| p.visitor_review_count }
+    column(:리뷰, sortable: :visitor_review_count) { |p| p.visitor_review_count }
+    column(:조회수, sortable: :views) { |p| number_with_delimiter(p.views) }
+    column(:썸네일) { |p| image_tag(p.thumbnail, height: 40, loading: 'lazy') if p.thumbnail.present? }
+    column(:수정일, sortable: :updated_at) { |p| p.updated_at.strftime('%Y-%m-%d') }
     actions
   end
 
   # ── 필터 ─────────────��────────────────────────────────────────────────────
   filter :name_cont, label: '이름'
   filter :road_address_cont, label: '주소'
-  filter :app_category_cont, as: :select,
-         collection: [['사우나', 'sauna'], ['찜질방', 'jjimjilbang'], ['스파', 'spa']],
+  filter :with_category, as: :select,
+         collection: Place::CATEGORIES.invert.to_a,
          label: '카테고리'
   filter :gender_type, as: :select, collection: ['남성전용', '여성전용', '남녀공용']
   filter :is_24hours
@@ -86,6 +91,53 @@ ActiveAdmin.register Place do
         row :parking_count
       end
     end
+
+    summary = place.review_summary.to_h
+    if summary.present?
+      panel '리뷰 분석' do
+        sentiment = summary['sentiment_breakdown'].to_h
+        attributes_table_for place do
+          row('긍정 / 중립 / 부정') { "#{sentiment['positive']}% / #{sentiment['neutral']}% / #{sentiment['negative']}%" }
+          row('요약') { summary['overall'] }
+          row('좋은 점') { Array(summary['pros']).join(', ') }
+          row('아쉬운 점') { Array(summary['cons']).join(', ') }
+          row('키워드') { Array(summary['keywords']).join(', ') }
+        end
+      end
+    end
+
+    panel '최근 90일 일별 리드 클릭' do
+      text_node line_chart(AdminMetrics.by_day(AdminMetrics.leads.where(place_id: place.id), 90), height: '200px')
+    end
+
+    columns do
+      column do
+        panel 'GA 조회수 (최근 28일)' do
+          views = GoogleAnalytics.page_views("/place/#{place.id}", AdminMetrics::DEFAULT_PERIOD)
+          if views.ok?
+            row = views.rows.first
+            para "조회 #{row&.fetch('screenPageViews', 0).to_i}회, 방문자 #{row&.fetch('activeUsers', 0).to_i}명"
+          else
+            para views.error
+          end
+        end
+      end
+      column do
+        panel '이 장소로 들어온 구글 검색어 (최근 28일)' do
+          queries = SearchConsole.page_queries("/place/#{place.id}", AdminMetrics::DEFAULT_PERIOD)
+          if queries.rows.any?
+            table_for queries.rows do
+              column('검색어') { |row| row['query'] }
+              column('클릭') { |row| row['clicks'].to_i }
+              column('노출') { |row| row['impressions'].to_i }
+              column('평균 순위') { |row| row['position'].round(1) }
+            end
+          else
+            para queries.error || '기록된 검색어가 없습니다.'
+          end
+        end
+      end
+    end
   end
 
   # ── 편집 폼 ─────────────────────────────────────────────────────────��─────
@@ -108,7 +160,7 @@ ActiveAdmin.register Place do
 
     f.inputs '앱 분류' do
       f.input :app_category, as: :check_boxes,
-              collection: [['사우나', 'sauna'], ['찜질방', 'jjimjilbang'], ['스파', 'spa'], ['세신샵', 'seshin'], ['호텔', 'hotel'], ['워터파크', 'waterpark']],
+              collection: Place::CATEGORIES.invert.to_a,
               label: '카테고리 (복수 선택 가능)'
       f.input :gender_type, as: :select,
               collection: ['남성전용', '여성전용', '남녀공용'],

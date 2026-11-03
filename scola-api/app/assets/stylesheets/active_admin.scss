@@ -15,3 +15,26 @@
 // For example, to change the default status-tag color:
 //
 //   .status_tag { background: #6090DB; }
+
+.admin-period { margin: 0 0 16px; }
+.admin-period a { display: inline-block; margin-right: 8px; padding: 4px 12px; border: 1px solid #ccc; border-radius: 4px; text-decoration: none; }
+.admin-period .admin-period-active { background: #5e6469; border-color: #5e6469; color: #fff; }
+.admin-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.admin-kpi { display: flex; flex-direction: column; gap: 4px; padding: 14px; background: #fff; border: 1px solid #ddd; border-radius: 4px; }
+.admin-kpi-label { color: #777; font-size: 12px; }
+.admin-kpi strong { font-size: 22px; }
+.admin-kpi-up { color: #2e7d32; font-size: 12px; }
+.admin-kpi-down { color: #c62828; font-size: 12px; }
+.paginated_collection_contents { overflow-x: auto; }
+.index_table th { white-space: nowrap; }
+.index_table td { word-break: keep-all; }
+#main_content { min-width: 0; }
+.paginated_collection { max-width: 100%; overflow-x: auto; }
+@media (max-width: 767px) {
+  #wrapper { min-width: 0; }
+  #main_content_wrapper { float: none; width: auto; }
+  #active_admin_content.with_sidebar #main_content_wrapper #main_content { margin-right: 0; }
+  #active_admin_content.with_sidebar #sidebar { float: none; width: auto; margin-left: 0; }
+  #header { flex-wrap: wrap; height: auto; }
+  #header .tabs, #header ul.tabs { flex-wrap: wrap; float: none; }
+}

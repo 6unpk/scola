@@ -24,8 +24,9 @@ class ApplicationController < ActionController::Base
 
   # 어드민 인증 (세션)
   def authenticate_admin!
-    unless current_admin_user_user
-      redirect_to new_admin_user_user_session_path
-    end
+    return if current_admin_user_user&.admin?
+
+    sign_out(:admin_user_user) if current_admin_user_user
+    redirect_to new_admin_user_user_session_path
   end
 end

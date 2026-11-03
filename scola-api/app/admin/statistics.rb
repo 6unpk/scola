@@ -1,103 +1,90 @@
 ActiveAdmin.register_page "Statistics" do
-  menu priority: 2, label: "통계"
+  menu priority: 4, label: "장소 분석"
 
-  content title: "통계" do
-    month_start = Time.zone.now.beginning_of_month
+  content title: "장소 분석" do
+    days = AdminMetrics.days(params[:days])
+    current = AdminMetrics.current(days)
+    previous = AdminMetrics.previous(days)
+    leads = AdminMetrics.leads.where(created_at: current)
+    now = leads.group(:event_type).count
+    before = AdminMetrics.leads.where(created_at: previous).group(:event_type).count
+    labels = { "call" => "전화", "naver_map" => "길찾기", "homepage" => "홈페이지" }
 
-    events_month = PlaceEvent.where("created_at >= ?", month_start).group(:event_type).count
-    events_total = PlaceEvent.group(:event_type).count
-    ev = ->(h, k) { h[k] || 0 }
-
-    kpis = [
-      ["장소 수", number_with_delimiter(Place.count)],
-      ["회원/게스트 리뷰", number_with_delimiter(Review.count)],
-      ["누적 조회수", number_with_delimiter(Place.sum(:views))],
-      ["검토 대기 제보", number_with_delimiter(PlaceSuggestion.where(status: "pending").count)],
-      ["전화 클릭 (이번 달 / 누적)", "#{ev.call(events_month, 'call')} / #{ev.call(events_total, 'call')}"],
-      ["길찾기 클릭 (이번 달 / 누적)", "#{ev.call(events_month, 'naver_map')} / #{ev.call(events_total, 'naver_map')}"],
-      ["홈페이지 클릭 (이번 달 / 누적)", "#{ev.call(events_month, 'homepage')} / #{ev.call(events_total, 'homepage')}"],
-    ]
-
-    pivot = Hash.new { |h, k| h[k] = Hash.new(0) }
-    PlaceEvent.where("created_at >= ?", month_start).group(:place_id, :event_type).count.each do |(pid, type), n|
-      pivot[pid][type] += n
-      pivot[pid][:total] += n
+    pivot = Hash.new { |hash, key| hash[key] = Hash.new(0) }
+    leads.group(:place_id, :event_type).count.each do |(place_id, type), count|
+      pivot[place_id][type] += count
+      pivot[place_id][:total] += count
     end
-    top_ids = pivot.sort_by { |_, v| -v[:total] }.first(20).map(&:first)
+    top_ids = pivot.sort_by { |_, row| -row[:total] }.first(20).map(&:first)
     places_by_id = Place.where(id: top_ids).index_by(&:id)
 
-    cat_labels = {
-      "sauna" => "사우나", "bath" => "목욕탕", "jjimjilbang" => "찜질방", "spa" => "스파",
-      "seshin" => "세신샵", "hotel" => "호텔", "waterpark" => "워터파크"
-    }
-    cat_rows = ActiveRecord::Base.connection.select_rows(
-      "SELECT cat, COUNT(*) AS cnt FROM (SELECT unnest(app_category) AS cat FROM places) s WHERE cat <> '' GROUP BY cat ORDER BY cnt DESC"
+    text_node admin_period_links(days)
+    text_node admin_kpis(
+      [["리드 클릭 합계", number_with_delimiter(now.values.sum), AdminMetrics.delta(now.values.sum, before.values.sum)]] +
+      labels.map { |type, label| [label, number_with_delimiter(now.fetch(type, 0)), AdminMetrics.delta(now.fetch(type, 0), before.fetch(type, 0))] } +
+      [["공유", number_with_delimiter(PlaceEvent.where(event_type: "share", created_at: current).count), nil]]
     )
 
-    post_cat = { "sauna" => "사우나 이야기", "wellness" => "건강 & 웰빙", "travel" => "여행 & 지역", "guide" => "가이드", "etc" => "기타" }
-    posts = Post.order(views: :desc)
-    post_kpis = [
-      ["발행 글", Post.where(published: true).count],
-      ["초안(미발행)", Post.where(published: false).count],
-      ["누적 조회수", number_with_delimiter(Post.sum(:views))],
-      ["누적 좋아요", number_with_delimiter(Post.sum(:likes))],
-      ["누적 공유", number_with_delimiter(Post.sum(:shares))],
-    ]
+    panel "일별 리드 클릭" do
+      series = labels.map { |type, label| { name: label, data: AdminMetrics.by_day(AdminMetrics.leads.where(event_type: type), days) } }
+      text_node line_chart(series, height: "260px")
+    end
 
     columns do
       column do
-        panel "핵심 지표" do
-          table_for kpis do
-            column("항목") { |r| r[0] }
-            column("값") { |r| r[1] }
-          end
-        end
-
-        panel "카테고리 분포" do
-          table_for cat_rows do
-            column("카테고리") { |r| cat_labels[r[0]] || r[0] }
-            column("개수") { |r| number_with_delimiter(r[1].to_i) }
-          end
-        end
-
-        panel "매거진" do
-          table_for post_kpis do
-            column("항목") { |r| r[0] }
-            column("값") { |r| r[1] }
-          end
-          table_for posts do
-            column("글") { |p| link_to(p.title.truncate(40), admin_post_path(p)) }
-            column("카테고리") { |p| post_cat[p.category] || p.category }
-            column("상태") { |p| p.published ? "발행" : "초안" }
-            column("발행일") { |p| p.published_at&.strftime("%Y-%m-%d") }
-            column("조회") { |p| number_with_delimiter(p.views) }
-            column("좋아요") { |p| number_with_delimiter(p.likes) }
-            column("공유") { |p| number_with_delimiter(p.shares) }
+        panel "리드가 많은 장소 (제휴 영업 후보)" do
+          if top_ids.any?
+            table_for top_ids do
+              column("장소") { |id| link_to(places_by_id[id]&.name || "##{id}", admin_place_path(id)) }
+              column("전화") { |id| pivot[id]["call"] }
+              column("길찾기") { |id| pivot[id]["naver_map"] }
+              column("홈페이지") { |id| pivot[id]["homepage"] }
+              column("합계") { |id| pivot[id][:total] }
+            end
+          else
+            para "이 기간에 수집된 리드 클릭이 없습니다."
           end
         end
       end
 
       column do
-        panel "아웃바운드 리드 / 이번 달 상위 장소" do
-          if top_ids.any?
-            table_for top_ids do
-              column("장소") { |pid| link_to(places_by_id[pid]&.name || "##{pid}", admin_place_path(pid)) }
-              column("전화") { |pid| pivot[pid]["call"] }
-              column("길찾기") { |pid| pivot[pid]["naver_map"] }
-              column("홈페이지") { |pid| pivot[pid]["homepage"] }
-              column("합계") { |pid| pivot[pid][:total] }
-            end
-          else
-            para "이번 달 수집된 아웃바운드 이벤트가 아직 없습니다. (배포 후 사용자 클릭이 쌓이면 표시됩니다)"
+        panel "지역별 리드 클릭" do
+          regions = leads.joins(:place).group(Arel.sql("split_part(places.road_address, ' ', 1)")).count
+          table_for regions.sort_by { |_, count| -count }.first(17) do
+            column("지역") { |region, _| region.presence || "주소 없음" }
+            column("클릭") { |_, count| number_with_delimiter(count) }
           end
         end
 
-        panel "조회수 상위 장소" do
+        panel "카테고리별 리드 클릭" do
+          categories = leads.joins(:place).group(Arel.sql("unnest(places.app_category)")).count
+          table_for categories.sort_by { |_, count| -count } do
+            column("카테고리") { |category, _| Place::CATEGORIES[category] || category }
+            column("클릭") { |_, count| number_with_delimiter(count) }
+          end
+        end
+      end
+    end
+
+    columns do
+      column do
+        panel "누적 조회수 상위 장소" do
           table_for Place.order(views: :desc).limit(15) do
-            column("장소") { |p| link_to(p.name, admin_place_path(p)) }
-            column("조회수") { |p| number_with_delimiter(p.views) }
-            column("리뷰") { |p| p.review_count }
-            column("평점") { |p| p.rating }
+            column("장소") { |place| link_to(place.name, admin_place_path(place)) }
+            column("조회수") { |place| number_with_delimiter(place.views) }
+            column("방문자 리뷰") { |place| place.visitor_review_count }
+          end
+        end
+      end
+
+      column do
+        panel "카테고리별 장소 수" do
+          rows = ActiveRecord::Base.connection.select_rows(
+            "SELECT cat, COUNT(*) AS cnt FROM (SELECT unnest(app_category) AS cat FROM places) s WHERE cat <> '' GROUP BY cat ORDER BY cnt DESC"
+          )
+          table_for rows do
+            column("카테고리") { |row| Place::CATEGORIES[row[0]] || row[0] }
+            column("개수") { |row| number_with_delimiter(row[1].to_i) }
           end
         end
       end

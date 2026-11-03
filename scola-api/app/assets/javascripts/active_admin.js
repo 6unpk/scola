@@ -1,4 +1,6 @@
 //= require active_admin/base
+//= require Chart.bundle
+//= require chartkick
 
 // ─── Toast UI 마크다운 에디터 (게시글 본문) ────────────────────────────────
 // #post_body textarea를 마크다운 WYSIWYG 에디터로 대체. 이미지는 /admin/uploads -> R2.

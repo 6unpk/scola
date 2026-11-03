@@ -53,3 +53,6 @@ gem "kaminari"
 
 # Cloudflare R2 (S3 호환) 이미지 업로드
 gem "aws-sdk-s3", require: false
+
+gem "chartkick", "~> 5.1"
+gem "googleauth", "~> 1.17"

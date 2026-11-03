@@ -2,6 +2,14 @@ class Review < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :place
 
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[author_name body created_at id place_id rating user_id visited_at]
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    []
+  end
+
   QUICK_TAGS = ['깨끗해요', '뜨끈해요', '시설 좋아요', '친절해요', '가성비 좋아요', '주차 편해요', '세신 잘해요', '넓어요', '조용해요', '붐벼요'].freeze
 
   validates :body, length: { maximum: 1000 }

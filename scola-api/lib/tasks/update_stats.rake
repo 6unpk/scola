@@ -22,7 +22,7 @@ namespace :places do
       updates = {}
       updates[:visitor_review_count] = item["visitor_review_count"] unless item["visitor_review_count"].nil?
       updates[:blog_review_count]    = item["blog_review_count"]    unless item["blog_review_count"].nil?
-      place.update_columns(updates) if updates.any?
+      place.update_columns(updates.merge(stats_refreshed_at: Time.current)) if updates.any?
       ok += 1
     end
 
