@@ -4,12 +4,6 @@ import { Analytics } from '@vercel/analytics/next';
 import Script from 'next/script';
 import StyledRegistry from '@/lib/StyledRegistry';
 import QueryProvider from '@/lib/QueryProvider';
-import posthog from 'posthog-js'
-
-posthog.init(process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN!, {
-    api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
-    defaults: '2026-08-30'
-});
 
 const bagelFatOne = Bagel_Fat_One({
   weight: '400',
